@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RestaurentsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,12 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register_user',[AuthController::class,'register']);
-Route::post('/login',[AuthController::class,'login']);
-Route::post('/check-uid',[AuthController::class,'checkUidAvailable']);
+Route::post('/register_user', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/check-uid', [AuthController::class, 'checkUidAvailable']);
 
-Route::post('/current-user',[AuthController::class,'currentUser'])->middleware(('auth:sanctum'));
+Route::post('/current-user', [AuthController::class, 'currentUser'])->middleware(('auth:sanctum'));
+
+Route::get('/get-restaurents',[RestaurentsController::class,'index']);
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+

@@ -19,11 +19,18 @@ class CreateRestaurentsTable extends Migration
             $table->string('name')->nullable();
             $table->double('lat')->default(0.0);
             $table->double('lng')->default(0.0);
-            $table->double('ratings')->default(0.0);
             $table->boolean('is_trending')->default(false);
             $table->string('status')->nullable();
-            $table->integer('sub_category')->default(-1);
-            $table->integer('rest_id')->default(-1);
+           
+            $table->string('image')->nullable();
+            $table->string('type')->nullable();
+            $table->string('zipcode')->nullable();
+            $table->boolean('open')->default(false);
+            $table->string('open_time')->nullable();
+            $table->string('close_time')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->timestamps();
         });
     }

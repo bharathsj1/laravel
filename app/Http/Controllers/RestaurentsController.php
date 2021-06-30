@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Restaurents;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class RestaurentsController extends Controller
 {
@@ -14,7 +16,14 @@ class RestaurentsController extends Controller
      */
     public function index()
     {
-        //
+        $restaurents = Restaurents::all();
+        return response()->json([
+            'success'=>true,
+            'data'=>$restaurents,
+            'message' => 'All restaurents',
+           
+        ]);
+
     }
 
     /**
@@ -35,7 +44,45 @@ class RestaurentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $upload_path = 'uploadedImages/restaurents/';
+
+        $validatedData   =  Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'address' => 'required|string',
+            'close_time' => 'required|string|min:8',
+            'phone_number' => 'required|string|max:15|unique:users',
+            'country'=>'required|string',
+            'open'=>'required',
+            'open_time'=>'required',
+            'phone'=>'required',
+            'type'=>'required',
+            'zipcode'=>'required'
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validatedData->errors()->first(),
+            ]);
+        }
+
+       
+            $file_name = $request->image->getClientOriginalName();
+            $generated_new_name = time() . '.' . $file_name;
+            $request->photo->move($upload_path, $generated_new_name);
+            $request['image']=$upload_path.$generated_new_name;
+            Restaurents::create($request->all());
+
+            return response()->json([
+                'success'=>true,
+                'message' => 'Restaurent Saved Successfully',
+               
+            ]);
+       
+
+
+        
+
     }
 
     /**
