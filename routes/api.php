@@ -33,7 +33,8 @@ Route::post('/addOrderTime', [OrderController::class, 'addOrderTime'])->middlewa
 Route::post('/addMenuTypes', [MenuController::class, 'addMenuTypes']);
 Route::get('/get-menu-types',[MenuController::class,'getMenuTypes']);
 Route::get('/get-menus/{id}',[MenuController::class,'getMenus']);
-Route::post('/addUserAddress', [AuthController::class, 'addUserAddress']);
+Route::get('/get-user-address',[AuthController::class,'getUserAddress'])->middleware(('auth:sanctum'));
+Route::post('/addUserAddress', [AuthController::class, 'addUserAddress'])->middleware(('auth:sanctum'));
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

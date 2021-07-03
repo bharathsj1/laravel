@@ -134,6 +134,9 @@ class AuthController extends Controller
             'city' => $request['city'],
             'country' => $request['country'],
             'user_id' => Auth::user()->id,
+            'user_latitude' => $request['latitude'],
+            'user_longitude' => $request['longitude'],
+            'address_type'=> $request['address_type'],
         ]);
 
         if ($userAddress) {
@@ -149,5 +152,25 @@ class AuthController extends Controller
                 'data' => 'Failed'
             ]);
         }
+    }
+
+    public function getUserAddress()
+    {
+        $userId = Auth::user()->id;
+        $data = UserAddress::where('user_id',$userId)->orderBy('id','desc')->limit(5)->get();
+        if ($data) {
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'message' => 'User Addresses'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'data' => 'Address is empty'
+            ]);
+        }
+        
     }
 }
