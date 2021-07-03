@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentsTable extends Migration
+class CreateDeviceTokensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreatePaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('device_tokens', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id')->default(-1);
-            $table->string('amount')->nullable();
-            $table->string('paid_by')->nullable();
-            $table->string('processed_by')->nullable();
+            $table->integer('user_id')->default(-1);
+            $table->string('device_id')->nullable();
+            $table->string('firebase_token')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreatePaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('device_tokens');
     }
 }

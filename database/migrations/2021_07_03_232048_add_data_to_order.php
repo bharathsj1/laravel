@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddAddressType extends Migration
+class AddDataToOrder extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddAddressType extends Migration
      */
     public function up()
     {
-        Schema::table('user_addresses', function (Blueprint $table) {
-            $table->string('address_type')->nullable()->comment('0 for home, 1 for work, 2 for hostel,3 for other');
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('payment_id')->change();
+            $table->integer('customer_addressId')->default(-1);
+
         });
     }
 
@@ -25,7 +27,7 @@ class AddAddressType extends Migration
      */
     public function down()
     {
-        Schema::table('user_addresses', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
         });
     }

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\Orderitems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
@@ -38,23 +40,23 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $order = Order::create([
-          
+
             'total_amount' => $request['total_amount'],
             'payment_method' => $request['payment_method'],
             'payment_id' => $request['payment_id'],
-            'customer_id'=>Auth::user()->id,
+            'customer_id' => Auth::user()->id,
 
         ]);
 
-        if($order){
+        if ($order) {
             return response()->json([
-                'success'=>true,
+                'success' => true,
                 'data' => $order,
                 'message' => 'Order created successfully',
             ]);
-        }else{
+        } else {
             return response()->json([
-                'success'=>false,
+                'success' => false,
                 'data' => [],
                 'message' => 'Failed, due to some reasons',
             ]);
@@ -106,18 +108,58 @@ class OrderController extends Controller
         //
     }
 
-    public function addOrderTime(Request $request){
+    public function addOrderItem(Request $request)
+    {
         $order = Order::latest()->first();
         $orderId = $order->id;
-       $price = $order->total_amount;
+        $price = $order->total_amount;
 
-       foreach ($request->data as $key => $value) {
-         Orderitems::create([
-             'order_id'=>$orderId,
-             'price'=>$value['price'],
-             'rest_id'=>$value['restaurantId'],
-             'product_id'=>$value['id'],
-         ]);
-       }
+        foreach ($request->data as $key => $value) {
+            Orderitems::create([
+                'order_id' => $orderId,
+                'price' => $value['price'],
+                'rest_id' => $value['restaurantId'],
+                'product_id' => $value['id'],
+            ]);
+        }
+    }
+
+    public function addOrderDetails(Request $request)
+    {
+        $validatedData   =  Validator::make($request->all(), [
+            'quantity' => 'required',
+            'total_price' => 'required',
+            'order_id' => 'required',
+            'rest_menuId' => 'required'
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validatedData->errors()->first(),
+            ]);
+        }
+
+        $order =   OrderDetails::create([
+            'quantity' => $request['quantity'],
+            'total_price' => $request['total_price'],
+            'order_id' => $request['order_id'],
+            'rest_menuId' => $request['rest_menuId'],
+
+        ]);
+
+        if ($order) {
+            response()->json([
+                'success' => true,
+                'data' => $order,
+                'message' => 'Details added',
+            ]);
+        }else{
+            response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Error',
+            ]);
+        }
     }
 }

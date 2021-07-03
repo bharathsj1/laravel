@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -27,7 +28,8 @@ Route::get('/get-restaurents', [RestaurentsController::class, 'index']);
 Route::post('/make-payment', [PaymentController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-order', [OrderController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-menu', [MenuController::class, 'store'])->middleware(('auth:sanctum'));
-Route::post('/addOrderTime', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
+Route::post('/addOrderItem', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
+Route::post('/addOrderDetails', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
 
 
 Route::post('/addMenuTypes', [MenuController::class, 'addMenuTypes']);
@@ -35,6 +37,8 @@ Route::get('/get-menu-types',[MenuController::class,'getMenuTypes']);
 Route::get('/get-menus/{id}',[MenuController::class,'getMenus']);
 Route::get('/get-user-address',[AuthController::class,'getUserAddress'])->middleware(('auth:sanctum'));
 Route::post('/addUserAddress', [AuthController::class, 'addUserAddress'])->middleware(('auth:sanctum'));
+Route::post('/addDeviceToken', [DeviceTokenController::class, 'store'])->middleware(('auth:sanctum'));
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

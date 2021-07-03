@@ -17,8 +17,8 @@ class CreateRestaurentsTable extends Migration
             $table->id();
             $table->string('rest_address')->nullable();
             $table->string('rest_name')->nullable();
-            $table->double('rest_latitude')->default(0.0);
-            $table->double('rest_longitude')->default(0.0);
+            $table->string('rest_latitude')->nullable();
+            $table->string('rest_longitude')->default();
             $table->boolean('rest_isTrending')->default(false);
             $table->string('rest_status')->nullable();
            
