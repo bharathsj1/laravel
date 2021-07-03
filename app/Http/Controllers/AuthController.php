@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -14,10 +15,10 @@ class AuthController extends Controller
     {
         $upload_path = 'uploadedImages/profilePictures/';
         $validatedData   =  Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'cust_first_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'phone_number' => 'required|string|max:15|unique:users'
+            'cust_phone_number' => 'required|string|max:15|unique:users'
         ]);
 
         if ($validatedData->fails()) {
@@ -37,25 +38,25 @@ class AuthController extends Controller
             $generated_new_name = time() . '.' . $file_name;
             $request->photo->move($upload_path, $generated_new_name);
             $user =    User::create([
-                'name' => $request['name'],
+                'cust_first_name' => $request['cust_first_name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
-                'phone_number' => $request['phone_number'],
-                'photo' => $upload_path . $generated_new_name,
-                'uID' => $request->uid,
-                'type'=>$request->type,
-                'device_id'=>$request->device_id,
+                'cust_phone_number' => $request['cust_phone_number'],
+                'cust_profile_image' => $upload_path . $generated_new_name,
+                'cust_uid' => $request->uid,
+                'cust_account_status' => $request['cust_account_status'],
+                'cust_registration_type' => $request['cust_registration_type']
+
             ]);
         } else {
             $user =   User::create([
-                'name' => $request['name'],
+                'cust_first_name' => $request['cust_first_name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
-                'phone_number' => $request['phone_number'],
-                'uID' => $request->uid,
-                'type'=>$request->type,
-                'device_id'=>$request->device_id,
-
+                'cust_phone_number' => $request['cust_phone_number'],
+                'cust_uid' => $request->uid,
+                'cust_account_status' => $request['cust_account_status'],
+                'cust_registration_type' => $request['cust_registration_type']
 
             ]);
         }
@@ -64,7 +65,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'success'=>true,
+            'success' => true,
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
@@ -72,6 +73,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'status' => false,
@@ -87,7 +89,7 @@ class AuthController extends Controller
             'status' => true,
             'data' => $user,
             'access_token' => $token,
-            
+
         ]);
     }
 
@@ -108,18 +110,43 @@ class AuthController extends Controller
 
     public function checkUidAvailable(Request $request)
     {
-        $user = User::where('uID',$request['uid'])->first();
-        if($user){
+        $user = User::where('uID', $request['uid'])->first();
+        if ($user) {
             return response()->json([
                 'success' => true,
-                'status' =>0,
+                'status' => 0,
                 'message' => 'Its Available'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => true,
-                'status' =>1,
+                'status' => 1,
                 'data' => 'No, its not available'
+            ]);
+        }
+    }
+
+
+    public function addUserAddress(Request $request)
+    {
+        $userAddress = UserAddress::create([
+            'address' => $request['address'],
+            'city' => $request['city'],
+            'country' => $request['country'],
+            'user_id' => Auth::user()->id,
+        ]);
+
+        if ($userAddress) {
+            return response()->json([
+                'success' => true,
+                'data' => $userAddress,
+                'message' => 'User Address Saved'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'data' => 'Failed'
             ]);
         }
     }
