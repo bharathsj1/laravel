@@ -45,6 +45,11 @@ class PaymentController extends Controller
            
         ]);
 
+        $order = Order::latest()->first();
+        $order->payment_id = $payment->id;
+        $order->save();
+
+
         if ($payment) {
             return response()->json([
                 'success' => true,
