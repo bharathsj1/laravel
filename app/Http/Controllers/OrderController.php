@@ -45,8 +45,8 @@ class OrderController extends Controller
             'payment_method' => $request['payment_method'],
             'payment_id' => $request['payment_id'],
             'customer_id' => Auth::user()->id,
-            'customer_addressId'=>$request['customer_addressId'],
-          
+            'customer_addressId' => $request['customer_addressId'],
+
 
         ]);
 
@@ -156,11 +156,94 @@ class OrderController extends Controller
                 'data' => $order,
                 'message' => 'Details added',
             ]);
-        }else{
+        } else {
             response()->json([
                 'success' => false,
                 'data' => [],
                 'message' => 'Error',
+            ]);
+        }
+    }
+
+    public function getUserOrders()
+    {
+        $user = Auth::user();
+        if ($user) {
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress'])->get();
+            return response()->json([
+                'success'=>true,
+                'data'=>$order,
+                'message'=>'Your Orders List'
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'data'=>[],
+                'message'=>'You are not authorized',
+            ]);
+        }
+    }
+
+    public function getAllOrders()
+    {
+        $order = Order::with('orderDetail')->get();
+       
+        if($order)
+        {
+            return response()->json([
+                'success'=>true,
+                'data'=>$order,
+                'message'=>'All Orders'
+            ]);
+        }else{
+            return response()->json([
+                'success'=>false,
+                'data'=>[],
+                'message'=>'No Orders'
+            ]);
+        }
+    }
+
+    public function changeSuperAdmin(Request $request)
+    {
+        $id = $request->order_id;
+        $order = Order::find($id);
+
+        if ($order) {
+            $order->super_admin = $request->super_admin_status;
+            $order->save();
+            return response()->json([
+                'success' => true,
+                'data' => $order,
+                'message' => 'Super Admin Status Changed Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Did not found any order id',
+            ]);
+        }
+    }
+
+    public function changeOrderStatus(Request $request)
+    {
+        $id = $request->order_id;
+        $order = Order::find($id);
+
+        if ($order) {
+            $order->status = $request->status;
+            $order->save();
+            return response()->json([
+                'success' => true,
+                'data' => $order,
+                'message' => 'Status Changed Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Did not found any order id',
             ]);
         }
     }

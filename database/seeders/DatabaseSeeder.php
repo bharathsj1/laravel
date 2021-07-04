@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             menu::class,
             menutypes::class,
             restaurentSeeder::class,
+            userTypes::class,
         ]);
     
     }

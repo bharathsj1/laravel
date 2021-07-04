@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderDetails;
 use App\Models\Restaurents;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,12 +20,11 @@ class RestaurentsController extends Controller
     {
         $restaurents = Restaurents::all();
         return response()->json([
-            'success'=>true,
-            'data'=>$restaurents,
+            'success' => true,
+            'data' => $restaurents,
             'message' => 'All restaurents',
-           
-        ]);
 
+        ]);
     }
 
     /**
@@ -51,12 +52,12 @@ class RestaurentsController extends Controller
             'address' => 'required|string',
             'close_time' => 'required|string|min:8',
             'phone_number' => 'required|string|max:15|unique:users',
-            'country'=>'required|string',
-            'open'=>'required',
-            'open_time'=>'required',
-            'phone'=>'required',
-            'type'=>'required',
-            'zipcode'=>'required'
+            'country' => 'required|string',
+            'open' => 'required',
+            'open_time' => 'required',
+            'phone' => 'required',
+            'type' => 'required',
+            'zipcode' => 'required'
         ]);
 
         if ($validatedData->fails()) {
@@ -66,23 +67,18 @@ class RestaurentsController extends Controller
             ]);
         }
 
-       
-            $file_name = $request->image->getClientOriginalName();
-            $generated_new_name = time() . '.' . $file_name;
-            $request->photo->move($upload_path, $generated_new_name);
-            $request['image']=$upload_path.$generated_new_name;
-            Restaurents::create($request->all());
 
-            return response()->json([
-                'success'=>true,
-                'message' => 'Restaurent Saved Successfully',
-               
-            ]);
-       
+        $file_name = $request->image->getClientOriginalName();
+        $generated_new_name = time() . '.' . $file_name;
+        $request->photo->move($upload_path, $generated_new_name);
+        $request['image'] = $upload_path . $generated_new_name;
+        Restaurents::create($request->all());
 
+        return response()->json([
+            'success' => true,
+            'message' => 'Restaurent Saved Successfully',
 
-        
-
+        ]);
     }
 
     /**
@@ -128,5 +124,30 @@ class RestaurentsController extends Controller
     public function destroy(Restaurents $restaurents)
     {
         //
+    }
+
+    public function getOrdersForSpecificRes()
+    {
+        $user = Auth::user();
+        if ($user) {
+            $restaurent = Restaurents::where('user_id', $user->id)->get();
+
+            $orderDetails = array();
+            foreach ($restaurent as $key => $value) {
+                $orderDetails[] = OrderDetails::where('rest_id', $value->id)->with('order')->get();
+            }
+            return response()->json([
+                'success'=>true,
+                'data'=>$orderDetails,
+                'message'=> 'Order List',
+            ]);
+        } else {
+
+            return response()->json([
+                'success'=>false,
+                'data'=>[],
+                'message','Please send access token',
+            ]);
+        }
     }
 }

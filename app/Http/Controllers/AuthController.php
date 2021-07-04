@@ -44,7 +44,7 @@ class AuthController extends Controller
                 'cust_phone_number' => $request['cust_phone_number'],
                 'cust_profile_image' => $upload_path . $generated_new_name,
                 'cust_uid' => $request->uid,
-                'cust_account_status' => $request['cust_account_status'],
+                'cust_account_type' => $request['cust_account_type'],
                 'cust_registration_type' => $request['cust_registration_type']
 
             ]);
@@ -55,7 +55,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request['password']),
                 'cust_phone_number' => $request['cust_phone_number'],
                 'cust_uid' => $request->uid,
-                'cust_account_status' => $request['cust_account_status'],
+                'cust_account_type' => $request['cust_account_type'],
                 'cust_registration_type' => $request['cust_registration_type']
 
             ]);
@@ -95,10 +95,11 @@ class AuthController extends Controller
 
     public function currentUser(Request $request)
     {
-        if ($request->user()) {
+        $user = Auth::user();
+        if ($user) {
             return response()->json([
                 'success' => true,
-                'data' => $request->user(),
+                'data' => $user,
             ]);
         } else {
             return response()->json([
@@ -110,7 +111,7 @@ class AuthController extends Controller
 
     public function checkUidAvailable(Request $request)
     {
-        $user = User::where('uID', $request['uid'])->first();
+        $user = User::where('cust_uid', $request['uid'])->first();
         if ($user) {
             return response()->json([
                 'success' => true,

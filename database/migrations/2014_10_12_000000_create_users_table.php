@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('cust_phone_number')->unique();
             $table->string('cust_account_status')->default(0);
             $table->string('cust_registration_type')->default(0)->comment('0 for email,1 for google,2 for apple, 3 for facebook');
-            $table->string('cust_account_type')->default(0);
+            $table->string('cust_account_type')->default(3);
             $table->string('cust_uid')->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();
