@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('image')->nullable();
             $table->integer('rating_count')->default(0);
             $table->integer('res_id')->default(-1);
-            $table->double('ratings')->default(0.0);
+            $table->string('ratings')->nullable();
 
             $table->timestamps();
         });

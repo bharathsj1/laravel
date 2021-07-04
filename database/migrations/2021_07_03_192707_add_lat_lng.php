@@ -14,8 +14,8 @@ class AddLatLng extends Migration
     public function up()
     {
         Schema::table('user_addresses', function (Blueprint $table) {
-            $table->double('user_latitude')->default(0.0);
-            $table->double('user_longitude')->default(0.0);
+            $table->string('user_latitude')->nullable();
+            $table->string('user_longitude')->nullable();
         });
     }
 

@@ -16,7 +16,7 @@ class CreateOrderDetailsTable extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->string('quantity')->nullable();
-            $table->double('total_price')->default(0.0);
+            $table->string('total_price')->nullable();
             $table->integer('order_id')->default(-1);
             $table->integer('rest_menuId')->default(-1);
             $table->timestamps();
