@@ -45,6 +45,8 @@ class OrderController extends Controller
             'payment_method' => $request['payment_method'],
             'payment_id' => $request['payment_id'],
             'customer_id' => Auth::user()->id,
+            'customer_addressId'=>$request['customer_addressId'],
+          
 
         ]);
 
