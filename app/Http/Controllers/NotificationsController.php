@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notifications;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class NotificationsController extends Controller
@@ -81,6 +82,14 @@ class NotificationsController extends Controller
     public function destroy(Notifications $notifications)
     {
         //
+    }
+
+    public function sendNotificationToSuperAdmin(Request $request)
+    {
+        $user = User::where('cust_account_type', '0')->get();
+        foreach ($user as $key => $value) {
+         return $value->id;
+        }
     }
 
     public function sendSingleNotification($title, $body)

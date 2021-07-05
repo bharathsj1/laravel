@@ -25,7 +25,7 @@ class OrderDetails extends Model
 
     public function rest_menu()
     {
-        return $this->belongsTo(MenuType::class,'rest_menuId' ,'id');
+        return $this->belongsTo(Menu::class,'rest_menuId' ,'id');
     }
 
     

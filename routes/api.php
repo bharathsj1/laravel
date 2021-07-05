@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RestaurentsController;
@@ -46,6 +47,11 @@ Route::get('/get-user-orders', [OrderController::class, 'getUserOrders'])->middl
 Route::post('/change-super-admin',[OrderController::class,'changeSuperAdmin']);
 Route::post('/change-order-status',[OrderController::class,'changeOrderStatus']);
 Route::post('/subscribed_offer',[SubscribedOfferController::class,'store']);
+
+
+//Sending Notification to SuperAdminRole
+
+Route::post('/sendNotificationToSuperAdmin',[NotificationsController::class,'sendNotificationToSuperAdmin']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
