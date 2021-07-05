@@ -7,6 +7,8 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RestaurentsController;
+use App\Http\Controllers\SubcategoriesController;
+use App\Http\Controllers\SubscribedOfferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +45,7 @@ Route::post('/addDeviceToken', [DeviceTokenController::class, 'store'])->middlew
 Route::get('/get-user-orders', [OrderController::class, 'getUserOrders'])->middleware(('auth:sanctum'));
 Route::post('/change-super-admin',[OrderController::class,'changeSuperAdmin']);
 Route::post('/change-order-status',[OrderController::class,'changeOrderStatus']);
-
+Route::post('/subscribed_offer',[SubscribedOfferController::class,'store']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
