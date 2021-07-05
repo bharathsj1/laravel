@@ -33,8 +33,6 @@ Route::post('/make-order', [OrderController::class, 'store'])->middleware(('auth
 Route::post('/make-menu', [MenuController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/addOrderItem', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
 Route::post('/addOrderDetails', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
-
-
 Route::post('/addMenuTypes', [MenuController::class, 'addMenuTypes']);
 Route::get('/get-menu-types',[MenuController::class,'getMenuTypes']);
 Route::get('/get-menus/{id}',[MenuController::class,'getMenus']);
@@ -43,7 +41,6 @@ Route::get('/get-user-address',[AuthController::class,'getUserAddress'])->middle
 Route::post('/addUserAddress', [AuthController::class, 'addUserAddress'])->middleware(('auth:sanctum'));
 Route::post('/addDeviceToken', [DeviceTokenController::class, 'store'])->middleware(('auth:sanctum'));
 Route::get('/get-user-orders', [OrderController::class, 'getUserOrders'])->middleware(('auth:sanctum'));
-
 Route::post('/change-super-admin',[OrderController::class,'changeSuperAdmin']);
 Route::post('/change-order-status',[OrderController::class,'changeOrderStatus']);
 

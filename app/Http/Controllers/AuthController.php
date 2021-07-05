@@ -139,6 +139,8 @@ class AuthController extends Controller
             'user_longitude' => $request['longitude'],
             'address_type'=> $request['address_type'],
             'phone_no'=>$request['phone_no'],
+            'name'=>$request['name'],
+            'type'=>$request['type'],
         ]);
 
         if ($userAddress) {

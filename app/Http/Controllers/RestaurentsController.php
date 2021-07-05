@@ -134,7 +134,7 @@ class RestaurentsController extends Controller
 
             $orderDetails = array();
             foreach ($restaurent as $key => $value) {
-                $orderDetails[] = OrderDetails::where('rest_id', $value->id)->with('order')->get();
+                $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order')->get();
             }
             return response()->json([
                 'success'=>true,
