@@ -187,7 +187,7 @@ class OrderController extends Controller
 
     public function getAllOrders()
     {
-        $order = Order::with('orderDetail')->get();
+        $order = Order::with(['orderDetail','customerAddress'])->get();
        
         if($order)
         {
