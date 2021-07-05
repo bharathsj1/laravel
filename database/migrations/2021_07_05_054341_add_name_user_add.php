@@ -13,7 +13,7 @@ class AddNameUserAdd extends Migration
      */
     public function up()
     {
-        Schema::table('user_Addresses', function (Blueprint $table) {
+        Schema::table('user_addresses', function (Blueprint $table) {
             $table->string('name')->nullable();
             $table->string('type')->nullable();
         });
@@ -26,7 +26,7 @@ class AddNameUserAdd extends Migration
      */
     public function down()
     {
-        Schema::table('user_Addresses', function (Blueprint $table) {
+        Schema::table('user_addresses', function (Blueprint $table) {
             
         });
     }
