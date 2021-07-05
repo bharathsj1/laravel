@@ -111,18 +111,26 @@ class AuthController extends Controller
 
     public function checkUidAvailable(Request $request)
     {
+    
         $user = User::where('cust_uid', $request['uid'])->first();
+
         if ($user) {
-            return response()->json([
-                'success' => true,
-                'status' => 0,
-                'message' => 'Its Available'
-            ]);
+       $userData=     Auth::loginUsingId($user->id);
+      
+
+       $token = $user->createToken('auth_token')->plainTextToken;
+
+       return response()->json([
+           'status' => true,
+           'data' => $user,
+           'access_token' => $token,
+
+       ]);
         } else {
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'status' => 1,
-                'data' => 'No, its not available'
+                'data' => 'This UID is not available'
             ]);
         }
     }
