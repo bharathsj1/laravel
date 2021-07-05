@@ -147,6 +147,7 @@ class OrderController extends Controller
             'total_price' => $request['total_price'],
             'order_id' => $request['order_id'],
             'rest_menuId' => $request['rest_menuId'],
+            'rest_id'=>$request['rest_Id']
 
         ]);
 
