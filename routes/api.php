@@ -34,7 +34,7 @@ Route::post('/make-payment', [PaymentController::class, 'store'])->middleware(('
 Route::post('/make-order', [OrderController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-menu', [MenuController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/addOrderItem', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
-Route::post('/addOrderDetails', [OrderController::class, 'addOrderTime'])->middleware(('auth:sanctum'));
+Route::post('/addOrderDetails', [OrderController::class, 'addOrderDetails'])->middleware(('auth:sanctum'));
 Route::post('/addMenuTypes', [MenuController::class, 'addMenuTypes']);
 Route::get('/get-menu-types',[MenuController::class,'getMenuTypes']);
 Route::get('/get-menus/{id}',[MenuController::class,'getMenus']);
