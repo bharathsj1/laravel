@@ -187,8 +187,9 @@ class OrderController extends Controller
 
     public function getAllOrders()
     {
-        $order = Order::with(['orderDetail'])->get();
-       
+      
+         $order = Order::with(['orderDetail','user_address'])->get();
+      
         if($order)
         {
             return response()->json([
@@ -196,6 +197,7 @@ class OrderController extends Controller
                 'data'=>$order,
                 'message'=>'All Orders'
             ]);
+
         }else{
             return response()->json([
                 'success'=>false,

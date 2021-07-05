@@ -8,21 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $guarded=[];
+    protected $guarded = [];
 
     public function orderDetail()
     {
-        return $this->hasMany(OrderDetails::class,'order_id')->with('customerAddress');
+        return $this->hasMany(OrderDetails::class, 'order_id')->with('rest_menu');
     }
 
     public function customerAddress()
     {
-        return $this->belongsTo(UserAddress::class,'id');
+        return $this->belongsTo(UserAddress::class, 'id');
     }
 
-    public function userAddress()
+    public function user_address()
     {
-        return $this->belongsTo(UserAddress::class,'id','user_id');
+        return $this->belongsTo(UserAddress::class, 'customer_addressId');
+    }
+
+    public function rest_menu()
+    {
+        return $this->belongsTo(MenuType::class,'id');
     }
 
 }
