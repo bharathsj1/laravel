@@ -12,7 +12,7 @@ class Order extends Model
 
     public function orderDetail()
     {
-        return $this->hasMany(OrderDetails::class,'order_id');
+        return $this->hasMany(OrderDetails::class,'order_id')->with('customerAddress');
     }
 
     public function customerAddress()

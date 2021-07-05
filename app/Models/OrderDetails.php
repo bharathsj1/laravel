@@ -15,6 +15,12 @@ class OrderDetails extends Model
         return $this->belongsTo(Order::class)->with('customerAddress');
     }
 
+    public function customerAddress()
+    {
+        return $this->belongsTo(UserAddress::class,'id','user_id');
+
+    }
+
     
 
 }
