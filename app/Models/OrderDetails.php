@@ -21,6 +21,11 @@ class OrderDetails extends Model
 
     }
 
+    public function user_address()
+    {
+        return $this->belongsTo(UserAddress::class, 'customer_addressId','id');
+    }
+
 
 
     public function rest_menu()

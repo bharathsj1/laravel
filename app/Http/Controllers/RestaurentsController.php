@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Restaurents;
 use Illuminate\Http\Request;
@@ -11,6 +12,9 @@ use Illuminate\Support\Facades\Validator;
 
 class RestaurentsController extends Controller
 {
+    public   $resID = 0;
+
+    public $orderID = 0;
     /**
      * Display a listing of the resource.
      *
@@ -128,20 +132,31 @@ class RestaurentsController extends Controller
 
     public function getOrdersForSpecificRes()
     {
+
         $user = Auth::user();
         if ($user) {
             if ($user->cust_account_type == '4') {
                 $restaurent = Restaurents::where('user_id', $user->id)->get();
-
                 $orderDetails = array();
                 foreach ($restaurent as $key => $value) {
-                    $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
-                        $query->where('super_admin', 'approved')->get();
-                    })->get();
+                    $this->resID = $value->id;
+                    $this->orderID = OrderDetails::where('rest_id', $this->resID)->get()->pluck('order_id');
+                    // return $this->orderID;
+                    // $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
+                    //     $query->where('super_admin', 'approved')->get();
+                    // })->get();
+                    // if (count($order)>0) {
+                    //     $orderDetails = $order;
+                    // } 
 
-                    if (count($order)>0) {
+                    $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
+                    $order = Order::where('super_admin', 'approved')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
+                        $query->where('rest_id', $this->resID)->get();
+                    })->with('user_address')->get();
+
+                    if (count($order) > 0) {
                         $orderDetails = $order;
-                    } 
+                    }
                 }
                 return response()->json([
                     'success' => true,
@@ -152,10 +167,31 @@ class RestaurentsController extends Controller
                 $restaurent = Restaurents::where('user_id', $user->id)->get();
 
                 $orderDetails = array();
+                // foreach ($restaurent as $key => $value) {
+                //     $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
+                //         $query->where('super_admin', 'ready')->get();
+                //     })->get();
+                // }
+
                 foreach ($restaurent as $key => $value) {
-                    $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
-                        $query->where('super_admin', 'ready')->get();
-                    })->get();
+                    $this->resID = $value->id;
+                    $this->orderID = OrderDetails::where('rest_id', $this->resID)->get()->pluck('order_id');
+                    // return $this->orderID;
+                    // $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
+                    //     $query->where('super_admin', 'ready')->get();
+                    // })->get();
+                    // if (count($order)>0) {
+                    //     $orderDetails = $order;
+                    // } 
+
+                    $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
+                    $order = Order::where('super_admin', 'ready')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
+                        $query->where('rest_id', $this->resID)->get();
+                    })->with('user_address')->get();
+
+                    if (count($order) > 0) {
+                        $orderDetails = $order;
+                    }
                 }
                 return response()->json([
                     'success' => true,
