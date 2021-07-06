@@ -135,7 +135,7 @@ class RestaurentsController extends Controller
 
             $orderDetails = array();
             foreach ($restaurent as $key => $value) {
-                $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function($query){
+                $orderDetails[] = OrderDetails::where('rest_id', $value->id)->with('order', function($query){
                     $query->where('super_admin','approved')->get();
                 })->get();
             }
