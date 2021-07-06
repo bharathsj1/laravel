@@ -130,41 +130,46 @@ class RestaurentsController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            if($user->cust_account_type=='4'){
-            $restaurent = Restaurents::where('user_id', $user->id)->get();
+            if ($user->cust_account_type == '4') {
+                $restaurent = Restaurents::where('user_id', $user->id)->get();
 
-            $orderDetails = array();
-            foreach ($restaurent as $key => $value) {
-                $orderDetails[] = OrderDetails::where('rest_id', $value->id)->with('order', function($query){
-                    $query->where('super_admin','approved')->get();
-                })->get();
-            }
-            return response()->json([
-                'success'=>true,
-                'data'=>$orderDetails,
-                'message'=> 'Order List',
-            ]);
-        }else if($user->cust_account_type=='3'){
-            $restaurent = Restaurents::where('user_id', $user->id)->get();
+                $orderDetails = array();
+                foreach ($restaurent as $key => $value) {
+                    $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
+                        $query->where('super_admin', 'approved')->get();
+                    })->get();
 
-            $orderDetails = array();
-            foreach ($restaurent as $key => $value) {
-                $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function($query){
-                    $query->where('super_admin','ready')->get();
-                })->get();
+                    if (count($order)>0) {
+                        $orderDetails = $order;
+                    } else {
+                    }
+                }
+                return response()->json([
+                    'success' => true,
+                    'data' => $orderDetails,
+                    'message' => 'Order List',
+                ]);
+            } else if ($user->cust_account_type == '3') {
+                $restaurent = Restaurents::where('user_id', $user->id)->get();
+
+                $orderDetails = array();
+                foreach ($restaurent as $key => $value) {
+                    $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
+                        $query->where('super_admin', 'ready')->get();
+                    })->get();
+                }
+                return response()->json([
+                    'success' => true,
+                    'data' => $orderDetails,
+                    'message' => 'Order List',
+                ]);
             }
-            return response()->json([
-                'success'=>true,
-                'data'=>$orderDetails,
-                'message'=> 'Order List',
-            ]);
-        }
         } else {
 
             return response()->json([
-                'success'=>false,
-                'data'=>[],
-                'message','Please send access token',
+                'success' => false,
+                'data' => [],
+                'message', 'Please send access token',
             ]);
         }
     }
