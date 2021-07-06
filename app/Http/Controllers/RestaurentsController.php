@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Validator;
 class RestaurentsController extends Controller
 {
     public   $resID = 0;
-
     public $orderID = 0;
+    
     /**
      * Display a listing of the resource.
      *
@@ -185,7 +185,7 @@ class RestaurentsController extends Controller
                     // } 
 
                     $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
-                    $order = Order::where('super_admin', 'ready')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
+                    $order = Order::where('status', 'ready')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
 
