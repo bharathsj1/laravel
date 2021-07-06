@@ -88,9 +88,8 @@ class NotificationsController extends Controller
     public function sendNotificationToSuperAdmin(Request $request)
     {
         $user = User::where('cust_account_type', '0')->get();
-        $device=array();
         foreach ($user as $key => $value) {
-       $tokens= DeviceToken::where('user_id',$user->id)->get()->pluck('firebase_token');
+       $tokens= DeviceToken::where('user_id',$value->id)->get()->pluck('firebase_token');
         $this->sendSingleNotification($tokens,$request->title,$request->body);
        
         }
