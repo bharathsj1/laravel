@@ -141,8 +141,7 @@ class RestaurentsController extends Controller
 
                     if (count($order)>0) {
                         $orderDetails = $order;
-                    } else {
-                    }
+                    } 
                 }
                 return response()->json([
                     'success' => true,

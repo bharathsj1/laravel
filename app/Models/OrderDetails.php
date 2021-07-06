@@ -12,7 +12,7 @@ class OrderDetails extends Model
 
     public function order()
     {
-        return $this->belongsTo(Order::class)->with('customerAddress');
+        return $this->belongsTo(Order::class)->with('user_address');
     }
 
     public function customerAddress()
