@@ -43,7 +43,7 @@ class AuthController extends Controller
                 'password' => Hash::make($request['password']),
                 'cust_phone_number' => $request['cust_phone_number'],
                 'cust_profile_image' => $upload_path . $generated_new_name,
-                'cust_uid' => $request->uid,
+                'cust_uid' => $request->cust_uid,
                 'cust_account_type' => $request['cust_account_type'],
                 'cust_registration_type' => $request['cust_registration_type']
 
@@ -54,7 +54,7 @@ class AuthController extends Controller
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
                 'cust_phone_number' => $request['cust_phone_number'],
-                'cust_uid' => $request->uid,
+                'cust_uid' => $request->cust_uid,
                 'cust_account_type' => $request['cust_account_type'],
                 'cust_registration_type' => $request['cust_registration_type']
 
