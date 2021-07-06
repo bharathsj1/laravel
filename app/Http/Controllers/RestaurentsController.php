@@ -164,7 +164,7 @@ class RestaurentsController extends Controller
                     'message' => 'Order List',
                 ]);
             } else if ($user->cust_account_type == '3') {
-                $restaurent = Restaurents::where('user_id', $user->id)->get();
+                $restaurent = Restaurents::all();
 
                 $orderDetails = array();
                 // foreach ($restaurent as $key => $value) {
