@@ -10,6 +10,8 @@
 | the IoC container for the system binding all of the various parts.
 |
 */
+class_alias(\LaravelFCM\Facades\FCM::class, 'FCM');
+class_alias(\LaravelFCM\Facades\FCMGroup::class, 'FCMGroup');
 
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
@@ -53,3 +55,4 @@ $app->singleton(
 */
 
 return $app;
+$app->register(LaravelFCM\FCMServiceProvider::class);

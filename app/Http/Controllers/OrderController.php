@@ -246,8 +246,28 @@ class OrderController extends Controller
             return response()->json([
                 'success' => false,
                 'data' => [],
-                'message' => 'Did not found any order id',
+                'message' => 'Did not found any order ',
             ]);
         }
+    }
+
+    public function getSpecificOrder($id)
+    {
+        $order = Order::where('id',$id)->with(['orderDetail','user_address'])->first();
+       if($order)
+       {
+        return response()->json([
+            'success' => true,
+            'data' => $order,
+            'message' => 'Order details',
+        ]);
+       }else{
+        return response()->json([
+            'success' => false,
+            'data' => [],
+            'message' => 'Did not found any order ',
+        ]);
+       }
+
     }
 }

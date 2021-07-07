@@ -6,6 +6,10 @@ use App\Models\DeviceToken;
 use App\Models\Notifications;
 use App\Models\User;
 use Illuminate\Http\Request;
+use LaravelFCM\Facades\FCM;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
 
 class NotificationsController extends Controller
 {
@@ -89,21 +93,58 @@ class NotificationsController extends Controller
     {
         $user = User::where('cust_account_type', '0')->get();
         foreach ($user as $key => $value) {
-       $tokens= DeviceToken::where('user_id',$value->id)->get()->pluck('firebase_token');
-        $this->sendSingleNotification($tokens,$request->title,$request->body);
-       
+            // $tokens = DeviceToken::pluck('firebase_token')->toArray();
+            $tokens = DeviceToken::where('user_id', $value->id)->get()->pluck('firebase_token');
+            $tos =    $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
+            return $tos;
         }
     }
 
-    public function sendSingleNotification($token,$title, $body)
+    public function sendNotificationToSpecificUser(Request $request)
     {
-        $SERVER_API_KEY = 'AAAAaepY2kM:APA91bGm3awJEG97z75oAaGMXtmUhzxnSH3h1OsUkTa1ACfn54roan0-13HqLrT0TzfsVHm5PSLVRBKgtoVi-5hl0zUSujrJyUeU9VD20HM7iqYTlVEc8lXijzYsh2e7XGyLhEnp9oza';
+      $tokens=  DeviceToken::where('user_id',$request->user_id)->get()->pluck('firebase_token');
+      $tos =    $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
+      return $tos;
+    }
+
+
+
+    public function sendNoticationTOSuperAdmin($tokens, $title, $body)
+    {
+
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
+        $notificationBuilder = new PayloadNotificationBuilder($title);
+        $notificationBuilder->setBody($body)
+            ->setSound('default');
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData([
+            'data_1' => 'first_data'
+        ]);
+
+
+        $data = $dataBuilder->build();
+
+
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+
+
+        $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
+        return $downstreamResponse;
+    }
+
+    public function sendSingleNotification($token, $title, $body, $data)
+    {
+
+        $SERVER_API_KEY = 'AAAAV0DCJ4I:APA91bGCijvnYnQgphS7rUTDtpfXtVqGcJxWXM8O-nAOZSp3rE9DOUDJav8-B3oaZpZgjI3Engzj_Y3wkxJ26c0X16hv8HOrceP3NVolYel8rE55IHUvVZzD8s-fqQsXasijSUVxJLHn';
         // $firebaseToken = DeviceToken::where('user_id', Auth::user()->id)->get()->pluck('device_token');
         $data = [
             'registration_ids' => $token,
             "notification" => [
                 'title' => $title,
-                "body" => $body
+                "body" => $body,
+                'data' => $data,
             ]
         ];
 

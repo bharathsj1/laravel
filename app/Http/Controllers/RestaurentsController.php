@@ -12,23 +12,66 @@ use Illuminate\Support\Facades\Validator;
 
 class RestaurentsController extends Controller
 {
+    //TODO THE NEARBY RESTAURENT
+
     public   $resID = 0;
     public $orderID = 0;
-    
+
+
+    public function haversineGreatCircleDistance(
+        $lat1,
+        $lon1,
+        $lat2,
+        $lon2,
+    ) {
+        $pi80 = M_PI / 180;
+        $lat1 *= $pi80;
+        $lon1 *= $pi80;
+        $lat2 *= $pi80;
+        $lon2 *= $pi80;
+        $r = 6372.797; // mean radius of Earth in km
+        $dlat = $lat2 - $lat1;
+        $dlon = $lon2 - $lon1;
+        $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlon / 2) * sin($dlon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $km = $r * $c;
+        return $km;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $restaurents = Restaurents::all();
-        return response()->json([
-            'success' => true,
-            'data' => $restaurents,
-            'message' => 'All restaurents',
+        if ($request->has('user_latitude') && $request->has('user_longitude')) {
+            $userLat = $request->user_latitude;
+            $userLng = $request->user_longitude;
+            $restaurents =      Restaurents::all();
+            $nearBy = array();
+            foreach ($restaurents as $key => $value) {
+                $distance = ($this->haversineGreatCircleDistance(floatval($value->rest_latitude), floatval($value->rest_longitude), floatval($request->user_latitude), floatval($userLng)));
+                if ($distance <= 150) {
+                    $nearBy[] = $value;
+                }
+            }
 
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $nearBy,
+                'message' => 'All nearby restaurents',
+
+            ]);
+        } else {
+            $restaurents = Restaurents::all();
+            return response()->json([
+                'success' => true,
+                'data' => $restaurents,
+                'message' => 'All restaurents',
+
+            ]);
+        }
     }
 
     /**
@@ -205,6 +248,28 @@ class RestaurentsController extends Controller
                 'success' => false,
                 'data' => [],
                 'message', 'Please send access token',
+            ]);
+        }
+    }
+
+    public function updateDriverLatLng(Request $request)
+    {
+
+        $order = Order::find($request->order_id);
+        if ($order) {
+            $order->driver_lat = $request->driver_lat;
+            $order->driver_lng = $request->driver_lng;
+            $order->save();
+            return response()->json([
+                'success' => true,
+                'data' => $order,
+                'message' => 'Latitude and Longitude Updated ',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Did not find any order',
             ]);
         }
     }

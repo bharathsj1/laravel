@@ -29,7 +29,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-uid', [AuthController::class, 'checkUidAvailable']);
 Route::post('/current-user', [AuthController::class, 'currentUser'])->middleware(('auth:sanctum'));
 Route::get('get-all-orders',[OrderController::class,'getAllOrders']);
-Route::get('/get-restaurents', [RestaurentsController::class, 'index']);
+Route::post('/get-restaurents', [RestaurentsController::class, 'index']);
 Route::get('getOrdersForSpecificOwnerRestaurent',[RestaurentsController::class,'getOrdersForSpecificRes'])->middleware(('auth:sanctum'));
 Route::post('/make-payment', [PaymentController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-order', [OrderController::class, 'store'])->middleware(('auth:sanctum'));
@@ -47,6 +47,10 @@ Route::get('/get-user-orders', [OrderController::class, 'getUserOrders'])->middl
 Route::post('/change-super-admin',[OrderController::class,'changeSuperAdmin']);
 Route::post('/change-order-status',[OrderController::class,'changeOrderStatus']);
 Route::post('/subscribed_offer',[SubscribedOfferController::class,'store']);
+Route::post('/update-driver-lat-lng',[RestaurentsController::class,'updateDriverLatLng']);
+Route::get('/get-specific-order/{id}',[OrderController::class,'getSpecificOrder']);
+Route::post('/send-notification-to-specific-user',[NotificationsController::class,'sendNotificationToSpecificUser']);
+
 
 
 //Sending Notification to SuperAdminRole
