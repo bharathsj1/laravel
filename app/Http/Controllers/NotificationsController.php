@@ -6,6 +6,7 @@ use App\Models\DeviceToken;
 use App\Models\Notifications;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
@@ -230,5 +231,24 @@ class NotificationsController extends Controller
         $response = curl_exec($ch);
 
         return $response;
+    }
+
+    public function getSpecificNotification()
+    {
+        $user = Auth::user();
+        $notifications = Notifications::where('user_id', $user->id)->get();
+        if ($notifications) {
+            return response()->json([
+                'success' => true,
+                'data' => $notifications,
+                'message' => 'Notifications'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Not Found'
+            ]);
+        }
     }
 }

@@ -50,6 +50,7 @@ Route::post('/subscribed_offer',[SubscribedOfferController::class,'store']);
 Route::post('/update-driver-lat-lng',[RestaurentsController::class,'updateDriverLatLng']);
 Route::get('/get-specific-order/{id}',[OrderController::class,'getSpecificOrder']);
 Route::post('/send-notification-to-specific-user',[NotificationsController::class,'sendNotificationToSpecificUser']);
+Route::get('/getSpecificNotification', [NotificationsController::class, 'getSpecificNotification'])->middleware(('auth:sanctum'));
 
 
 
