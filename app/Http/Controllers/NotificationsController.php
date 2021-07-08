@@ -98,39 +98,40 @@ class NotificationsController extends Controller
         foreach ($user as $key => $value) {
             $tokens = DeviceToken::where('user_id', $value->id)->get()->pluck('firebase_token');
             $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
+            if ($request->has('image')) {
+                $file_name = $request->image->getClientOriginalName();
+                $generated_new_name = time() . '.' . $file_name;
+                $request->photo->move($upload_path, $generated_new_name);
+                $notification =   Notifications::create([
+                    'title' => $request->title,
+                    'subtitle' => $request->body,
+                    'data' => $request->data,
+                    'image' => $upload_path . $generated_new_name,
+                    'user_id' => $value->id,
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'data' => $notification,
+                    'meesage' => 'Notification Stored',
+                ]);
+            } else {
+                $notification =     Notifications::create([
+                    'title' => $request->title,
+                    'subtitle' => $request->body,
+                    'data' => $request->data,
+                    'user_id' => $value->id,
+    
+                ]);
+    
+                return response()->json([
+                    'success' => true,
+                    'data' => $notification,
+                    'meesage' => 'Notification Stored',
+                ]);
+            }
         }
 
-        if ($request->has('image')) {
-            $file_name = $request->image->getClientOriginalName();
-            $generated_new_name = time() . '.' . $file_name;
-            $request->photo->move($upload_path, $generated_new_name);
-            $notification =   Notifications::create([
-                'title' => $request->title,
-                'subtitle' => $request->body,
-                'data' => $request->data,
-                'image' => $upload_path . $generated_new_name,
-                // 'user_id' => $request->user_id,
-            ]);
-            return response()->json([
-                'success' => true,
-                'data' => $notification,
-                'meesage' => 'Notification Stored',
-            ]);
-        } else {
-            $notification =     Notifications::create([
-                'title' => $request->title,
-                'subtitle' => $request->body,
-                'data' => $request->data,
-                // 'user_id' => $request->user_id,
-
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'data' => $notification,
-                'meesage' => 'Notification Stored',
-            ]);
-        }
+       
     }
 
     public function sendNotificationToSpecificUser(Request $request)
