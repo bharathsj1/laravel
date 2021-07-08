@@ -101,7 +101,7 @@ class NotificationsController extends Controller
             if ($request->has('image')) {
                 $file_name = $request->image->getClientOriginalName();
                 $generated_new_name = time() . '.' . $file_name;
-                $request->photo->move($upload_path, $generated_new_name);
+                $request->image->move($upload_path, $generated_new_name);
                 $notification =   Notifications::create([
                     'title' => $request->title,
                     'subtitle' => $request->body,
@@ -145,7 +145,7 @@ class NotificationsController extends Controller
             if ($request->has('image')) {
                 $file_name = $request->image->getClientOriginalName();
                 $generated_new_name = time() . '.' . $file_name;
-                $request->photo->move($upload_path, $generated_new_name);
+                $request->image->move($upload_path, $generated_new_name);
                 $notification =   Notifications::create([
                     'title' => $request->title,
                     'subtitle' => $request->body,

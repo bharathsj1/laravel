@@ -33,6 +33,12 @@ class OrderDetails extends Model
         return $this->belongsTo(Menu::class,'rest_menuId' ,'id');
     }
 
+    public function restDetails()
+    {
+        return $this->belongsTo(Restaurents::class,'rest_id','id');
+
+    }
+
     
 
 }
