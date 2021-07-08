@@ -61,6 +61,7 @@ Route::delete('/deleteFCM',[DeviceTokenController::class,'deleteToken'])->middle
 //Sending Notification to SuperAdminRole
 
 Route::post('/sendNotificationToSuperAdmin',[NotificationsController::class,'sendNotificationToSuperAdmin']);
+Route::post('/sendNotificationToDeliverBoy',[NotificationsController::class,'sendNotificationToDeliverBoy']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
