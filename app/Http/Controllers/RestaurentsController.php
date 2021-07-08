@@ -22,7 +22,7 @@ class RestaurentsController extends Controller
         $lat1,
         $lon1,
         $lat2,
-        $lon2,
+        $lon2
     ) {
         $pi80 = M_PI / 180;
         $lat1 *= $pi80;

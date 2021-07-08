@@ -95,16 +95,50 @@ class NotificationsController extends Controller
         foreach ($user as $key => $value) {
             // $tokens = DeviceToken::pluck('firebase_token')->toArray();
             $tokens = DeviceToken::where('user_id', $value->id)->get()->pluck('firebase_token');
-            $tos =    $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
-            return $tos;
+           return $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
         }
     }
 
     public function sendNotificationToSpecificUser(Request $request)
     {
-      $tokens=  DeviceToken::where('user_id',$request->user_id)->get()->pluck('firebase_token');
-      $tos =    $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
-      return $tos;
+        $upload_path = 'uploadedImages/notifications/';
+
+        $tokens =  DeviceToken::where('user_id', $request->user_id)->get()->pluck('firebase_token');
+        $tos =    $this->sendSingleNotification($tokens, $request->title, $request->body, $request->data);
+        if($request->has('image'))
+        {
+            $file_name = $request->image->getClientOriginalName();
+            $generated_new_name = time() . '.' . $file_name;
+            $request->photo->move($upload_path, $generated_new_name);
+          $notification =   Notifications::create([
+                'title'=>$request->title,
+                'subtitle'=>$request->body,
+                'data'=>$request->data,
+                'image'=>$upload_path . $generated_new_name,
+                'user_id'=>$request->user_id,
+            ]);
+            return response()->json([
+                'success'=>true,
+                'data'=>$notification,
+                'meesage'=>'Notification Stored',
+            ]);
+
+        }else{
+   $notification=     Notifications::create([
+            'title' => $request->title,
+            'subtitle' => $request->body,
+            'data' => $request->data,
+            'user_id'=>$request->user_id,
+
+        ]);
+
+        return response()->json([
+            'success'=>true,
+            'data'=>$notification,
+            'meesage'=>'Notification Stored',
+        ]);
+    }
+       
     }
 
 
