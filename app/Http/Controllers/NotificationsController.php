@@ -109,7 +109,7 @@ class NotificationsController extends Controller
                 'subtitle' => $request->body,
                 'data' => $request->data,
                 'image' => $upload_path . $generated_new_name,
-                'user_id' => $request->user_id,
+                // 'user_id' => $request->user_id,
             ]);
             return response()->json([
                 'success' => true,
@@ -121,7 +121,7 @@ class NotificationsController extends Controller
                 'title' => $request->title,
                 'subtitle' => $request->body,
                 'data' => $request->data,
-                'user_id' => $request->user_id,
+                // 'user_id' => $request->user_id,
 
             ]);
 
