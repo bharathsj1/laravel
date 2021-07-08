@@ -116,4 +116,21 @@ class DeviceTokenController extends Controller
     {
         //
     }
+
+    public function deleteToken()
+    {
+        $user = Auth::user();
+        $isDeleted =  DeviceToken::where('user_id', $user->id)->delete();
+        if ($isDeleted) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Delted'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Delted'
+            ]);
+        }
+    }
 }

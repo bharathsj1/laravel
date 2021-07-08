@@ -10,6 +10,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RestaurentsController;
 use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
+use App\Models\DeviceToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,9 @@ Route::get('/get-specific-order/{id}',[OrderController::class,'getSpecificOrder'
 Route::post('/send-notification-to-specific-user',[NotificationsController::class,'sendNotificationToSpecificUser']);
 Route::get('/getSpecificNotification', [NotificationsController::class, 'getSpecificNotification'])->middleware(('auth:sanctum'));
 
+//DELETING FCM TOKEN
+
+Route::delete('/deleteFCM',[DeviceTokenController::class,'deleteToken'])->middleware('auth:sanctum');
 
 
 //Sending Notification to SuperAdminRole
