@@ -228,7 +228,7 @@ class RestaurentsController extends Controller
                     // } 
 
                     $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
-                    $order = Order::where('status', 'ready')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
+                    $order = Order::whereIn('status', ['ready', 'onway', 'delivered'])->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
 
