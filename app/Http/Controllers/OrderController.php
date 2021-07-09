@@ -170,7 +170,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress'])->get();
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress'])->orderBy('id','DESC')->get();
             return response()->json([
                 'success'=>true,
                 'data'=>$order,
