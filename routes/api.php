@@ -10,7 +10,10 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RestaurentsController;
 use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +66,9 @@ Route::delete('/deleteFCM',[DeviceTokenController::class,'deleteToken'])->middle
 Route::post('/sendNotificationToSuperAdmin',[NotificationsController::class,'sendNotificationToSuperAdmin']);
 Route::post('/sendNotificationToDeliverBoy',[NotificationsController::class,'sendNotificationToDeliverBoy']);
 
+//SUBSCRIPTION
+Route::post('/storeSubscription',[SubscriptionController::class,'store'])->middleware('auth:sanctum');
+Route::get('/get-all-subscription-plans',[SubscriptionPlanController::class,'index']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

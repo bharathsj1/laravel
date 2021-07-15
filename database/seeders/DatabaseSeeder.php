@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\MenuType;
+use App\Models\SubscriptionPlan;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
             menutypes::class,
             restaurentSeeder::class,
             userTypes::class,
+            SubscriptionPlan::class
         ]);
     
     }
