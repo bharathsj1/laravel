@@ -37,20 +37,19 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $subscription = Subscription::create([
-           'subscription_plan_id'=>$request->subscription_plan_id,
-           'subscription_status'=>$request->subscription_status,
-           'subscription_start_date'=>$request->subscription_start_date,
-           'subscription_end_date'=>$request->subscription_end_date,
-           'user_id'=>Auth::user()->id,
+            'subscription_plan_id' => $request->subscription_plan_id,
+            'subscription_status' => $request->subscription_status,
+            'subscription_start_date' => $request->subscription_start_date,
+            'subscription_end_date' => $request->subscription_end_date,
+            'user_id' => Auth::user()->id,
         ]);
 
         return response()->json([
-            'status'=>200,
-            'data'=>$subscription,
-            'message'=>'Successfully Subscribed',
+            'status' => 200,
+            'data' => $subscription,
+            'message' => 'Successfully Subscribed',
 
         ]);
-        
     }
 
     /**
@@ -96,5 +95,25 @@ class SubscriptionController extends Controller
     public function destroy(Subscription $subscription)
     {
         //
+    }
+
+
+    public function getSpecificUserSubscription()
+    {
+        $user =   Auth::user();
+        $subscriptionData = Subscription::where('user_id', $user->id)->with('subscription_plan')->get();
+        if ($subscriptionData) {
+            return response()->json([
+                'success' => true,
+                'data' => $subscriptionData,
+                'message' => 'User Subscription Detail'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'No Subscription Details Found'
+            ]);
+        }
     }
 }

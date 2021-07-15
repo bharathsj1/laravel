@@ -13,6 +13,7 @@ use App\Http\Controllers\SubscribedOfferController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
+use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +70,10 @@ Route::post('/sendNotificationToDeliverBoy',[NotificationsController::class,'sen
 //SUBSCRIPTION
 Route::post('/storeSubscription',[SubscriptionController::class,'store'])->middleware('auth:sanctum');
 Route::get('/get-all-subscription-plans',[SubscriptionPlanController::class,'index']);
+Route::get('/get-specific-user-subs',[SubscriptionController::class,'getSpecificUserSubscription'])->middleware('auth:sanctum');;
+
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
