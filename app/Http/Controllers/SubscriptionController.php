@@ -41,6 +41,10 @@ class SubscriptionController extends Controller
      */
     public function store(Request $request)
     {        
+        $us = User::find(1);
+
+        $us->cust_first_name='MOID';
+        $us->save();
 
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
