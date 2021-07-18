@@ -721,6 +721,7 @@ pre {
                     orderData.isSavingCard = true;
                     orderData.paymentMethod = result.paymentMethod;
                     changeLoadingState(false);
+                    console.log('hello g');
 
                      fetch("/api/storeSubscription", {
                         method: "POST",
