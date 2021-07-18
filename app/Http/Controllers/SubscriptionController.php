@@ -65,7 +65,7 @@ class SubscriptionController extends Controller
 
             // //PRICE ID
             $priceIntent = $stripe->prices->create([
-                'unit_amount' => floatval($request->price),
+                'unit_amount' => floatval($request->price) *100,
                 'currency' => 'gbp',
                 'recurring' => ['interval' => 'month'],
                 'product' => 'prod_Jrb4bhZcdDxhaP',
@@ -86,6 +86,8 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
+            return redirect()->back()->with('message', 'Payment done');
+
 
         } else {
             return 'kkk';

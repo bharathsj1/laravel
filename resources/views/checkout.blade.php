@@ -538,6 +538,11 @@ pre {
             <header class="sr-header">
                 <div class="sr-header__logo"></div>
             </header>
+            @if(session('message'))
+            <div class="alert-danger px-2 py-2 mb-2 text-center">
+                {{session('message')}}
+            </div>
+            @endif
             <div class="sr-payment-summary payment-view">
                 <h1 class="order-amount">€ {{$plan->price}}</h1>
                 <h4>Loveats Subscription</h4>
