@@ -721,7 +721,7 @@ pre {
                     orderData.paymentMethod = result.paymentMethod;
                     changeLoadingState(false);
 
-                    return fetch("/api/storeSubscription", {
+                     fetch("/api/storeSubscription", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
