@@ -86,7 +86,7 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
-            return redirect('/checkout/1/1')->with('status', 'Profile updated!');
+            return redirect('https://google.com.pk')->with('status', 'Profile updated!');
 
 
         } else {
