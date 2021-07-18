@@ -77,7 +77,7 @@ class SubscriptionController extends Controller
             ]);
 
 
-            $subscription =        $stripe->subscriptions->create([
+            $subscription = $stripe->subscriptions->create([
                 'customer' => $customer['id'],
                 'items' => [
                     [
@@ -86,7 +86,7 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
-            return redirect('https://google.com.pk')->with('status', 'Profile updated!');
+            return redirect('https://google.com.pk');
 
 
         } else {
