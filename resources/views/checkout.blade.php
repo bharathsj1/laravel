@@ -716,7 +716,7 @@ pre {
                 if (result.error) {
                     showError(result.error.message);
                 } else {
-                    //   alert(result.paymentMethod.id);
+                      alert(result.paymentMethod.id);
                     orderData.paymentMethodId = result.paymentMethod.id;
                     orderData.isSavingCard = true;
                     orderData.paymentMethod = result.paymentMethod;
