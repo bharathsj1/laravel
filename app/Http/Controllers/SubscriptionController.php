@@ -43,9 +43,7 @@ class SubscriptionController extends Controller
     {        
         $us = User::find(1);
 
-        $us->cust_first_name='MOID';
-        $us->save();
-
+     \
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
         $customer = null;
@@ -53,7 +51,7 @@ class SubscriptionController extends Controller
             $stripe = new \Stripe\StripeClient(
                 'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
             );
-            $userObject = User::find(Auth::user()->id);
+            $userObject = User::find($request->user_id);
             if ($userObject->stripe_cus_id == null) {
                 // NEW USER 
                 $customer =  $stripe->customers->create([
