@@ -614,6 +614,7 @@ pre {
         currency: "usd",
         user_id: id,
         price:{!! json_encode($plan->price) !!},
+        plan_id:{!! json_encode($plan->id) !!},
     };
 
     fetch("/api/get-all-subscription-plans")
@@ -713,7 +714,7 @@ pre {
         }
 
         changeLoadingState(true);
-        alert('hell');
+     
 
         // Collect card details
         stripe

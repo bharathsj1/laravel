@@ -86,6 +86,12 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
+            $subs = Subscription::create([
+                'subscription_plan_id' => $request->plan_id,
+                'subscription_status' =>'active',
+                'user_id' => Auth::user()->id,
+            ]);
+
              return response()->json([
             'success' => true,
             'data' => $subscription,
