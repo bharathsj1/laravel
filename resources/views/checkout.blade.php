@@ -538,7 +538,7 @@ pre {
             <header class="sr-header">
                 <div class="sr-header__logo"></div>
             </header>
-            @if(session('message'))
+            @if(session('status'))
             <div class="alert-danger px-2 py-2 mb-2 text-center">
                 {{session('message')}}
             </div>
