@@ -568,6 +568,7 @@ pre {
                 <div class="sr-legal-text">
                     Your card will be charge € {{$plan->price}}<span id="save-card-text"> and your card details will be saved to
                         your account</span>.
+                        <span> Your User id is {{$id}}</span>
                 </div>
             </div>
             {{-- <div class="sr-payment-summary hidden completed-view">
