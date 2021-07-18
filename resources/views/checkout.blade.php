@@ -741,8 +741,10 @@ pre {
             })
             .then(function(result) {
                 changeLoadingState(false);
+                window.location.href = "/";
+
                 // return result.json();
-            })
+            });
             // .then(function(paymentData) {
             //     if (paymentData.requiresAction) {
             //         // Request authentication

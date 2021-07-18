@@ -86,8 +86,12 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
-            return redirect('https://google.com.pk');
+             return response()->json([
+            'success' => true,
+            'data' => $subscription,
+            'message' => 'Successfully Subscribed',
 
+        ]);
 
         } else {
             return 'kkk';
