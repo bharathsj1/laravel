@@ -717,11 +717,11 @@ pre {
                 if (result.error) {
                     showError(result.error.message);
                 } else {
-                      alert(result.paymentMethod.id);
+                    alert(result.paymentMethod.id);
                     orderData.paymentMethodId = result.paymentMethod.id;
                     orderData.isSavingCard = true;
                     orderData.paymentMethod = result.paymentMethod;
-                    changeLoadingState(false);
+                
                     console.log('hello g');
 
                      fetch("/api/storeSubscription", {
@@ -734,6 +734,7 @@ pre {
                 }
             })
             .then(function(result) {
+                changeLoadingState(false);
                 return result.json();
             })
             .then(function(paymentData) {

@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
 
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
@@ -77,16 +77,6 @@ class SubscriptionController extends Controller
             ]);
 
 
-
-            // $payment_intent = \Stripe\PaymentIntent::create([
-            //     'amount' => 5000,
-            //     'currency' => 'gbp',
-            //     'payment_method' => $payment_methods->data[0]->id,
-            //     'customer' => $customer['id'],
-            //     'confirm' => true,
-            //     'off_session' => true
-            //   ]);
-
             $subscription =        $stripe->subscriptions->create([
                 'customer' => $customer['id'],
                 'items' => [
@@ -96,19 +86,6 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
-
-            
-
-
-
-
-            //ADDING PAYMENT INTENT
-            // $intent = \Stripe\PaymentIntent::create([
-            //     'amount' => 1099,
-            //     'currency' => 'gbp',
-            //     'payment_method_types' => ['card'],
-            //     'customer' => $customer['id'],
-            // ]);
 
         } else {
             return 'kkk';
