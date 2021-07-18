@@ -708,6 +708,7 @@ pre {
         }
 
         changeLoadingState(true);
+        alert('hell');
 
         // Collect card details
         stripe
