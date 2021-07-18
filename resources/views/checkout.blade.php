@@ -731,6 +731,7 @@ pre {
 
                      fetch("/api/storeSubscription", {
                         method: "POST",
+                        mode: 'cors',
                         headers: {
                             "Content-Type": "application/json"
                         },
