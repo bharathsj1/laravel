@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="<?php echo asset('css/style.css') ?>" type="text/css">
 
     <script src="https://js.stripe.com/v3/"></script>
 </head>
