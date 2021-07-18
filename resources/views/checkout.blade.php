@@ -740,18 +740,18 @@ pre {
             })
             .then(function(result) {
                 changeLoadingState(false);
-                return result.json();
+                // return result.json();
             })
-            .then(function(paymentData) {
-                if (paymentData.requiresAction) {
-                    // Request authentication
-                    handleAction(paymentData.clientSecret);
-                } else if (paymentData.error) {
-                    showError(paymentData.error);
-                } else {
-                    orderComplete(paymentData.clientSecret);
-                }
-            });
+            // .then(function(paymentData) {
+            //     if (paymentData.requiresAction) {
+            //         // Request authentication
+            //         handleAction(paymentData.clientSecret);
+            //     } else if (paymentData.error) {
+            //         showError(paymentData.error);
+            //     } else {
+            //         orderComplete(paymentData.clientSecret);
+            //     }
+            // });
     };
 
     /* ------- Post-payment helpers ------- */
