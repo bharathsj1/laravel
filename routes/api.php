@@ -68,7 +68,7 @@ Route::post('/sendNotificationToSuperAdmin',[NotificationsController::class,'sen
 Route::post('/sendNotificationToDeliverBoy',[NotificationsController::class,'sendNotificationToDeliverBoy']);
 
 //SUBSCRIPTION
-Route::post('/storeSubscription',[SubscriptionController::class,'store'])->middleware('auth:sanctum');
+Route::post('/storeSubscription',[SubscriptionController::class,'store']);
 Route::get('/get-all-subscription-plans',[SubscriptionPlanController::class,'index']);
 Route::get('/get-specific-user-subs',[SubscriptionController::class,'getSpecificUserSubscription'])->middleware('auth:sanctum');
 Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSubscription'])->middleware('auth:sanctum');

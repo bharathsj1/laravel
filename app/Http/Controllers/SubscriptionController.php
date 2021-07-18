@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subscription;
+use App\Models\SubscriptionPlan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Stripe\Stripe;
 
 class SubscriptionController extends Controller
 {
+
+    public $USERID;
     /**
      * Display a listing of the resource.
      *
@@ -36,20 +41,96 @@ class SubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-        $subscription = Subscription::create([
-            'subscription_plan_id' => $request->subscription_plan_id,
-            'subscription_status' => $request->subscription_status,
-            'subscription_start_date' => $request->subscription_start_date,
-            'subscription_end_date' => $request->subscription_end_date,
-            'user_id' => Auth::user()->id,
-        ]);
 
-        return response()->json([
-            'status' => 200,
-            'data' => $subscription,
-            'message' => 'Successfully Subscribed',
+        Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
+        $userData = Auth::loginUsingId($request->user_id);
+        $customer = null;
+        if ($userData) {
+            $stripe = new \Stripe\StripeClient(
+                'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+            );
+            $userObject = User::find(Auth::user()->id);
+            if ($userObject->stripe_cus_id == null) {
+                // NEW USER 
+                $customer =  $stripe->customers->create([
+                    'payment_method' => $request->paymentMethodId,
+                    'description' => 'NEW USER FOR SUBSCRIPTION',
+                ]);
+                //adding stripe_customer_id to user profile
+                $userObject->stripe_cus_id = $customer->id;
+                $userObject->save();
+            } else
+                $customer['id'] = $userObject->stripe_cus_id;
 
-        ]);
+
+            // //PRICE ID
+            $priceIntent = $stripe->prices->create([
+                'unit_amount' => floatval($request->price),
+                'currency' => 'gbp',
+                'recurring' => ['interval' => 'month'],
+                'product' => 'prod_Jrb4bhZcdDxhaP',
+            ]);
+
+            $payment_methods = \Stripe\PaymentMethod::all([
+                'customer' => $customer['id'],
+                'type' => 'card'
+            ]);
+
+
+
+            // $payment_intent = \Stripe\PaymentIntent::create([
+            //     'amount' => 5000,
+            //     'currency' => 'gbp',
+            //     'payment_method' => $payment_methods->data[0]->id,
+            //     'customer' => $customer['id'],
+            //     'confirm' => true,
+            //     'off_session' => true
+            //   ]);
+
+            $subscription =        $stripe->subscriptions->create([
+                'customer' => $customer['id'],
+                'items' => [
+                    [
+                        'price' => $priceIntent->id,
+                    ],
+                ],
+                'default_payment_method' => $payment_methods->data[0]->id,
+            ]);
+
+            
+
+
+
+
+            //ADDING PAYMENT INTENT
+            // $intent = \Stripe\PaymentIntent::create([
+            //     'amount' => 1099,
+            //     'currency' => 'gbp',
+            //     'payment_method_types' => ['card'],
+            //     'customer' => $customer['id'],
+            // ]);
+
+        } else {
+            return 'kkk';
+        }
+
+
+
+
+        // $subscription = Subscription::create([
+        //     'subscription_plan_id' => $request->subscription_plan_id,
+        //     'subscription_status' => $request->subscription_status,
+        //     'subscription_start_date' => $request->subscription_start_date,
+        //     'subscription_end_date' => $request->subscription_end_date,
+        //     'user_id' => Auth::user()->id,
+        // ]);
+
+        // return response()->json([
+        //     'status' => 200,
+        //     'data' => $subscription,
+        //     'message' => 'Successfully Subscribed',
+
+        // ]);
     }
 
     /**
@@ -121,29 +202,37 @@ class SubscriptionController extends Controller
     {
         $user = Auth::user();
         $subscription = Subscription::find($id);
-        if($subscription)
-        {
-            if($subscription->subscription_status=='canceled')
-            {
+        if ($subscription) {
+            if ($subscription->subscription_status == 'canceled') {
                 return response()->json([
-                    'success'=>false,
-                    'data'=>[],
-                    'message'=>'Subscription already canceled'
+                    'success' => false,
+                    'data' => [],
+                    'message' => 'Subscription already canceled'
                 ]);
             }
-            $subscription->subscription_status='canceled';
+            $subscription->subscription_status = 'canceled';
             $subscription->save();
             return response()->json([
-                'success'=>true,
-                'data'=>$subscription,
-                'message'=>'Subscription Canceled Successfully',
+                'success' => true,
+                'data' => $subscription,
+                'message' => 'Subscription Canceled Successfully',
             ]);
-        }else{
+        } else {
             return response()->json([
-                'success'=>false,
-                'data'=>[],
-                'message'=>'Not Found'
+                'success' => false,
+                'data' => [],
+                'message' => 'Not Found'
             ]);
         }
+    }
+
+    public function checkoutPage($id, $plan_id)
+    {
+        $this->USERID = $id;
+        $subscriptionPlan = SubscriptionPlan::find($plan_id);
+        if ($subscriptionPlan)
+            return view('checkout')->with(['id' => $id, 'plan' => $subscriptionPlan]);
+        else
+            return 'Error: Subscription Plan Not Found';
     }
 }
