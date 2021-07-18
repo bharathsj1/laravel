@@ -741,7 +741,7 @@ pre {
             })
             .then(function(result) {
                 changeLoadingState(false);
-                window.location.href = "/";
+                window.location.href = "/checkout?success";
 
                 // return result.json();
             });
