@@ -719,6 +719,7 @@ pre {
                     orderData.paymentMethodId = result.paymentMethod.id;
                     orderData.isSavingCard = true;
                     orderData.paymentMethod = result.paymentMethod;
+                    changeLoadingState(false);
 
                     return fetch("/api/storeSubscription", {
                         method: "POST",
