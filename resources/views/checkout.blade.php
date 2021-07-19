@@ -730,7 +730,7 @@ pre {
                 
                     console.log('hello g');
 
-                     fetch("/api/storeSubscription", {
+              await       fetch("/api/storeSubscription", {
                         method: "POST",
                         mode: 'cors',
                         headers: {
@@ -743,7 +743,6 @@ pre {
             .then(function(result) {
                 changeLoadingState(false);
                window.location.href = "/checkout?success";
-return result.json();
                 // return result.json();
             });
             // .then(function(paymentData) {
