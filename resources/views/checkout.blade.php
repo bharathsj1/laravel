@@ -723,7 +723,7 @@ pre {
                 if (result.error) {
                     showError(result.error.message);
                 } else {
-                    alert(result.paymentMethod.id);
+                  
                     orderData.paymentMethodId = result.paymentMethod.id;
                     orderData.isSavingCard = true;
                     orderData.paymentMethod = result.paymentMethod;
@@ -742,8 +742,8 @@ pre {
             })
             .then(function(result) {
                 changeLoadingState(false);
-                window.location.href = "/checkout?success";
-
+               window.location.href = "/checkout?success";
+return result.json();
                 // return result.json();
             });
             // .then(function(paymentData) {

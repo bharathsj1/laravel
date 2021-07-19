@@ -88,13 +88,13 @@ class SubscriptionController extends Controller
             ]);
             $subs = Subscription::create([
                 'subscription_plan_id' => $request->plan_id,
-                'subscription_status' =>'active',
+                'subscription_status' =>'active',   
                 'user_id' => Auth::user()->id,
             ]);
 
              return response()->json([
             'success' => true,
-            'data' => $subscription,
+            'data' => $subs,
             'message' => 'Successfully Subscribed',
 
         ]);
