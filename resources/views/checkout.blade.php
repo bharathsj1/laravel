@@ -737,13 +737,18 @@ pre {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify(orderData)
+                    }).then(function(result){
+                     window.location.href = "/checkout?success";
+             
                     });
                 }
             })
             .then(function(result) {
+              // console.log(result.body());
                 changeLoadingState(false);
-                if(result.success==true)
-               window.location.href = "/checkout?success";
+              
+              //   if(result.success==true)
+              //  window.location.href = "/checkout?success";
                 // return result.json();
             });
             // .then(function(paymentData) {
