@@ -182,13 +182,13 @@ class MenuController extends Controller
 
     public function getMenus($id)
     {
-        $menus = Menu::where('rest_id',$id)->get();
+        $menus = Menu::where('rest_id',$id)->with('foodCategory')->get();
         if($menus)
         {
             return response()->json([
                 'success' => true,
                 'data' => $menus,
-                'message' =>'Menu List '
+                'message' =>'Menu List'
             ]);
         }else{
             return response()->json([
