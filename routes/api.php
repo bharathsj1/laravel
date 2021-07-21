@@ -13,6 +13,7 @@ use App\Http\Controllers\SubscribedOfferController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
+use App\Models\freeMeal;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
@@ -72,6 +73,11 @@ Route::post('/storeSubscription',[SubscriptionController::class,'store']);
 Route::get('/get-all-subscription-plans',[SubscriptionPlanController::class,'index']);
 Route::get('/get-specific-user-subs',[SubscriptionController::class,'getSpecificUserSubscription'])->middleware('auth:sanctum');
 Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSubscription'])->middleware('auth:sanctum');
+
+//free meal
+
+Route::post('/storeFreeMeal', [freeMeal::class, 'store'])->middleware(('auth:sanctum'));
+
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
