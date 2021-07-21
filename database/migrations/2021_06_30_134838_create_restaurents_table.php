@@ -35,6 +35,12 @@ class CreateRestaurentsTable extends Migration
             $table->timestamps();
         });
     }
+ //boolean
+
+ 
+    //delivery
+    //pickup
+    //tableservice
 
     /**
      * Reverse the migrations.

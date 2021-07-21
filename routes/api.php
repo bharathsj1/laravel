@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceTokenController;
+use App\Http\Controllers\FreeMealController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
@@ -75,9 +76,9 @@ Route::get('/get-specific-user-subs',[SubscriptionController::class,'getSpecific
 Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSubscription'])->middleware('auth:sanctum');
 
 //free meal
+Route::post('/storeFreeMeal', [FreeMealController::class, 'store'])->middleware(('auth:sanctum'));
+Route::get('/getFreeMeal/{$id}',[FreeMealController::class,'getFreeMealById']);
 
-Route::post('/storeFreeMeal', [freeMeal::class, 'store'])->middleware(('auth:sanctum'));
-Route::get('/get-free-meal/{$id}',[freeMeal::class,'getFreeMealById']);
 
 
 
