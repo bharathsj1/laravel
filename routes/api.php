@@ -77,6 +77,7 @@ Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSub
 //free meal
 
 Route::post('/storeFreeMeal', [freeMeal::class, 'store'])->middleware(('auth:sanctum'));
+Route::get('/get-free-meal/{$id}',[freeMeal::class,'getFreeMealById']);
 
 
 

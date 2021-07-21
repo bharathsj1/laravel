@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\freeMeal;
+use App\Models\User;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -38,7 +41,7 @@ class FreeMealController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->stripe_cus_id!=null) {
+        if ($user->stripe_cus_id != null) {
             $freeMeal =   freeMeal::create([
                 'user_id' => $user->id,
                 'meal_id' => $request->menu_id,
@@ -100,5 +103,47 @@ class FreeMealController extends Controller
     public function destroy(freeMeal $freeMeal)
     {
         //
+    }
+
+    public function getFreeMealById($id)
+    {
+        //CURRENT USER
+        $currentUser = User::find($id);
+
+        // USER IS NOT SUBSCRIBED
+        if ($currentUser->stripe_cus_id == null) {
+            return response()->json([
+                'status' => false,
+                'data' => [],
+                'message' => 'User is not a subscribed user',
+            ]);
+        }
+
+        $freeMeal = freeMeal::where('user_id', $id)->latest()->first();
+
+        if ($freeMeal == null) {
+            return response()->json([
+                'status' => true,
+                'data' => [],
+                'message' => 'One free meal is available',
+            ]);
+        }
+     //   $freeMealAvailabel = false;
+
+        //CURRENT TIME
+        $mytime = Carbon::now();
+        if ($freeMeal->created_at > $mytime) {
+            return response()->json([
+                'status' => true,
+                'data' => [],
+                'message' => 'One free meal is available',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'data' => [],
+                'message' => 'You already took the free meal for this weak',
+            ]);
+        }
     }
 }
