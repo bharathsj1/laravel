@@ -138,13 +138,13 @@ class FreeMealController extends Controller
         if ($freeMeal->created_at < $mytime) {
             return response()->json([
                 'status' => true,
-                'data' => [],
+                
                 'message' => 'One free meal is available',
             ]);
         } else {
             return response()->json([
                 'status' => false,
-                'data' => [],
+               
                 'message' => 'You already took the free meal for this week',
             ]);
         }
