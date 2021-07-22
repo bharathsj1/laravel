@@ -14,10 +14,14 @@ class SubscriptionPlanController extends Controller
      */
     public function index()
     {
-        $subscriptionPlan = SubscriptionPlan::all();
+       
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_TEST_SECRET_KEY'),
+          );
+     $subscriptionPlan=$stripe->products->all();
         return response()->json([
             'success'=>true,
-            'data'=>$subscriptionPlan,
+            'data'=>$subscriptionPlan['data'],
             'message'=>'All Subscription Plans'
         ]);
     }
