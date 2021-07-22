@@ -107,20 +107,6 @@ class SubscriptionController extends Controller
 
 
 
-        // $subscription = Subscription::create([
-        //     'subscription_plan_id' => $request->subscription_plan_id,
-        //     'subscription_status' => $request->subscription_status,
-        //     'subscription_start_date' => $request->subscription_start_date,
-        //     'subscription_end_date' => $request->subscription_end_date,
-        //     'user_id' => Auth::user()->id,
-        // ]);
-
-        // return response()->json([
-        //     'status' => 200,
-        //     'data' => $subscription,
-        //     'message' => 'Successfully Subscribed',
-
-        // ]);
     }
 
     /**
@@ -186,12 +172,6 @@ class SubscriptionController extends Controller
                     []
                 );
             }
-
-
-
-
-
-
 
             return response()->json([
                 'success' => true,

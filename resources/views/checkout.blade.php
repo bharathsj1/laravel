@@ -611,8 +611,9 @@ pre {
         }],
         currency: "gbp",
         user_id: id,
-        price:{!! json_encode($plan->price) !!},
+        price:{!! json_encode($plan->metadata->amount) !!},
         plan_id:{!! json_encode($plan->id) !!},
+
     };
 
     fetch("/api/get-all-subscription-plans")
