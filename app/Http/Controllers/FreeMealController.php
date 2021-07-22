@@ -39,6 +39,7 @@ class FreeMealController extends Controller
      */
     public function store(Request $request)
     {
+    
         $user = Auth::user();
 
         if ($user->stripe_cus_id != null) {
@@ -107,6 +108,7 @@ class FreeMealController extends Controller
 
     public function getFreeMealById($id)
     {
+        
         //CURRENT USER
         $currentUser = User::find($id);
 
@@ -130,9 +132,10 @@ class FreeMealController extends Controller
         }
      //   $freeMealAvailabel = false;
 
-        //CURRENT TIME
-        $mytime = Carbon::now();
-        if ($freeMeal->created_at > $mytime) {
+        //7DAYS OLD DATE-TIME
+        $mytime = Carbon::now()->subDays(7);
+       
+        if ($freeMeal->created_at < $mytime) {
             return response()->json([
                 'status' => true,
                 'data' => [],
@@ -142,7 +145,7 @@ class FreeMealController extends Controller
             return response()->json([
                 'status' => false,
                 'data' => [],
-                'message' => 'You already took the free meal for this weak',
+                'message' => 'You already took the free meal for this week',
             ]);
         }
     }
