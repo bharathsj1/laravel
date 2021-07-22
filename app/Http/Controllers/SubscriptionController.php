@@ -40,7 +40,7 @@ class SubscriptionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
+    {
 
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
@@ -65,7 +65,7 @@ class SubscriptionController extends Controller
 
             // //PRICE ID
             $priceIntent = $stripe->prices->create([
-                'unit_amount' => floatval($request->price) *100,
+                'unit_amount' => floatval($request->price) * 100,
                 'currency' => 'gbp',
                 'recurring' => ['interval' => 'month'],
                 'product' => 'prod_Jrb4bhZcdDxhaP',
@@ -89,18 +89,17 @@ class SubscriptionController extends Controller
             ]);
             $subs = Subscription::create([
                 'subscription_plan_id' => $request->plan_id,
-                'subscription_status' =>'active',   
+                'subscription_status' => 'active',
                 'user_id' => Auth::user()->id,
                 'payment_intent' => $subscription->id
             ]);
 
-             return response()->json([
-            'success' => true,
-            'data' => $subs,
-            'message' => 'Successfully Subscribed',
+            return response()->json([
+                'success' => true,
+                'data' => $subs,
+                'message' => 'Successfully Subscribed',
 
-        ]);
-
+            ]);
         } else {
             return 'kkk';
         }
@@ -173,11 +172,30 @@ class SubscriptionController extends Controller
     public function getSpecificUserSubscription()
     {
         $user =   Auth::user();
-        $subscriptionData = Subscription::where('user_id', $user->id)->with('subscription_plan')->get();
+        $subscriptionData = Subscription::where('user_id', $user->id)->whereNotNull('payment_intent')->get('payment_intent');
+
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+        $subs = array();
         if ($subscriptionData) {
+
+            foreach ($subscriptionData as $key => $value) {
+                $subs[] =   $stripe->subscriptions->retrieve(
+                    $value->payment_intent,
+                    []
+                );
+            }
+            
+
+
+
+
+
+
             return response()->json([
                 'success' => true,
-                'data' => $subscriptionData,
+                'data' => $subs,
                 'message' => 'User Subscription Detail'
             ]);
         } else {
