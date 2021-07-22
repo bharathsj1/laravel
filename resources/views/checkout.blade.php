@@ -544,7 +544,7 @@ pre {
             </div>
             @endif
             <div class="sr-payment-summary payment-view">
-                <h1 class="order-amount">€ {{$plan->price}}</h1>
+                <h1 class="order-amount">€ {{$plan->metadata->amount}}</h1>
                 <h4>Loveats Subscription</h4>
             </div>
             <div class="sr-payment-form payment-view">
@@ -562,16 +562,13 @@ pre {
                         </div>
                     </div>
                     <div class="sr-field-error" id="card-errors" role="alert"></div>
-                    <div class="sr-form-row">
-                        <label class="sr-checkbox-label"><input type="checkbox" id="save-card"><span
-                                class="sr-checkbox-check"></span> Save card for future payments</label>
-                    </div>
+                  
                 </div>
                 <button id="submit">
                     <div class="spinner hidden" id="spinner"></div><span id="button-text">Pay</span>
                 </button>
                 <div class="sr-legal-text">
-                    Your card will be charge € {{$plan->price}}<span id="save-card-text"> and your card details will be saved to
+                    Your card will be charge € {{$plan->metadata->amount}}<span id="save-card-text"> and your card details will be saved to
                         your account</span>.
                         {{-- <span> Your User id is {{$id}}</span> --}}
                 </div>
@@ -605,13 +602,14 @@ pre {
     // A reference to Stripe.js
     var stripe;
     id = {!! json_encode($id) !!};
+    
 
 
     var orderData = {
         items: [{
             id: "photo-subscription"
         }],
-        currency: "usd",
+        currency: "gbp",
         user_id: id,
         price:{!! json_encode($plan->price) !!},
         plan_id:{!! json_encode($plan->id) !!},

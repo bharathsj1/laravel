@@ -4,6 +4,8 @@ use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\FreeMealController;
+use App\Http\Controllers\HotspotsController;
+use App\Http\Controllers\HotspotsRestaurantsController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
 use App\Models\freeMeal;
+use App\Models\HotspotsRestaurants;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
@@ -78,6 +81,13 @@ Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSub
 //free meal
 Route::post('/storeFreeMeal', [FreeMealController::class, 'store'])->middleware(('auth:sanctum'));
 Route::get('/get-free-meal/{id}',[FreeMealController::class,'getFreeMealById']);
+
+//hotspot stored
+Route::post('/storeHotspot',[HotspotsController::class,'store']);
+Route::get('/getAllHotspot',[HotspotsController::class,'index']);
+
+Route::post('/store-hotspot-restaurent',[HotspotsRestaurantsController::class,'store']);
+Route::get('/get-hotspot-restaurent/{id}',[HotspotsRestaurantsController::class,'getHotspotRestaurentById']);
 
 
 

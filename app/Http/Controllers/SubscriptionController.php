@@ -68,7 +68,7 @@ class SubscriptionController extends Controller
                 'unit_amount' => floatval($request->price) * 100,
                 'currency' => 'gbp',
                 'recurring' => ['interval' => 'month'],
-                'product' => 'prod_Jrb4bhZcdDxhaP',
+                'product' => $request->plan_id,
             ]);
 
 
@@ -172,7 +172,7 @@ class SubscriptionController extends Controller
     public function getSpecificUserSubscription()
     {
         $user =   Auth::user();
-        $subscriptionData = Subscription::where('user_id', $user->id)->whereNotNull('payment_intent')->orderBy('created_at','DESC')->get('payment_intent');
+        $subscriptionData = Subscription::where('user_id', $user->id)->whereNotNull('payment_intent')->orderBy('created_at', 'DESC')->get('payment_intent');
 
         $stripe = new \Stripe\StripeClient(
             'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
@@ -186,7 +186,7 @@ class SubscriptionController extends Controller
                     []
                 );
             }
-            
+
 
 
 
@@ -237,11 +237,16 @@ class SubscriptionController extends Controller
 
     public function checkoutPage($id, $plan_id)
     {
+       
         $this->USERID = $id;
-        $subscriptionPlan = SubscriptionPlan::find($plan_id);
-        if ($subscriptionPlan)
-            return view('checkout')->with(['id' => $id, 'plan' => $subscriptionPlan]);
-        else
-            return 'Error: Subscription Plan Not Found';
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_TEST_SECRET_KEY')
+        );
+        $subscriptionPlan =  $stripe->products->retrieve(
+            $plan_id,
+            []
+        );
+      
+        return view('checkout')->with(['id' => $id, 'plan' => $subscriptionPlan]);
     }
 }
