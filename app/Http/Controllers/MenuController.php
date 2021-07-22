@@ -204,4 +204,22 @@ class MenuController extends Controller
             'message' => 'Menu Items with Restaurants',
         ]);
     }
+
+    public function getMenuWithMenuTypeId($id)
+    {
+        $menus = Menu::where('menu_type_id', $id)->get();
+        if ($menus) {
+            return response()->json([
+                'success' => true,
+                'data' => $menus,
+                'message' => 'Menu Items with Menu Types'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Not Found'
+            ]);
+        }
+    }
 }
