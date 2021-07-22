@@ -71,6 +71,7 @@ class SubscriptionController extends Controller
                 'product' => 'prod_Jrb4bhZcdDxhaP',
             ]);
 
+
             $payment_methods = \Stripe\PaymentMethod::all([
                 'customer' => $customer['id'],
                 'type' => 'card'
@@ -90,6 +91,7 @@ class SubscriptionController extends Controller
                 'subscription_plan_id' => $request->plan_id,
                 'subscription_status' =>'active',   
                 'user_id' => Auth::user()->id,
+                'payment_intent' => $subscription->id
             ]);
 
              return response()->json([
