@@ -172,7 +172,7 @@ class SubscriptionController extends Controller
     public function getSpecificUserSubscription()
     {
         $user =   Auth::user();
-        $subscriptionData = Subscription::where('user_id', $user->id)->whereNotNull('payment_intent')->get('payment_intent');
+        $subscriptionData = Subscription::where('user_id', $user->id)->whereNotNull('payment_intent')->orderBy('created_at','DESC')->get('payment_intent');
 
         $stripe = new \Stripe\StripeClient(
             'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
