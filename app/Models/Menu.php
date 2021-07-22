@@ -16,4 +16,9 @@ class Menu extends Model
 
     }
 
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurents::class,'rest_id');
+    }
+
 }

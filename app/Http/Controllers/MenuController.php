@@ -136,26 +136,25 @@ class MenuController extends Controller
             $menuTypes =    MenuType::create([
                 'menu_name' => $request['name'],
                 'menu_type_image' => $upload_path . $generated_new_name,
-                
-            ]);
-        }else{
-            $menuTypes =    MenuType::create([
-                'menu_name' => $request['name'],                
-            ]);
-        } 
 
-        if($menuTypes)
-        {
+            ]);
+        } else {
+            $menuTypes =    MenuType::create([
+                'menu_name' => $request['name'],
+            ]);
+        }
+
+        if ($menuTypes) {
             return response()->json([
                 'success' => true,
                 'data' => $menuTypes,
-                'message' =>'Menu Type added'
+                'message' => 'Menu Type added'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'data' => [],
-                'message' =>'Failed'
+                'message' => 'Failed'
             ]);
         }
     }
@@ -163,40 +162,46 @@ class MenuController extends Controller
     public function getMenuTypes()
     {
         $menuTypes = MenuType::all();
-        if($menuTypes)
-        {
+        if ($menuTypes) {
             return response()->json([
                 'success' => true,
                 'data' => $menuTypes,
-                'message' =>'Menu Type added'
+                'message' => 'Menu Type added'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'data' => [],
-                'message' =>'Failed'
+                'message' => 'Failed'
             ]);
         }
-
     }
 
     public function getMenus($id)
     {
-        $menus = Menu::where('rest_id',$id)->with('foodCategory')->get();
-        if($menus)
-        {
+        $menus = Menu::where('rest_id', $id)->with('foodCategory')->get();
+        if ($menus) {
             return response()->json([
                 'success' => true,
                 'data' => $menus,
-                'message' =>'Menu List'
+                'message' => 'Menu List'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'data' => [],
-                'message' =>'Failed'
+                'message' => 'Failed'
             ]);
         }
+    }
 
+    public function getMenuItemsWithRestaurants()
+    {
+        $menu =   Menu::with('restaurant')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $menu,
+            'message' => 'Menu Items with Restaurants',
+        ]);
     }
 }

@@ -89,6 +89,8 @@ Route::get('/getAllHotspot',[HotspotsController::class,'index']);
 Route::post('/store-hotspot-restaurent',[HotspotsRestaurantsController::class,'store']);
 Route::get('/get-hotspot-restaurent/{id}',[HotspotsRestaurantsController::class,'getHotspotRestaurentById']);
 
+Route::get('/getMenuItemsWithRestaurant',[MenuController::class,'getMenuItemsWithRestaurants']);
+
 
 
 
