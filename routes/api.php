@@ -77,6 +77,7 @@ Route::post('/storeSubscription',[SubscriptionController::class,'store']);
 Route::get('/get-all-subscription-plans',[SubscriptionPlanController::class,'index']);
 Route::get('/get-specific-user-subs',[SubscriptionController::class,'getSpecificUserSubscription'])->middleware('auth:sanctum');
 Route::get('/cancel-subscription/{id}',[SubscriptionController::class,'cancelSubscription']);
+Route::post('/checkAlreadySubscribed',[SubscriptionController::class,'checkAlreadySubscribed']);
 
 //free meal
 Route::post('/storeFreeMeal', [FreeMealController::class, 'store'])->middleware(('auth:sanctum'));

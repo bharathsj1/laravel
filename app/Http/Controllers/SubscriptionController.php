@@ -42,6 +42,8 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
 
+
+
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
         $customer = null;
@@ -55,8 +57,8 @@ class SubscriptionController extends Controller
                 $customer =  $stripe->customers->create([
                     'payment_method' => $request->paymentMethodId,
                     'description' => 'NEW USER FOR SUBSCRIPTION',
-                    'email'=>$userObject->email,
-                    'name'=>$userObject->name,
+                    'email' => $userObject->email,
+                    'name' => $userObject->name,
                 ]);
                 //adding stripe_customer_id to user profile
                 $userObject->stripe_cus_id = $customer->id;
@@ -105,10 +107,6 @@ class SubscriptionController extends Controller
         } else {
             return 'kkk';
         }
-
-
-
-
     }
 
     /**
@@ -189,11 +187,11 @@ class SubscriptionController extends Controller
         }
     }
 
-    
+
 
     public function checkoutPage($id, $plan_id)
     {
-       
+
         $this->USERID = $id;
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY')
@@ -202,31 +200,53 @@ class SubscriptionController extends Controller
             $plan_id,
             []
         );
-      
+
         return view('checkout')->with(['id' => $id, 'plan' => $subscriptionPlan]);
     }
 
-    public function cancelSubscription($subsriptionId)
+    public function cancelSubscription($subscriptionId)
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY')
-          );
-          $stripe->subscriptions->cancel(
-          $subsriptionId,
+        );
+        $stripe->subscriptions->cancel(
+            $subscriptionId,
             []
-          );
+        );
 
-          if($stripe)
-          {
-              return response()->json([
-                  'success'=>true,
-                  'message'=> 'Subscription Cancelled Successfully',
-              ]);
-          }else{
-              return response()->json([
-                  'success'=>false,
-                  'message'=>'Some Error Occured, Please Try Again Later',
-              ]);
-          }
+        $sub =    Subscription::where('payment_intent', $subscriptionId)->get()->first();
+        if ($sub) {
+            $sub->subscription_status = 'canceled';
+            $sub->save();
+        }
+
+        if ($stripe) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Subscription Cancelled Successfully',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Some Error Occured, Please Try Again Later',
+            ]);
+        }
+    }
+
+    public function checkAlreadySubscribed(Request $request)
+    {
+        $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', $request->plan_id)->where('subscription_status', 'active')->get();
+    
+        if (count($allUserSubs)>0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You have already subscribed for this subscription'
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => 'You can applied for this subscription'
+            ]);
+        }
     }
 }
