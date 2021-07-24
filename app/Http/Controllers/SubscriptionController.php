@@ -55,6 +55,8 @@ class SubscriptionController extends Controller
                 $customer =  $stripe->customers->create([
                     'payment_method' => $request->paymentMethodId,
                     'description' => 'NEW USER FOR SUBSCRIPTION',
+                    'email'=>$userObject->email,
+                    'name'=>$userObject->name,
                 ]);
                 //adding stripe_customer_id to user profile
                 $userObject->stripe_cus_id = $customer->id;
