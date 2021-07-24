@@ -189,33 +189,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function cancelSubscription($id)
-    {
-        $user = Auth::user();
-        $subscription = Subscription::find($id);
-        if ($subscription) {
-            if ($subscription->subscription_status == 'canceled') {
-                return response()->json([
-                    'success' => false,
-                    'data' => [],
-                    'message' => 'Subscription already canceled'
-                ]);
-            }
-            $subscription->subscription_status = 'canceled';
-            $subscription->save();
-            return response()->json([
-                'success' => true,
-                'data' => $subscription,
-                'message' => 'Subscription Canceled Successfully',
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'data' => [],
-                'message' => 'Not Found'
-            ]);
-        }
-    }
+    
 
     public function checkoutPage($id, $plan_id)
     {
@@ -230,5 +204,29 @@ class SubscriptionController extends Controller
         );
       
         return view('checkout')->with(['id' => $id, 'plan' => $subscriptionPlan]);
+    }
+
+    public function cancelSubscription($subsriptionId)
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_TEST_SECRET_KEY')
+          );
+          $stripe->subscriptions->cancel(
+          $subsriptionId,
+            []
+          );
+
+          if($stripe)
+          {
+              return response()->json([
+                  'success'=>true,
+                  'message'=> 'Subscription Cancelled Successfully',
+              ]);
+          }else{
+              return response()->json([
+                  'success'=>false,
+                  'message'=>'Some Error Occured, Please Try Again Later',
+              ]);
+          }
     }
 }
