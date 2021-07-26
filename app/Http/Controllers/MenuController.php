@@ -262,6 +262,22 @@ class MenuController extends Controller
 
     public function MenuTypesWithAtleastOneItem()
     {
-       
+        $data= array();
+       $allMenuItems = Menu::all();
+       $allMenuTypes = MenuType::all();
+       foreach ($allMenuItems as $key => $value) {
+         foreach ($allMenuTypes as $key => $menuTypes) {
+          if($menuTypes->id == $value->id)
+          {
+              $data[]=$menuTypes;
+          }
+         }
+       }
+
+       return  response()->json([
+           'success'=>true,
+           'data'=>$data,
+           'message'=>'Menu Types with atleast one item'
+       ]);
     }
 }
