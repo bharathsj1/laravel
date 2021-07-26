@@ -222,4 +222,46 @@ class MenuController extends Controller
             ]);
         }
     }
+
+    public function menuItemsWithTypesForSpecificRes($id)
+    {
+        $menuTypeArray = array();
+        //all Items for specific Restaurent
+        $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
+        $allMenuTypes = MenuType::all();
+
+        foreach ($allMenusForSpecificRes as $key => $value) {
+            foreach ($allMenuTypes as $key => $menuType) {
+                if ($value->menu_type_id == $menuType->id) {
+                    // Required MenuType for Specific Restaurant
+                    $menuTypeArray[] = $menuType;
+                }
+            }
+        }
+        foreach ($menuTypeArray as $key => $value) {
+            $menuItems = Menu::where('menu_type_id', $value->id)->get();
+            $rr[] = [
+                'menutype' => $value,
+                'menuItems' => $menuItems,
+            ];
+        }
+        if (count($rr) > 0) {
+            return response()->json([
+                'success' => true,
+                'data' => $rr,
+                'message' => 'Menu Items With Menu Types',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'No Data Found',
+            ]);
+        }
+    }
+
+    public function MenuTypesWithAtleastOneItem()
+    {
+       
+    }
 }

@@ -21,4 +21,9 @@ class Menu extends Model
         return $this->belongsTo(Restaurents::class,'rest_id');
     }
 
+    public function menuType()
+    {
+        return $this->belongsTo(MenuType::class,'menu_type_id');
+    }
+
 }

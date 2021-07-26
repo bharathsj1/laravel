@@ -90,12 +90,12 @@ Route::get('/getAllHotspot',[HotspotsController::class,'index']);
 Route::post('/store-hotspot-restaurent',[HotspotsRestaurantsController::class,'store']);
 Route::get('/get-hotspot-restaurent/{id}',[HotspotsRestaurantsController::class,'getHotspotRestaurentById']);
 
+//menu ITEMS
 Route::get('/getMenuItemsWithRestaurant',[MenuController::class,'getMenuItemsWithRestaurants']);
 Route::get('/getMenuWithMenuType/{id}',[MenuController::class,'getMenuWithMenuTypeId']);
 
-
-
-
+Route::get('/menuItemsWithTypesForSpecificRes/{id}',[MenuController::class,'menuItemsWithTypesForSpecificRes']);
+Route::get('/MenuTypesWithAtleastOneItem',[MenuController::class,'MenuTypesWithAtleastOneItem']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
