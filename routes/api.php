@@ -38,6 +38,10 @@ Route::post('/register_user', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/check-uid', [AuthController::class, 'checkUidAvailable']);
 Route::post('/current-user', [AuthController::class, 'currentUser'])->middleware(('auth:sanctum'));
+//UPDATE USER
+Route::post('/updateUser',[AuthController::class,'updateUser'])->middleware(('auth:sanctum'));
+//CHANGE USER PASSWORD
+Route::post('/changePassword',[AuthController::class,'changePassword'])->middleware(('auth:sanctum'));
 Route::get('get-all-orders',[OrderController::class,'getAllOrders']);
 Route::post('/get-restaurents', [RestaurentsController::class, 'index']);
 Route::get('getOrdersForSpecificOwnerRestaurent',[RestaurentsController::class,'getOrdersForSpecificRes'])->middleware(('auth:sanctum'));
