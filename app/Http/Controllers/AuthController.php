@@ -230,7 +230,7 @@ class AuthController extends Controller
             } else {
                 $msg = $ex->getMessage();
             }
-            $arr = array("status" => 400, "message" => $msg, "data" => array());
+            $arr = array("success" => false, "message" => $msg, "data" => array());
         }
     }
     return response($arr);
