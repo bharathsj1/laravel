@@ -101,6 +101,8 @@ Route::get('/getMenuWithMenuType/{id}',[MenuController::class,'getMenuWithMenuTy
 Route::get('/menuItemsWithTypesForSpecificRes/{id}',[MenuController::class,'menuItemsWithTypesForSpecificRes']);
 Route::get('/MenuTypesWithAtleastOneItem',[MenuController::class,'MenuTypesWithAtleastOneItem']);
 
+Route::post('/filter',[RestaurentsController::class,'filters']);
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderDetails;
+use App\Models\ratings;
+use App\Models\Menu;
+use App\Models\MenuType;
+
 use App\Models\Restaurents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -272,5 +276,132 @@ class RestaurentsController extends Controller
                 'message' => 'Did not find any order',
             ]);
         }
+    }
+
+    public function filters(Request $request)
+    {
+
+        // SORTING
+        // => DISTANCE
+        // => RATING
+        // => RECOMMENDED ( ISOPEN, NEARBY, RATING)
+        // => TOP RATED
+
+        $sortType = null;
+        $isSorting = false;
+        $filterData = array();
+
+
+        if ($request->has('sort')) {
+            $isSorting = true;
+            $sortType = $request['sort'];
+            //IF SORT IS RECOMMENDED
+            if ($sortType == 'recommended') {
+                $recommendedRestaurants = Restaurents::where('rest_isOpen', '1')->orWhere('rest_isTrending', '1')->get();
+                foreach ($recommendedRestaurants as $key => $value) {
+                    $ratings = ratings::where('rest_id', $value->id)->get();
+                    if (count($ratings) > 0) {
+                        if ($ratings->avg('rating') >= 3) {
+                            $filterData[] = $value;
+                        }
+                    } else {
+                        $filterData[] = $recommendedRestaurants;
+                    }
+                }
+            }
+            // IF SORT IS RATINGS
+            else if ($sortType == 'ratings') {
+                $restaurentRatings = ratings::orderBy('id', 'DESC')->get();
+                if ($restaurentRatings) {
+                    foreach ($restaurentRatings as $key => $value) {
+                        $restaurent = Restaurents::where('id', $value->rest_id)->get();
+                    }
+                    $filterData = $restaurent;
+                }
+            } else if ($sortType = 'topRated') {
+                $topRatedRestaurants = Restaurents::where('rest_isTrending', '1')->get();
+                if (count($topRatedRestaurants) > 0) {
+                    $filterData = $topRatedRestaurants;
+                }
+            }
+        }
+
+        // if rating list is sent
+
+        if ($request->has('rating_list')) {
+            $ratingList = $request->rating_list;
+            $restaurentsRating = ratings::all();
+            $allRestaurants = Restaurents::all();
+
+
+            // agr sorting param available ho tu
+            if ($isSorting) {
+                foreach ($filterData as $key => $value) {
+                    foreach ($restaurentsRating as $key1 => $secondValue) {
+                        if ($secondValue->rest_id == $value->id) {
+
+                            $ratingRes = ratings::where('rest_id', $value->id)->get()->avg('rating');
+                            if (!in_array($ratingRes, $ratingList))
+                                unset($filterData[$key]);
+                        }
+                    }
+                }
+            } else {
+
+                foreach ($allRestaurants as $key => $value) {
+                    $currentRating = ratings::where('rest_id', $value->id)->get()->avg('rating');
+                    if (in_array($currentRating, $ratingList)) {
+                        $filterData[] = $value;
+                    }
+                }
+            }
+        }
+
+        if ($request->has('categories_list')) {
+            $categoriesList = $request->categories_list;
+            $resID = array();
+            $menusList = Menu::all();
+            if (empty($filterData)) {
+                foreach ($categoriesList as $key => $value) {
+                    $menuType =   MenuType::where('menu_name', $value)->first();
+                    if ($menuType) {
+                        foreach ($menusList as $key => $menuData) {
+                            if ($menuData->menu_type_id == $menuType->id)
+                                $resID[] = $menuData->rest_id;
+                        }
+                    }
+                }
+                $resID = array_unique($resID);
+                foreach ($resID as $key => $value) {
+                    $filterData[] = Restaurents::find($value);
+                }
+            } else {
+                foreach ($categoriesList as $key => $value) {
+
+                    $menuType =   MenuType::where('menu_name', $value)->first();
+
+                    if (($menuType)) {
+                        foreach ($menusList as $key => $menuData) {
+                            if ($menuData->menu_type_id == $menuType->id)
+                                $resID[] = $menuData->rest_id;
+                        }
+                    } else break;
+                }
+                if (count($resID) > 0) {
+                    $resID = array_unique($resID);
+                    foreach ($filterData as $key => $value) {
+                        if (!($value->id == $resID[$key])) {
+                            unset($filterData[$key]);
+                        }
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'success'=>true,
+            'data'=>$filterData,
+            'message'=>'Filters Data'
+        ]);
     }
 }
