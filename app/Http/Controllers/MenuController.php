@@ -225,19 +225,26 @@ class MenuController extends Controller
 
     public function menuItemsWithTypesForSpecificRes($id)
     {
+       
         $menuTypeArray = array();
         //all Items for specific Restaurent
         $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
         $allMenuTypes = MenuType::all();
+        $menuTypeIdArray = array();
 
         foreach ($allMenusForSpecificRes as $key => $value) {
             foreach ($allMenuTypes as $key => $menuType) {
                 if ($value->menu_type_id == $menuType->id) {
-                    // Required MenuType for Specific Restaurant
-                    $menuTypeArray[] = $menuType;
+                    // Required MenuType for Specific Restauran
+                    $menuTypeIdArray[]=$menuType->id;
+                    // $menuTypeArray[] = $menuType;
                 }
             }
         }
+        //removing same value in array
+       $menuTypeIdArray= array_unique( $menuTypeIdArray);
+       $menuTypeArray = MenuType::whereIn('id',$menuTypeIdArray)->get();
+     
         foreach ($menuTypeArray as $key => $value) {
             $menuItems = Menu::where('menu_type_id', $value->id)->get();
             $rr[] = [
@@ -245,6 +252,7 @@ class MenuController extends Controller
                 'menuItems' => $menuItems,
             ];
         }
+        return $rr;
         if (count($rr) > 0) {
             return response()->json([
                 'success' => true,
