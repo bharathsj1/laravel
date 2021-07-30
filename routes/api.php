@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountTypeController;
+use App\Http\Controllers\AddonsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\FreeMealController;
@@ -102,6 +103,10 @@ Route::get('/menuItemsWithTypesForSpecificRes/{id}',[MenuController::class,'menu
 Route::get('/MenuTypesWithAtleastOneItem',[MenuController::class,'MenuTypesWithAtleastOneItem']);
 
 Route::post('/filter',[RestaurentsController::class,'filters']);
+
+//ADDONS
+
+Route::get('/getAddOns/{id}',[AddonsController::class,'getAddOns']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
