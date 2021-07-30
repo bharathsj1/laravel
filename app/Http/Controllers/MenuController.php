@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FoodCategory;
 use App\Models\Menu;
 use App\Models\MenuType;
 use Illuminate\Http\Request;
@@ -225,35 +226,27 @@ class MenuController extends Controller
 
     public function menuItemsWithTypesForSpecificRes($id)
     {
-       
-        $menuTypeArray = array();
-        //all Items for specific Restaurent
-        $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
-        $allMenuTypes = MenuType::all();
-        $menuTypeIdArray = array();
+        $restaurantMenus = Menu::where('rest_id',$id)->get();
+        $restaurantFoodCategory=array();
+        $foodCategoryIds = array();
 
-        foreach ($allMenusForSpecificRes as $key => $value) {
-            foreach ($allMenuTypes as $key => $menuType) {
-                if ($value->menu_type_id == $menuType->id) {
-                    // Required MenuType for Specific Restauran
-                    $menuTypeIdArray[]=$menuType->id;
-                    // $menuTypeArray[] = $menuType;
-                }
+        foreach ($restaurantMenus as $key => $value) {
+           $foodCategoryIds[]=$value->food_category_id;
+        }
+        $foodCategoryIds = array_unique($foodCategoryIds);
+    //    $menuItemsArray = Menu::whereIn('food_category_id',$foodCategoryId)->get();
+
+       foreach ($foodCategoryIds as $key => $foodCategoryId) {
+                $foodCategoryData = FoodCategory::find($value->food_category_id);
+                $menuItems = Menu::where('food_category_id',$foodCategoryId)->get();
+               
+                $rr[] = [
+                    'foodCategory' => $foodCategoryData,
+                    'menuItems' => $menuItems,
+                ];
+            
             }
-        }
-        //removing same value in array
-       $menuTypeIdArray= array_unique( $menuTypeIdArray);
-       $menuTypeArray = MenuType::whereIn('id',$menuTypeIdArray)->get();
-     
-        foreach ($menuTypeArray as $key => $value) {
-            $menuItems = Menu::where('menu_type_id', $value->id)->get();
-            $rr[] = [
-                'menutype' => $value,
-                'menuItems' => $menuItems,
-            ];
-        }
-        return $rr;
-        if (count($rr) > 0) {
+                if (count($rr) > 0) {
             return response()->json([
                 'success' => true,
                 'data' => $rr,
@@ -266,6 +259,53 @@ class MenuController extends Controller
                 'message' => 'No Data Found',
             ]);
         }
+       
+        
+
+        
+      
+       
+
+      
+       
+    //     $menuTypeArray = array();
+    //     //all Items for specific Restaurent
+    //     $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
+    //     $allMenuTypes = MenuType::all();
+    //     $menuTypeIdArray = array();
+
+    //     foreach ($allMenusForSpecificRes as $key => $value) {
+    //         foreach ($allMenuTypes as $key => $menuType) {
+    //             if ($value->menu_type_id == $menuType->id) {
+    //                 $menuTypeIdArray[]=$menuType->id;
+    //             }
+    //         }
+    //     }
+    //     //removing same value in array
+    //    $menuTypeIdArray= array_unique( $menuTypeIdArray);
+    //    $menuTypeArray = MenuType::whereIn('id',$menuTypeIdArray)->get();
+     
+    //     foreach ($menuTypeArray as $key => $value) {
+    //         $menuItems = Menu::where('menu_type_id', $value->id)->get();
+    //         $rr[] = [
+    //             'foodCategory' => $value,
+    //             'menuItems' => $menuItems,
+    //         ];
+    //     }
+    //     return $rr;
+    //     if (count($rr) > 0) {
+    //         return response()->json([
+    //             'success' => true,
+    //             'data' => $rr,
+    //             'message' => 'Menu Items With Menu Types',
+    //         ]);
+    //     } else {
+    //         return response()->json([
+    //             'success' => false,
+    //             'data' => [],
+    //             'message' => 'No Data Found',
+    //         ]);
+    //     }
     }
 
     public function MenuTypesWithAtleastOneItem()
