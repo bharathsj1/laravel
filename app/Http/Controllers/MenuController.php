@@ -237,7 +237,7 @@ class MenuController extends Controller
     //    $menuItemsArray = Menu::whereIn('food_category_id',$foodCategoryId)->get();
 
        foreach ($foodCategoryIds as $key => $foodCategoryId) {
-                $foodCategoryData = FoodCategory::find($value->food_category_id);
+                $foodCategoryData = FoodCategory::find($foodCategoryId);
                 $menuItems = Menu::where('food_category_id',$foodCategoryId)->get();
                
                 $rr[] = [
