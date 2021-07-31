@@ -360,4 +360,24 @@ class MenuController extends Controller
     {
         return $id;
     }
+
+    public function demoRecommendedItem()
+    {
+        $foodCategories= FoodCategory::all()->random(5)->pluck('id');
+        foreach ($foodCategories as $key => $value) {
+            $menuItem = Menu::where('food_category_id',$value)->first();
+            if($menuItem!=null)
+            $menuItems[]=$menuItem;
+            else
+            continue; 
+            
+        }
+        return response()->json([
+            'success'=>true,
+            'data'=>$menuItems,
+            'message'=>'Recommeded Items',
+        ]) ;
+      
+       
+    }
 }

@@ -32,23 +32,22 @@ class AuthController extends Controller
         $stripe = new \Stripe\StripeClient(
             'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
         );
- 
-            $customer =  $stripe->customers->create([
-                // 'payment_method' => $request->paymentMethodId,
-                'description' => 'NEW USER Signed up',
-                'email' =>  $request['email'],
-                'name' =>  $request['cust_first_name'],
-            ]);
 
-            if(!$customer)
-            {
-                    return response()->json([
-                        'success'=>false,
-                        'data'=>[],
-                        'message'=>'Something really bad happens'
-                    ]);
-            }
-        
+        $customer =  $stripe->customers->create([
+            // 'payment_method' => $request->paymentMethodId,
+            'description' => 'NEW USER Signed up',
+            'email' =>  $request['email'],
+            'name' =>  $request['cust_first_name'],
+        ]);
+
+        if (!$customer) {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Something really bad happens'
+            ]);
+        }
+
 
 
 

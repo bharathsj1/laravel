@@ -110,6 +110,8 @@ Route::get('/getMenuItemsFoodCategory{id}',function(){
     return 'asf';
 });
 
+Route::get('/demoRecommendedItems',[MenuController::class,'demoRecommendedItem']);
+
 Route::post('/filter',[RestaurentsController::class,'filters']);
 
 
