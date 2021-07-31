@@ -49,15 +49,15 @@ class PaymentIntentController extends Controller
                 'exp_month' => $request['exp_month'],
                 'exp_year' => $request['exp_year'],
                 'cvc' => $request['cvc'],
-                'billing_details' => [
-                    'email' => $request['email'],
-                    "phone" => $request['phone'],
-                    'name' => $request['name'],
-                ],
-                'customer' => [
-                    'customer' => $request['customer'],
-                ]
             ],
+            'billing_details' => [
+                'email' => $request['email'],
+                "phone" => $request['phone'],
+                'name' => $request['name'],
+            ],
+            'metadata' => [
+                'customer' => $request['customer'],
+            ]
 
         ]);
 
