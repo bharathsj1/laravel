@@ -19,6 +19,7 @@ use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
 use App\Models\freeMeal;
 use App\Models\HotspotsRestaurants;
+use App\Models\PaymentIntent;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
@@ -107,6 +108,12 @@ Route::post('/filter',[RestaurentsController::class,'filters']);
 //ADDONS
 
 Route::get('/getAddOns/{id}',[AddonsController::class,'getAddOns']);
+
+
+//PAYMENT METHOD
+
+Route::post('/storePaymentMethod',[PaymentIntent::class,'store'])->middleware(('auth:sanctum'));
+Route::get('/getPaymentMethod',[PaymentIntent::class,'getPaymentMethod'])->middleware(('auth:sanctum'));
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
