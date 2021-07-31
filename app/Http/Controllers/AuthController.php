@@ -34,7 +34,7 @@ class AuthController extends Controller
         );
  
             $customer =  $stripe->customers->create([
-                'payment_method' => $request->paymentMethodId,
+                // 'payment_method' => $request->paymentMethodId,
                 'description' => 'NEW USER Signed up',
                 'email' =>  $request['email'],
                 'name' =>  $request['cust_first_name'],

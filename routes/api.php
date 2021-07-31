@@ -20,6 +20,7 @@ use App\Http\Controllers\SubscriptionPlanController;
 use App\Models\DeviceToken;
 use App\Models\freeMeal;
 use App\Models\HotspotsRestaurants;
+use App\Models\Menu;
 use App\Models\PaymentIntent;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
@@ -104,7 +105,13 @@ Route::get('/getMenuWithMenuType/{id}',[MenuController::class,'getMenuWithMenuTy
 Route::get('/menuItemsWithTypesForSpecificRes/{id}',[MenuController::class,'menuItemsWithTypesForSpecificRes']);
 Route::get('/MenuTypesWithAtleastOneItem',[MenuController::class,'MenuTypesWithAtleastOneItem']);
 
+Route::get('/getCategoriesMenuType/{id}',[MenuController::class,'getCategoriesByMenuTypeId']);
+Route::get('/getMenuItemsFoodCategory{id}',function(){
+    return 'asf';
+});
+
 Route::post('/filter',[RestaurentsController::class,'filters']);
+
 
 //ADDONS
 

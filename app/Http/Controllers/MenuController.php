@@ -226,27 +226,26 @@ class MenuController extends Controller
 
     public function menuItemsWithTypesForSpecificRes($id)
     {
-        $restaurantMenus = Menu::where('rest_id',$id)->get();
-        $restaurantFoodCategory=array();
+        $restaurantMenus = Menu::where('rest_id', $id)->get();
+        $restaurantFoodCategory = array();
         $foodCategoryIds = array();
 
         foreach ($restaurantMenus as $key => $value) {
-           $foodCategoryIds[]=$value->food_category_id;
+            $foodCategoryIds[] = $value->food_category_id;
         }
         $foodCategoryIds = array_unique($foodCategoryIds);
-    //    $menuItemsArray = Menu::whereIn('food_category_id',$foodCategoryId)->get();
+        //    $menuItemsArray = Menu::whereIn('food_category_id',$foodCategoryId)->get();
 
-       foreach ($foodCategoryIds as $key => $foodCategoryId) {
-                $foodCategoryData = FoodCategory::find($foodCategoryId);
-                $menuItems = Menu::where('food_category_id',$foodCategoryId)->get();
-               
-                $rr[] = [
-                    'foodCategory' => $foodCategoryData,
-                    'menuItems' => $menuItems,
-                ];
-            
-            }
-                if (count($rr) > 0) {
+        foreach ($foodCategoryIds as $key => $foodCategoryId) {
+            $foodCategoryData = FoodCategory::find($foodCategoryId);
+            $menuItems = Menu::where('food_category_id', $foodCategoryId)->get();
+
+            $rr[] = [
+                'foodCategory' => $foodCategoryData,
+                'menuItems' => $menuItems,
+            ];
+        }
+        if (count($rr) > 0) {
             return response()->json([
                 'success' => true,
                 'data' => $rr,
@@ -259,73 +258,106 @@ class MenuController extends Controller
                 'message' => 'No Data Found',
             ]);
         }
-       
-        
 
-        
-      
-       
 
-      
-       
-    //     $menuTypeArray = array();
-    //     //all Items for specific Restaurent
-    //     $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
-    //     $allMenuTypes = MenuType::all();
-    //     $menuTypeIdArray = array();
 
-    //     foreach ($allMenusForSpecificRes as $key => $value) {
-    //         foreach ($allMenuTypes as $key => $menuType) {
-    //             if ($value->menu_type_id == $menuType->id) {
-    //                 $menuTypeIdArray[]=$menuType->id;
-    //             }
-    //         }
-    //     }
-    //     //removing same value in array
-    //    $menuTypeIdArray= array_unique( $menuTypeIdArray);
-    //    $menuTypeArray = MenuType::whereIn('id',$menuTypeIdArray)->get();
-     
-    //     foreach ($menuTypeArray as $key => $value) {
-    //         $menuItems = Menu::where('menu_type_id', $value->id)->get();
-    //         $rr[] = [
-    //             'foodCategory' => $value,
-    //             'menuItems' => $menuItems,
-    //         ];
-    //     }
-    //     return $rr;
-    //     if (count($rr) > 0) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'data' => $rr,
-    //             'message' => 'Menu Items With Menu Types',
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'success' => false,
-    //             'data' => [],
-    //             'message' => 'No Data Found',
-    //         ]);
-    //     }
+
+
+
+
+
+
+        //     $menuTypeArray = array();
+        //     //all Items for specific Restaurent
+        //     $allMenusForSpecificRes = Menu::where('rest_id', $id)->with('menuType')->get();
+        //     $allMenuTypes = MenuType::all();
+        //     $menuTypeIdArray = array();
+
+        //     foreach ($allMenusForSpecificRes as $key => $value) {
+        //         foreach ($allMenuTypes as $key => $menuType) {
+        //             if ($value->menu_type_id == $menuType->id) {
+        //                 $menuTypeIdArray[]=$menuType->id;
+        //             }
+        //         }
+        //     }
+        //     //removing same value in array
+        //    $menuTypeIdArray= array_unique( $menuTypeIdArray);
+        //    $menuTypeArray = MenuType::whereIn('id',$menuTypeIdArray)->get();
+
+        //     foreach ($menuTypeArray as $key => $value) {
+        //         $menuItems = Menu::where('menu_type_id', $value->id)->get();
+        //         $rr[] = [
+        //             'foodCategory' => $value,
+        //             'menuItems' => $menuItems,
+        //         ];
+        //     }
+        //     return $rr;
+        //     if (count($rr) > 0) {
+        //         return response()->json([
+        //             'success' => true,
+        //             'data' => $rr,
+        //             'message' => 'Menu Items With Menu Types',
+        //         ]);
+        //     } else {
+        //         return response()->json([
+        //             'success' => false,
+        //             'data' => [],
+        //             'message' => 'No Data Found',
+        //         ]);
+        //     }
     }
 
     public function MenuTypesWithAtleastOneItem()
     {
-        $data= array();
-       $allMenuItems = Menu::all();
-       $allMenuTypes = MenuType::all();
-       foreach ($allMenuItems as $key => $value) {
-         foreach ($allMenuTypes as $key => $menuTypes) {
-          if($menuTypes->id == $value->id)
-          {
-              $data[]=$menuTypes;
-          }
-         }
-       }
+        $data = array();
+        $allMenuItems = Menu::all();
+        $allMenuTypes = MenuType::all();
+        foreach ($allMenuItems as $key => $value) {
+            foreach ($allMenuTypes as $key => $menuTypes) {
+                if ($menuTypes->id == $value->id) {
+                    $data[] = $menuTypes;
+                }
+            }
+        }
 
-       return  response()->json([
-           'success'=>true,
-           'data'=>$data,
-           'message'=>'Menu Types with atleast one item'
-       ]);
+        return  response()->json([
+            'success' => true,
+            'data' => $data,
+            'message' => 'Menu Types with atleast one item'
+        ]);
+    }
+
+    public function getCategoriesByMenuTypeId($id)
+    {
+        $allMenuItems = Menu::where('menu_type_id', $id)->get();
+        if (count($allMenuItems) <= 0) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'data' => [],
+                    'message' => 'No data found'
+                ],
+            );
+        }
+        // WE HAVE ALL MENU ITEMS 
+        $foodCategoriesID = array();
+
+        foreach ($allMenuItems as $key => $item) {
+            $foodCategoriesID[] = $item->food_category_id;
+        }
+
+        $foodCategoriesID = array_unique($foodCategoriesID);
+
+        $foodCategories = FoodCategory::whereIn('id', $foodCategoriesID)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $foodCategories,
+            'message' => 'Food Categories List',
+        ]);
+    }
+
+    public function getMenuItemsByFoodCategoryIds($id)
+    {
+        return $id;
     }
 }
