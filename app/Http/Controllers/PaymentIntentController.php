@@ -56,7 +56,7 @@ class PaymentIntentController extends Controller
                 'name' => $request['name'],
             ],
             'metadata' => [
-                'customer' => $request['customer'],
+                'customer' => $user->stripe_cus_id
             ]
 
         ]);
@@ -71,7 +71,7 @@ class PaymentIntentController extends Controller
 
         $stripe->paymentMethods->attach(
             $paymentMethod->id,
-            ['customer' => $request['customer']]
+            ['customer' => $user->stripe_cus_id]
         );
 
         return response()->json([
