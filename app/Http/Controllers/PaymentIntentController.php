@@ -38,26 +38,71 @@ class PaymentIntentController extends Controller
     {
         $user = Auth::user();
 
-        $paymentIntent =  PaymentIntent::create([
-            'user_id' => $user->id,
-            'payment_method_id' => $request->payment_method_id,
-            'stripe_cus_id' => $user->stripe_cus_id,
+
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+        $paymentMethod =   $stripe->paymentMethods->create([
+            'type' => 'card',
+            'card' => [
+                'number' => $request['number'],
+                'exp_month' => $request['exp_month'],
+                'exp_year' => $request['exp_year'],
+                'cvc' => $request['cvc'],
+                'billing_details' => [
+                    'email' => 'email',
+                    "phone" => 'phone'
+                ],
+                'customer' => [
+                    'customer' => $request['customer'],
+                ]
+            ],
 
         ]);
 
-        if ($paymentIntent) {
-            return response()->json([
-                'success' => true,
-                'data' => $paymentIntent,
-                'message' => 'Stripe Payment Method Successfully Added',
-            ]);
-        } else {
+        if (!$paymentMethod) {
             return response()->json([
                 'success' => false,
                 'data' => [],
                 'message' => 'Failed to Store the payment method',
             ]);
         }
+
+        $stripe->paymentMethods->attach(
+            $paymentMethod->id,
+            ['customer' => $request['customer']]
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => $paymentMethod,
+            'message' => 'Stripe Payment Method Successfully Added',
+        ]);
+
+
+
+
+
+        // $paymentIntent =  PaymentIntent::create([
+        //     'user_id' => $user->id,
+        //     'payment_method_id' => $request->payment_method_id,
+        //     'stripe_cus_id' => $user->stripe_cus_id,
+
+        // ]);
+
+        // if ($paymentIntent) {
+        //     return response()->json([
+        //         'success' => true,
+        //         'data' => $paymentIntent,
+        //         'message' => 'Stripe Payment Method Successfully Added',
+        //     ]);
+        // } else {
+        //     return response()->json([
+        //         'success' => false,
+        //         'data' => [],
+        //         'message' => 'Failed to Store the payment method',
+        //     ]);
+        // }
     }
 
     /**
@@ -108,19 +153,18 @@ class PaymentIntentController extends Controller
     public function getPaymentMethod()
     {
         $user = Auth::user();
-        $paymentMethod = PaymentIntent::where('user_id',$user->id)->get();
-        if($paymentMethod)
-        {
+        $paymentMethod = PaymentIntent::where('user_id', $user->id)->get();
+        if ($paymentMethod) {
             return response()->json([
-                'success'=>true,
-                'data'=>$paymentMethod,
-                'message'=>'Payment Method Available Here',
+                'success' => true,
+                'data' => $paymentMethod,
+                'message' => 'Payment Method Available Here',
             ]);
-        }else{
+        } else {
             return response()->json([
-                'success'=>false,
-                'data'=>[],
-                'message'=>'No Payment Method Available Here',
+                'success' => false,
+                'data' => [],
+                'message' => 'No Payment Method Available Here',
             ]);
         }
     }
