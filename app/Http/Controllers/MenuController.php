@@ -365,7 +365,7 @@ class MenuController extends Controller
     {
         $foodCategories= FoodCategory::all()->random(5)->pluck('id');
         foreach ($foodCategories as $key => $value) {
-            $menuItem = Menu::where('food_category_id',$value)->first();
+            $menuItem = Menu::where('food_category_id',$value)->with('restaurant')->first();
             if($menuItem!=null)
             $menuItems[]=$menuItem;
             else
