@@ -28,7 +28,27 @@ class AuthController extends Controller
             ]);
         }
 
+        //CREATING STRIPE USER
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+ 
+            $customer =  $stripe->customers->create([
+                'payment_method' => $request->paymentMethodId,
+                'description' => 'NEW USER Signed up',
+                'email' =>  $request['email'],
+                'name' =>  $request['cust_first_name'],
+            ]);
 
+            if(!$customer)
+            {
+                    return response()->json([
+                        'success'=>false,
+                        'data'=>[],
+                        'message'=>'Something really bad happens'
+                    ]);
+            }
+        
 
 
 
@@ -45,7 +65,8 @@ class AuthController extends Controller
                 'cust_profile_image' => $upload_path . $generated_new_name,
                 'cust_uid' => $request->cust_uid,
                 'cust_account_type' => $request['cust_account_type'],
-                'cust_registration_type' => $request['cust_registration_type']
+                'cust_registration_type' => $request['cust_registration_type'],
+                'stripe_cus_id' => $customer->id,
 
             ]);
         } else {
@@ -56,7 +77,9 @@ class AuthController extends Controller
                 'cust_phone_number' => $request['cust_phone_number'],
                 'cust_uid' => $request->cust_uid,
                 'cust_account_type' => $request['cust_account_type'],
-                'cust_registration_type' => $request['cust_registration_type']
+                'cust_registration_type' => $request['cust_registration_type'],
+                'stripe_cus_id' => $customer->id,
+
 
             ]);
         }
@@ -66,9 +89,9 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'=>$user,
+            'data' => $user,
             'access_token' => $token,
-           
+
         ]);
     }
 
@@ -112,21 +135,21 @@ class AuthController extends Controller
 
     public function checkUidAvailable(Request $request)
     {
-    
+
         $user = User::where('cust_uid', $request['uid'])->first();
 
         if ($user) {
-       $userData=     Auth::loginUsingId($user->id);
-      
+            $userData =     Auth::loginUsingId($user->id);
 
-       $token = $user->createToken('auth_token')->plainTextToken;
 
-       return response()->json([
-           'status' => true,
-           'data' => $user,
-           'access_token' => $token,
+            $token = $user->createToken('auth_token')->plainTextToken;
 
-       ]);
+            return response()->json([
+                'status' => true,
+                'data' => $user,
+                'access_token' => $token,
+
+            ]);
         } else {
             return response()->json([
                 'success' => false,
@@ -146,10 +169,10 @@ class AuthController extends Controller
             'user_id' => Auth::user()->id,
             'user_latitude' => $request['latitude'],
             'user_longitude' => $request['longitude'],
-            'address_type'=> $request['address_type'],
-            'phone_no'=>$request['phone_no'],
-            'name'=>$request['name'],
-            'type'=>$request['type'],
+            'address_type' => $request['address_type'],
+            'phone_no' => $request['phone_no'],
+            'name' => $request['name'],
+            'type' => $request['type'],
         ]);
 
         if ($userAddress) {
@@ -170,7 +193,7 @@ class AuthController extends Controller
     public function getUserAddress()
     {
         $userId = Auth::user()->id;
-        $data = UserAddress::where('user_id',$userId)->orderBy('id','desc')->limit(5)->get();
+        $data = UserAddress::where('user_id', $userId)->orderBy('id', 'desc')->limit(5)->get();
         if ($data) {
             return response()->json([
                 'success' => true,
@@ -184,7 +207,6 @@ class AuthController extends Controller
                 'data' => 'Address is empty'
             ]);
         }
-        
     }
 
     public function updateUser(Request $request)
@@ -192,48 +214,46 @@ class AuthController extends Controller
         $user = Auth::user();
         $user = User::find(Auth::user()->id);
         $user->update($request->all());
-       
-        return response()->json([
-            'success'=>true,
-            'data'=>$user,
-            'message'=>'User Profile Updated'
-        ]);
 
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'message' => 'User Profile Updated'
+        ]);
     }
 
     public function changePassword(Request $request)
-{
-   
-    $input = $request->all();
-    $userid =Auth::user()->id;
-    $rules = array(
-        'old_password' => 'required',
-        'new_password' => 'required|min:6',
-        'confirm_password' => 'required|same:new_password',
-    );
-    $validator = Validator::make($input, $rules);
-    if ($validator->fails()) {
-        $arr = array("success" => false, "message" => $validator->errors()->first(), "data" => array());
-    } else {
-        try {
-            if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
-                $arr = array("success" => false, "message" => "Check your old password.", "data" => array());
-            } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
-                $arr = array("success" => false, "message" => "Please enter a password which is not similar then current password.", "data" => array());
-            } else {
-                User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
-                $arr = array("success" => true, "message" => "Password updated successfully.", "data" => array());
-            }
-        } catch (\Exception $ex) {
-            if (isset($ex->errorInfo[2])) {
-                $msg = $ex->errorInfo[2];
-            } else {
-                $msg = $ex->getMessage();
-            }
-            $arr = array("success" => false, "message" => $msg, "data" => array());
-        }
-    }
-    return response($arr);
-}
+    {
 
+        $input = $request->all();
+        $userid = Auth::user()->id;
+        $rules = array(
+            'old_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        );
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            $arr = array("success" => false, "message" => $validator->errors()->first(), "data" => array());
+        } else {
+            try {
+                if ((Hash::check(request('old_password'), Auth::user()->password)) == false) {
+                    $arr = array("success" => false, "message" => "Check your old password.", "data" => array());
+                } else if ((Hash::check(request('new_password'), Auth::user()->password)) == true) {
+                    $arr = array("success" => false, "message" => "Please enter a password which is not similar then current password.", "data" => array());
+                } else {
+                    User::where('id', $userid)->update(['password' => Hash::make($input['new_password'])]);
+                    $arr = array("success" => true, "message" => "Password updated successfully.", "data" => array());
+                }
+            } catch (\Exception $ex) {
+                if (isset($ex->errorInfo[2])) {
+                    $msg = $ex->errorInfo[2];
+                } else {
+                    $msg = $ex->getMessage();
+                }
+                $arr = array("success" => false, "message" => $msg, "data" => array());
+            }
+        }
+        return response($arr);
+    }
 }
