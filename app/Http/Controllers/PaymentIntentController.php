@@ -50,8 +50,9 @@ class PaymentIntentController extends Controller
                 'exp_year' => $request['exp_year'],
                 'cvc' => $request['cvc'],
                 'billing_details' => [
-                    'email' => 'email',
-                    "phone" => 'phone'
+                    'email' => $request['email'],
+                    "phone" => $request['phone'],
+                    'name' => $request['name'],
                 ],
                 'customer' => [
                     'customer' => $request['customer'],
@@ -153,11 +154,19 @@ class PaymentIntentController extends Controller
     public function getPaymentMethod()
     {
         $user = Auth::user();
-        $paymentMethod = PaymentIntent::where('user_id', $user->id)->get();
-        if ($paymentMethod) {
+
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+        $paymentMethods =    $stripe->paymentMethods->all([
+            'customer' => $user->stripe_cus_id,
+            'type' => 'card',
+        ]);
+
+        if ($paymentMethods) {
             return response()->json([
                 'success' => true,
-                'data' => $paymentMethod,
+                'data' => $paymentMethods,
                 'message' => 'Payment Method Available Here',
             ]);
         } else {
@@ -167,5 +176,20 @@ class PaymentIntentController extends Controller
                 'message' => 'No Payment Method Available Here',
             ]);
         }
+
+        // $paymentMethod = PaymentIntent::where('user_id', $user->id)->get();
+        // if ($paymentMethod) {
+        //     return response()->json([
+        //         'success' => true,
+        //         'data' => $paymentMethod,
+        //         'message' => 'Payment Method Available Here',
+        //     ]);
+        // } else {
+        //     return response()->json([
+        //         'success' => false,
+        //         'data' => [],
+        //         'message' => 'No Payment Method Available Here',
+        //     ]);
+        // }
     }
 }
