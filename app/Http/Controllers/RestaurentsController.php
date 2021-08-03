@@ -427,11 +427,10 @@ class RestaurentsController extends Controller
     }
 
 
-    public function restaurantServiceType(Request $request)
+    public function getItemsServiceType(Request $request)
     {
-        $restaurantServiceType =  $request['restaurant_type'];
-        $restaurantsIds = Restaurents::where($restaurantServiceType, 1)->get('id')->pluck('id');
-        $filteredItems = Menu::whereIn('rest_id',$restaurantsIds)->with('restaurant')->get();
+        $itemType =  $request['item_type'];
+        $filteredItems = Menu::where($itemType,1)->with('restaurant')->get();
         return response()->json([
             'success'=>true,
             'data'=>$filteredItems,

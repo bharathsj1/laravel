@@ -50,7 +50,7 @@ Route::post('/changePassword',[AuthController::class,'changePassword'])->middlew
 Route::get('get-all-orders',[OrderController::class,'getAllOrders']);
 Route::post('/get-restaurents', [RestaurentsController::class, 'index']);
 Route::get('getOrdersForSpecificOwnerRestaurent',[RestaurentsController::class,'getOrdersForSpecificRes'])->middleware(('auth:sanctum'));
-Route::post('/getRestaurantServiceType',[RestaurentsController::class,'restaurantServiceType']);// PICKUP DELIVERY
+Route::post('/getItemsServiceType',[RestaurentsController::class,'getItemsServiceType']);// PICKUP DELIVERY
 Route::post('/make-payment', [PaymentController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-order', [OrderController::class, 'store'])->middleware(('auth:sanctum'));
 Route::post('/make-menu', [MenuController::class, 'store'])->middleware(('auth:sanctum'));
