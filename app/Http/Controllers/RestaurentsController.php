@@ -431,7 +431,7 @@ class RestaurentsController extends Controller
     {
         $restaurantServiceType =  $request['restaurant_type'];
         $restaurantsIds = Restaurents::where($restaurantServiceType, 1)->get('id')->pluck('id');
-        $filteredItems = Menu::whereIn('rest_id',$restaurantsIds)->get();
+        $filteredItems = Menu::whereIn('rest_id',$restaurantsIds)->with('restaurant')->get();
         return response()->json([
             'success'=>true,
             'data'=>$filteredItems,
