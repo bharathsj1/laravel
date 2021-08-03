@@ -293,18 +293,16 @@ class RestaurentsController extends Controller
 
         if ($request->has('sort')) {
             $sortType = $request['sort'];
-            if ($sortType == 'distance' && $request->has('lat') && $request->has('lng') ) {
+            if ($sortType == 'distance' && $request->has('lat') && $request->has('lng')) {
                 $allRestaurants = Restaurents::all();
                 foreach ($allRestaurants as $key => $value) {
                     $km =  $this->haversineGreatCircleDistance(floatval($value->rest_latitude), floatval($value->rest_longitude), $request->lat, $request->lng);
-               
-                    if($km<=5)
-                    {
-                      
-                        $filterData[]=$value;
+
+                    if ($km <= 5) {
+
+                        $filterData[] = $value;
                     }
                 }
-               
             } else {
                 return response()->json([
                     'success' => false,
@@ -312,11 +310,11 @@ class RestaurentsController extends Controller
                     'message' => 'Lat Lngs are required for distance sorting'
                 ]);
             }
-            
+
 
             //IF SORT IS RECOMMENDED
             if ($sortType == 'recommended') {
-                
+
                 $recommendedRestaurants = Restaurents::where('rest_isOpen', '1')->orWhere('rest_isTrending', '1')->get();
                 foreach ($recommendedRestaurants as $key => $value) {
                     $ratings = ratings::where('rest_id', $value->id)->get();
@@ -331,7 +329,7 @@ class RestaurentsController extends Controller
             }
             // IF SORT IS RATINGS
             else if ($sortType == 'ratings') {
-                
+
                 $restaurentRatings = ratings::orderBy('id', 'DESC')->get();
                 if ($restaurentRatings) {
                     foreach ($restaurentRatings as $key => $value) {
@@ -350,7 +348,7 @@ class RestaurentsController extends Controller
         // if rating list is sent
 
         if ($request->has('rating_list')) {
-            
+
             $ratingList = $request->rating_list;
             $restaurentsRating = ratings::all();
             $allRestaurants = Restaurents::all();
@@ -380,7 +378,7 @@ class RestaurentsController extends Controller
         }
 
         if ($request->has('categories_list')) {
-            
+
             $categoriesList = $request->categories_list;
             $resID = array();
             $menusList = Menu::all();
@@ -425,6 +423,19 @@ class RestaurentsController extends Controller
             'success' => true,
             'data' => $filterData,
             'message' => 'Filters Data'
+        ]);
+    }
+
+
+    public function restaurantServiceType(Request $request)
+    {
+        $restaurantServiceType =  $request['restaurant_type'];
+        $restaurantsIds = Restaurents::where($restaurantServiceType, 1)->get('id')->pluck('id');
+        $filteredItems = Menu::whereIn('rest_id',$restaurantsIds)->get();
+        return response()->json([
+            'success'=>true,
+            'data'=>$filteredItems,
+            'message'=>'Restaurant Type Data',
         ]);
     }
 }
