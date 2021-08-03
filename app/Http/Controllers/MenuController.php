@@ -208,7 +208,7 @@ class MenuController extends Controller
 
     public function getMenuWithMenuTypeId($id)
     {
-        $menus = Menu::where('menu_type_id', $id)->get();
+        $menus = Menu::where('menu_type_id', $id)->orderBy('order_count','DESC')->get();
         if ($menus) {
             return response()->json([
                 'success' => true,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderDetails;
 use App\Models\Orderitems;
@@ -123,6 +124,9 @@ class OrderController extends Controller
                 'rest_id' => $value['restaurantId'],
                 'product_id' => $value['id'],
             ]);
+            $menuItem = Menu::find($value['id']);
+            $menuItem->order_count = $menuItem->order_count+1;
+            $menuItem->save();
         }
     }
 

@@ -108,9 +108,7 @@ Route::get('/menuItemsWithTypesForSpecificRes/{id}',[MenuController::class,'menu
 Route::get('/MenuTypesWithAtleastOneItem',[MenuController::class,'MenuTypesWithAtleastOneItem']);
 
 Route::get('/getCategoriesMenuType/{id}',[MenuController::class,'getCategoriesByMenuTypeId']);
-Route::get('/getMenuItemsFoodCategory{id}',function(){
-    return 'asf';
-});
+
 
 Route::get('/demoRecommendedItems',[MenuController::class,'demoRecommendedItem']);
 
