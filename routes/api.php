@@ -71,7 +71,7 @@ Route::post('/update-driver-lat-lng',[RestaurentsController::class,'updateDriver
 Route::get('/get-specific-order/{id}',[OrderController::class,'getSpecificOrder']);
 Route::post('/send-notification-to-specific-user',[NotificationsController::class,'sendNotificationToSpecificUser']);
 Route::get('/getSpecificNotification', [NotificationsController::class, 'getSpecificNotification'])->middleware(('auth:sanctum'));
-
+Route::get('/getRestaurant/{id}',[RestaurentsController::class,'getRestaurant']);
 //DELETING FCM TOKEN
 
 Route::delete('/deleteFCM',[DeviceTokenController::class,'deleteToken'])->middleware('auth:sanctum');

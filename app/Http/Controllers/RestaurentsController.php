@@ -437,4 +437,15 @@ class RestaurentsController extends Controller
             'message'=>'Restaurant Type Data',
         ]);
     }
+
+    public function getRestaurant($id)
+    {
+      
+        $filteredItems = Restaurents::find($id);
+        return response()->json([
+            'success'=>true,
+            'data'=>$filteredItems,
+            'message'=>'Restaurant Type Data',
+        ]);
+    }
 }
