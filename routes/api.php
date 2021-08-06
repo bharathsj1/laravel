@@ -130,6 +130,7 @@ Route::get('/getPaymentMethod',[PaymentIntentController::class,'getPaymentMethod
 //Receipies
 
 Route::get('/get-receipe/{id}',[ReceipeController::class,'getReceipeById' ]);
+Route::get('/get-receipies',[ReceipeController::class,'index']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

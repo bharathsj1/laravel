@@ -20,7 +20,12 @@ class ReceipeController extends Controller
      */
     public function index()
     {
-        //
+        $receipe = Receipe::all();
+        return response()->json([
+            'success'=>true,
+            'data'=>$receipe,
+            'message'=>'All Receipes',
+        ]);
     }
 
     /**
