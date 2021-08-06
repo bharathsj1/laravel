@@ -125,7 +125,7 @@ class ReceipeController extends Controller
 
             $filterIngridient = array();
             foreach ($ingridientArray as $key => $ingridientValue) {
-                $filterIngridient[] = Ingridients::find(intval($ingridientValue));
+                $filterIngridient[] = ReciepeIngridient::where('ingridient_id',intval($ingridientValue))->with('ingridient')->first();
             }
             $filterUtensils = array();
             foreach ($utensilsArray as $key => $utensilValue) {
