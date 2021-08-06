@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentIntentController;
+use App\Http\Controllers\ReceipeController;
 use App\Http\Controllers\RestaurentsController;
 use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
@@ -124,6 +125,11 @@ Route::get('/getAddOns/{id}',[AddonsController::class,'getAddOns']);
 
 Route::post('/storePaymentMethod',[PaymentIntentController::class,'store'])->middleware(('auth:sanctum'));
 Route::get('/getPaymentMethod',[PaymentIntentController::class,'getPaymentMethod'])->middleware(('auth:sanctum'));
+
+
+//Receipies
+
+Route::get('/get-receipe/{id}',[ReceipeController::class,'getReceipeById' ]);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
