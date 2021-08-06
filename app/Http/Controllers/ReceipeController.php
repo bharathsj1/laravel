@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ingridients;
 use App\Models\Nutrition;
+use App\Models\NutritionDefault;
 use App\Models\Receipe;
 use App\Models\ReciepeIngridient;
 use App\Models\Steps;
@@ -22,9 +23,9 @@ class ReceipeController extends Controller
     {
         $receipe = Receipe::all();
         return response()->json([
-            'success'=>true,
-            'data'=>$receipe,
-            'message'=>'All Receipes',
+            'success' => true,
+            'data' => $receipe,
+            'message' => 'All Receipes',
         ]);
     }
 
@@ -112,7 +113,9 @@ class ReceipeController extends Controller
             $recipeUtensils[] = $value->utensil->name;
         }
 
-        $nutrition = Nutrition::where('receipe_id', $receipe->id)->get();
+        $perServiingnutrition = NutritionDefault::where('receipe_id', $receipe->id)->where('per_serving', 1)->get();
+        $notPerServiingnutrition = NutritionDefault::where('receipe_id', $receipe->id)->where('per_serving', 0)->get();
+
         $steps = array();
         $allSteps = Steps::where('receipe_id', $receipe->id)->get();
         foreach ($allSteps as $key => $value) {
@@ -133,15 +136,19 @@ class ReceipeController extends Controller
                 'step_no' => $value->step_no,
                 'description' => $value->description,
                 'image' => $value->image,
-                'ingridients'=>$filterIngridient,
-                'utensils'=>$filterUtensils,
+                'ingridients' => $filterIngridient,
+                'utensils' => $filterUtensils,
 
             ];
         };
 
-       
 
 
+        $nutrition[] = [
+            'perServing' => $perServiingnutrition,
+            'notPerServing' => $notPerServiingnutrition,
+
+        ];
 
         $array = [
             'reciepe' => $receipe,
@@ -152,10 +159,9 @@ class ReceipeController extends Controller
 
         ];
         return response()->json([
-            'success'=>true,
-            'data'=>$array,
-            'message'=>'Your Data'
+            'success' => true,
+            'data' => $array,
+            'message' => 'Your Data'
         ]);
-      
     }
 }
