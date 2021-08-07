@@ -171,10 +171,11 @@ class SubscriptionController extends Controller
                 $subsc =   $stripe->subscriptions->retrieve(
                     $value->payment_intent,
                     []
+                  
                 );
-
+              
                 $product =     $stripe->products->retrieve(
-                    $subsc->item['data']->price['product'],
+                    $subsc['items']['data'][0]['price']['product'],
                     []
                 );
 
