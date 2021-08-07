@@ -164,13 +164,24 @@ class SubscriptionController extends Controller
             'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
         );
         $subs = array();
+        //TODO PRODUCT KA DATA
         if ($subscriptionData) {
 
             foreach ($subscriptionData as $key => $value) {
-                $subs[] =   $stripe->subscriptions->retrieve(
+                $subsc =   $stripe->subscriptions->retrieve(
                     $value->payment_intent,
                     []
                 );
+
+                $product =     $stripe->products->retrieve(
+                    $subsc->item['data']->price['product'],
+                    []
+                );
+
+                $subs[] = [
+                    'sub' => $subsc,
+                    'product' => $product,
+                ];
             }
 
             return response()->json([
@@ -236,8 +247,8 @@ class SubscriptionController extends Controller
     public function checkAlreadySubscribed(Request $request)
     {
         $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', $request->plan_id)->where('subscription_status', 'active')->get();
-    
-        if (count($allUserSubs)>0) {
+
+        if (count($allUserSubs) > 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'You have already subscribed for this subscription'
