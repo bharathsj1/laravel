@@ -13,6 +13,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentIntentController;
 use App\Http\Controllers\ReceipeController;
+use App\Http\Controllers\ReceipeOrderController;
 use App\Http\Controllers\RestaurentsController;
 use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
@@ -23,6 +24,7 @@ use App\Models\freeMeal;
 use App\Models\HotspotsRestaurants;
 use App\Models\Menu;
 use App\Models\PaymentIntent;
+use App\Models\ReceipeOrder;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
@@ -132,6 +134,10 @@ Route::get('/getPaymentMethod',[PaymentIntentController::class,'getPaymentMethod
 Route::get('/get-receipe/{id}',[ReceipeController::class,'getReceipeById' ]);
 Route::get('/get-receipies',[ReceipeController::class,'index']);
 
+//Receipies Order
+
+Route::post('/create-receipe-order',[ReceipeOrderController::class,'store'])->middleware(('auth:sanctum'));
+Route::get('/get-receipe-orders',[ReceipeOrderController::class,'getReceipeOrders'])->middleware(('auth:sanctum'));
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
