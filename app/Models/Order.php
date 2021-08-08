@@ -30,4 +30,9 @@ class Order extends Model
         return $this->belongsTo(MenuType::class,'id');
     }
 
+    public function receipe()
+    {
+        return $this->belongsTo(Receipe::class,'receipe_id');
+    }
+
 }

@@ -47,6 +47,9 @@ class OrderController extends Controller
             'payment_id' => $request['payment_id'],
             'customer_id' => Auth::user()->id,
             'customer_addressId' => $request['customer_addressId'],
+            'receipe_id'=>$request['receipe_id'],
+            'method_id'=>$request['method_id'],
+            'person_quantity'=>$request['person_quantity'],
 
 
         ]);
@@ -123,6 +126,7 @@ class OrderController extends Controller
                 'price' => $value['price'],
                 'rest_id' => $value['restaurantId'],
                 'product_id' => $value['id'],
+              
             ]);
             $menuItem = Menu::find($value['id']);
             $menuItem->order_count = $menuItem->order_count+1;
@@ -174,7 +178,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress'])->orderBy('id','DESC')->get();
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress','receipe'])->orderBy('id','DESC')->get();
             return response()->json([
                 'success'=>true,
                 'data'=>$order,
