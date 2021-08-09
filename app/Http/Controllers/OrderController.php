@@ -40,19 +40,37 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $order = Order::create([
+        if ($request->has('receipe_id')) {
+            $order = Order::create([
 
-            'total_amount' => $request['total_amount'],
-            'payment_method' => $request['payment_method'],
-            'payment_id' => $request['payment_id'],
-            'customer_id' => Auth::user()->id,
-            'customer_addressId' => $request['customer_addressId'],
-            'receipe_id'=>$request['receipe_id'],
-            'method_id'=>$request['method_id'],
-            'person_quantity'=>$request['person_quantity'],
+                'total_amount' => $request['total_amount'],
+                'payment_method' => $request['payment_method'],
+                'payment_id' => $request['payment_id'],
+                'customer_id' => Auth::user()->id,
+                'customer_addressId' => $request['customer_addressId'],
+
+                'receipe_id' => $request['receipe_id'],
+                'method_id' => $request['method_id'],
+                'person_quantity' => $request['person_quantity'],
 
 
-        ]);
+
+            ]);
+        } else {
+            $order = Order::create([
+
+                'total_amount' => $request['total_amount'],
+                'payment_method' => $request['payment_method'],
+                'payment_id' => $request['payment_id'],
+                'customer_id' => Auth::user()->id,
+                'customer_addressId' => $request['customer_addressId'],
+
+                'method_id' => $request['method_id'],
+
+
+
+            ]);
+        }
 
         if ($order) {
             return response()->json([
@@ -126,10 +144,10 @@ class OrderController extends Controller
                 'price' => $value['price'],
                 'rest_id' => $value['restaurantId'],
                 'product_id' => $value['id'],
-              
+
             ]);
             $menuItem = Menu::find($value['id']);
-            $menuItem->order_count = $menuItem->order_count+1;
+            $menuItem->order_count = $menuItem->order_count + 1;
             $menuItem->save();
         }
     }
@@ -137,10 +155,10 @@ class OrderController extends Controller
     public function addOrderDetails(Request $request)
     {
         $validatedData   =  Validator::make($request->all(), [
-            'quantity' => 'required',
+            // 'quantity' => 'required',
             'total_price' => 'required',
             'order_id' => 'required',
-            'rest_menuId' => 'required'
+            // 'rest_menuId' => 'required'
         ]);
 
         if ($validatedData->fails()) {
@@ -150,14 +168,27 @@ class OrderController extends Controller
             ]);
         }
 
-        $order =   OrderDetails::create([
-            'quantity' => $request['quantity'],
-            'total_price' => $request['total_price'],
-            'order_id' => $request['order_id'],
-            'rest_menuId' => $request['rest_menuId'],
-            'rest_id'=>$request['rest_Id']
+        if ($request->has('receipe_id')) {
 
-        ]);
+            $order =   OrderDetails::create([
+                'quantity' => $request['quantity'],
+                'total_price' => $request['total_price'],
+                'order_id' => $request['order_id'],
+                'receipe_id' => $request['receipe_id'],
+
+            ]);
+        } else {
+
+            $order =   OrderDetails::create([
+                'quantity' => $request['quantity'],
+                'total_price' => $request['total_price'],
+                'order_id' => $request['order_id'],
+
+            ]);
+        }
+
+
+
 
         if ($order) {
             response()->json([
@@ -178,39 +209,37 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress','receipe'])->orderBy('id','DESC')->get();
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress', 'receipe'])->orderBy('id', 'DESC')->get();
             return response()->json([
-                'success'=>true,
-                'data'=>$order,
-                'message'=>'Your Orders List'
+                'success' => true,
+                'data' => $order,
+                'message' => 'Your Orders List'
             ]);
-        }else{
+        } else {
             return response()->json([
-                'success'=>false,
-                'data'=>[],
-                'message'=>'You are not authorized',
+                'success' => false,
+                'data' => [],
+                'message' => 'You are not authorized',
             ]);
         }
     }
 
     public function getAllOrders()
     {
-      
-         $order = Order::with(['orderDetail','user_address'])->orderBy('id','desc')->get();
-      
-        if($order)
-        {
-            return response()->json([
-                'success'=>true,
-                'data'=>$order,
-                'message'=>'All Orders'
-            ]);
 
-        }else{
+        $order = Order::with(['orderDetail', 'user_address'])->orderBy('id', 'desc')->get();
+
+        if ($order) {
             return response()->json([
-                'success'=>false,
-                'data'=>[],
-                'message'=>'No Orders'
+                'success' => true,
+                'data' => $order,
+                'message' => 'All Orders'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'No Orders'
             ]);
         }
     }
@@ -261,21 +290,19 @@ class OrderController extends Controller
 
     public function getSpecificOrder($id)
     {
-        $order = Order::where('id',$id)->with(['orderDetail','user_address'])->first();
-       if($order)
-       {
-        return response()->json([
-            'success' => true,
-            'data' => $order,
-            'message' => 'Order details',
-        ]);
-       }else{
-        return response()->json([
-            'success' => false,
-            'data' => [],
-            'message' => 'Did not found any order ',
-        ]);
-       }
-
+        $order = Order::where('id', $id)->with(['orderDetail', 'user_address'])->first();
+        if ($order) {
+            return response()->json([
+                'success' => true,
+                'data' => $order,
+                'message' => 'Order details',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Did not found any order ',
+            ]);
+        }
     }
 }
