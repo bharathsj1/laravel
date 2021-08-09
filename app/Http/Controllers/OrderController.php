@@ -50,7 +50,7 @@ class OrderController extends Controller
                 'customer_id' => $request['user_id'],
                 'customer_addressId' => $request['customer_addressId'],
 
-                'receipe_id' => $request['receipe_id'],
+                'receipe_id' => true,
                 'method_id' => $request['method_id'],
                 'person_quantity' => $request['person_quantity'],
                 'is_receipe'=>$request['is_receipe'],
