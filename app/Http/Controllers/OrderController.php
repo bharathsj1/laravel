@@ -52,6 +52,7 @@ class OrderController extends Controller
                 'receipe_id' => $request['receipe_id'],
                 'method_id' => $request['method_id'],
                 'person_quantity' => $request['person_quantity'],
+                'is_receipe'=>$request['is_receipe'],
 
 
 
@@ -175,6 +176,7 @@ class OrderController extends Controller
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
                 'receipe_id' => $request['receipe_id'],
+                'person_quantity'=>$request['person_quantity']
 
             ]);
         } else {
