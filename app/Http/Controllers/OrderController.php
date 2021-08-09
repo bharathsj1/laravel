@@ -66,6 +66,7 @@ class OrderController extends Controller
                 'payment_id' => $request['payment_id'],
                 'customer_id' => $request['user_id'],
                 'customer_addressId' => $request['customer_addressId'],
+                'receipe_id' => false,
 
                 'method_id' => $request['method_id'],
 
