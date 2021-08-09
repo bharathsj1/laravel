@@ -199,7 +199,7 @@ class RestaurentsController extends Controller
                     $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
                     $order = Order::where('super_admin', 'approved')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
-                    })->with('user_address')->get();
+                    })->with(['user_address','receipe'])->get();
 
                     if (count($order) > 0) {
                         $orderDetails = $order;

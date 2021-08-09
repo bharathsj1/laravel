@@ -231,7 +231,7 @@ class OrderController extends Controller
     public function getAllOrders()
     {
 
-        $order = Order::with(['orderDetail', 'user_address'])->orderBy('id', 'desc')->get();
+        $order = Order::with(['orderDetail', 'user_address','receipe'])->orderBy('id', 'desc')->get();
 
         if ($order) {
             return response()->json([

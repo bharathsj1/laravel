@@ -35,4 +35,6 @@ class Order extends Model
         return $this->belongsTo(Receipe::class,'receipe_id');
     }
 
+    
+
 }
