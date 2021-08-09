@@ -40,40 +40,23 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-       
-        if ($request->has('receipe_id')) {
-            $order = Order::create([
 
-                'total_amount' => $request['total_amount'],
-                'payment_method' => $request['payment_method'],
-                'payment_id' => $request['payment_id'],
-                'customer_id' => $request['user_id'],
-                'customer_addressId' => $request['customer_addressId'],
 
-                'receipe_id' => true,
-                'method_id' => $request['method_id'],
-                'person_quantity' => $request['person_quantity'],
-                'is_receipe'=>$request['is_receipe'],
+        $order = Order::create([
+
+            'total_amount' => $request['total_amount'],
+            'payment_method' => $request['payment_method'],
+            'payment_id' => $request['payment_id'],
+            'customer_id' => $request['user_id'],
+            'customer_addressId' => $request['customer_addressId'],
+            'is_receipe' => $request['is_receipe'],
+
+            'method_id' => $request['method_id'],
 
 
 
-            ]);
-        } else {
-            $order = Order::create([
+        ]);
 
-                'total_amount' => $request['total_amount'],
-                'payment_method' => $request['payment_method'],
-                'payment_id' => $request['payment_id'],
-                'customer_id' => $request['user_id'],
-                'customer_addressId' => $request['customer_addressId'],
-                'receipe_id' => false,
-
-                'method_id' => $request['method_id'],
-
-
-
-            ]);
-        }
 
         if ($order) {
             return response()->json([
@@ -178,7 +161,7 @@ class OrderController extends Controller
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
                 'receipe_id' => $request['receipe_id'],
-                'person_quantity'=>$request['person_quantity']
+                'person_quantity' => $request['person_quantity']
 
             ]);
         } else {
@@ -231,7 +214,7 @@ class OrderController extends Controller
     public function getAllOrders()
     {
 
-        $order = Order::with(['orderDetail', 'user_address','receipe'])->orderBy('id', 'desc')->get();
+        $order = Order::with(['orderDetail', 'user_address', 'receipe'])->orderBy('id', 'desc')->get();
 
         if ($order) {
             return response()->json([
