@@ -170,6 +170,8 @@ class OrderController extends Controller
                 'quantity' => $request['quantity'],
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
+                'rest_menuId' => $request['rest_menuId'],
+                'rest_id'=>$request['rest_Id']
 
             ]);
         }
@@ -291,5 +293,10 @@ class OrderController extends Controller
                 'message' => 'Did not found any order ',
             ]);
         }
+    }
+
+    public function checkFreeReceipeAvailable()
+    {
+        $userId = Auth::user()->id;
     }
 }
