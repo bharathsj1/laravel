@@ -47,7 +47,7 @@ class OrderController extends Controller
                 'total_amount' => $request['total_amount'],
                 'payment_method' => $request['payment_method'],
                 'payment_id' => $request['payment_id'],
-                'customer_id' => Auth::user()->id,
+                'customer_id' => $request['user_id'],
                 'customer_addressId' => $request['customer_addressId'],
 
                 'receipe_id' => $request['receipe_id'],
@@ -64,7 +64,7 @@ class OrderController extends Controller
                 'total_amount' => $request['total_amount'],
                 'payment_method' => $request['payment_method'],
                 'payment_id' => $request['payment_id'],
-                'customer_id' => Auth::user()->id,
+                'customer_id' => $request['user_id'],
                 'customer_addressId' => $request['customer_addressId'],
 
                 'method_id' => $request['method_id'],
