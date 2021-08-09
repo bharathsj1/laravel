@@ -40,7 +40,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        return 'sfsdf';
+       
         if ($request->has('receipe_id')) {
             $order = Order::create([
 
