@@ -82,7 +82,7 @@ class ReceipeSubscriptionController extends Controller
             ]);
             $subs = ReceipeSubscription::create([
                 'subscription_plan_id' => $request->plan_id,
-                'total_receipes' => $request->total_receipes,
+                'total_receipes' => ($request->total_receipes -1),
                 'user_id' => Auth::user()->id,
                 'payment_intent' => $subscription->id,
                 'subscription_start_date' => Carbon::now(),

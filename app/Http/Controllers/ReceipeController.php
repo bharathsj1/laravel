@@ -206,7 +206,7 @@ class ReceipeController extends Controller
             foreach ($pricesList['data'] as $key => $value) {
                 if ($value->product == $plan_id) {
                     if (!empty($value->transform_quantity)) {
-                        if ($value->transform_quantity['divide_by'] == intval($person_quantity)) {
+                        if ($value->transform_quantity['divide_by'] == intval($receipe_id)) {
                             $requiredData = $value;
                         }
                     }

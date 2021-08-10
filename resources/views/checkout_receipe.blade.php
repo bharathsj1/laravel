@@ -740,7 +740,7 @@ pre {
                         },
                         body: JSON.stringify(orderData)
                     }).then(function(result){
-                   // window.location.href = "/checkout?success";
+                   window.location.href = "/checkout?success";
              
                     });
                 }
