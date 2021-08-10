@@ -179,12 +179,21 @@ class ReceipeController extends Controller
             env('STRIPE_TEST_SECRET_KEY')
         );
         $stripesProductsList =  $stripe->products->all();
+        $stripesPricesList =  $stripe->prices->all();
+
         $receipeProducts = array();
 
         foreach ($stripesProductsList['data'] as $key => $value) {
-            if (!empty($value->metadata)) {
-                if ($value->metadata->is_receipe == 'true') {
-                    $receipeProducts[] = $value;
+            foreach ($stripesPricesList as $key => $priceList) {
+                if (!empty($value->metadata)) {
+                    if ($value->metadata->is_receipe == 'true') {
+                        if ($value->id == $priceList->product) {
+                            $receipeProducts[] = [
+                                'product' => $value,
+                                'price'=>$priceList,
+                            ];;
+                        }
+                    }
                 }
             }
         }
@@ -221,6 +230,6 @@ class ReceipeController extends Controller
         );
         $id = $user_id;
 
-        return view('checkout_receipe')->with(['user_id' => $id, 'plan' => $subscriptionPlan, 'payment' => $requiredData, 'totalReceipes' => $receipe_id,'person_quantity'=>$person_quantity]);
+        return view('checkout_receipe')->with(['user_id' => $id, 'plan' => $subscriptionPlan, 'payment' => $requiredData, 'totalReceipes' => $receipe_id, 'person_quantity' => $person_quantity]);
     }
 }
