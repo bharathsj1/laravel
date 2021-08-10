@@ -18,3 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/checkout/{id}/{plan_id}','SubscriptionController@checkoutPage');
+
+
+Route::get('/checkout-subscription/{user_id}/{plan_id}/{person_quantity}/{receipe_id}','ReceipeController@checkoutPage');

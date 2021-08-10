@@ -127,7 +127,7 @@ class ReceipeController extends Controller
 
             $filterIngridient = array();
             foreach ($ingridientArray as $key => $ingridientValue) {
-                $filterIngridient[] = ReciepeIngridient::where('ingridient_id',intval($ingridientValue))->with('ingridient')->first();
+                $filterIngridient[] = ReciepeIngridient::where('ingridient_id', intval($ingridientValue))->with('ingridient')->first();
             }
             $filterUtensils = array();
             foreach ($utensilsArray as $key => $utensilValue) {
@@ -170,7 +170,7 @@ class ReceipeController extends Controller
     public function checkFreeReceipeAvailable()
     {
         $userId = Auth::user()->id;
-        $orders = Order::where('customer_id')->where('is_receipe',1)->get();
+        $orders = Order::where('customer_id')->where('is_receipe', 1)->get();
     }
 
     public function getReceipiesProduct()
@@ -178,22 +178,49 @@ class ReceipeController extends Controller
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY')
         );
-      $stripesPaymentList=  $stripe->products->all();
-    $receipeProducts = array();
+        $stripesPaymentList =  $stripe->products->all();
+        $receipeProducts = array();
 
-    foreach ($stripesPaymentList['data'] as $key => $value) {
-       if(!empty($value->metadata))
-       {
-            if($value->metadata->is_receipe=='true')
-            {
-                $receipeProducts[]=$value;
+        foreach ($stripesPaymentList['data'] as $key => $value) {
+            if (!empty($value->metadata)) {
+                if ($value->metadata->is_receipe == 'true') {
+                    $receipeProducts[] = $value;
+                }
             }
-       }
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $receipeProducts,
+            'message' => 'Receipies Products'
+        ]);
     }
-    return response()->json([
-        'success'=>true,
-        'data'=>$receipeProducts,
-        'message'=> 'Receipies Products'
-    ]);
+
+    public function checkoutPage($user_id, $plan_id, $person_quantity, $receipe_id)
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_TEST_SECRET_KEY')
+        );
+        $pricesList = $stripe->prices->all();
+
+        if (!empty($pricesList)) {
+            foreach ($pricesList['data'] as $key => $value) {
+                if ($value->product == $plan_id) {
+                    if (!empty($value->transform_quantity)) {
+                        if ($value->transform_quantity['divide_by'] == intval($person_quantity)) {
+                            $requiredData = $value;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        $subscriptionPlan =  $stripe->products->retrieve(
+            $requiredData['product'],
+            []
+        );
+        $id = $user_id;
+
+        return view('checkout_receipe')->with(['user_id' => $id, 'plan' => $subscriptionPlan, 'payment' => $requiredData, 'totalReceipes' => $receipe_id]);
     }
 }

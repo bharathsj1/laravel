@@ -15,6 +15,7 @@ use App\Http\Controllers\PaymentIntentController;
 use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\ReceipeController;
 use App\Http\Controllers\ReceipeOrderController;
+use App\Http\Controllers\ReceipeSubscriptionController;
 use App\Http\Controllers\RestaurentsController;
 use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
@@ -26,6 +27,7 @@ use App\Models\HotspotsRestaurants;
 use App\Models\Menu;
 use App\Models\PaymentIntent;
 use App\Models\ReceipeOrder;
+use App\Models\ReceipeSubscription;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
@@ -141,6 +143,9 @@ Route::Get('/checkFreeReceipeAvailable',[ReceipeController::class,'checkFreeRece
 Route::post('/create-receipe-order',[ReceipeOrderController::class,'store'])->middleware(('auth:sanctum'));
 Route::get('/get-receipe-orders',[ReceipeOrderController::class,'getReceipeOrders'])->middleware(('auth:sanctum'));
 Route::get('/getReceipiesProduct',[ReceipeController::class,'getReceipiesProduct']);
+
+Route::post('/storeReceipeSubscription',[ReceipeSubscriptionController::class,'store']);
+
 //Ratings
 Route::post('/store-rating',[RatingsController::class,'store']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
