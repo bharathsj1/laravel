@@ -146,6 +146,8 @@ Route::get('/getReceipiesProduct',[ReceipeController::class,'getReceipiesProduct
 
 Route::post('/storeReceipeSubscription',[ReceipeSubscriptionController::class,'store']);
 
+Route::get('/isUserReceipeSubscribed',[ReceipeSubscriptionController::class,'isUserReceipeSubscribed'])->middleware(('auth:sanctum'));
+
 //Ratings
 Route::post('/store-rating',[RatingsController::class,'store']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {

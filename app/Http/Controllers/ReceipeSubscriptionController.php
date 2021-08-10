@@ -40,7 +40,7 @@ class ReceipeSubscriptionController extends Controller
      */
     public function store(Request $request)
     {
-      
+
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
         $userData = Auth::loginUsingId($request->user_id);
         $customer = null;
@@ -75,17 +75,17 @@ class ReceipeSubscriptionController extends Controller
                 'customer' => $customer['id'],
                 'items' => [
                     [
-                        'price' =>$request->price_id,
+                        'price' => $request->price_id,
                     ],
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
             $subs = ReceipeSubscription::create([
                 'subscription_plan_id' => $request->plan_id,
-                'total_receipes'=>$request->total_receipes,
-               'user_id' => Auth::user()->id,
+                'total_receipes' => $request->total_receipes,
+                'user_id' => Auth::user()->id,
                 'payment_intent' => $subscription->id,
-                'subscription_start_date'=>Carbon::now(),
+                'subscription_start_date' => Carbon::now(),
             ]);
 
             return response()->json([
@@ -142,5 +142,24 @@ class ReceipeSubscriptionController extends Controller
     public function destroy(ReceipeSubscription $receipeSubscription)
     {
         //
+    }
+
+    public function isUserReceipeSubscribed()
+    {
+        $user = Auth::user();
+        $receipe =   ReceipeSubscription::where('user_id', $user->id)->get();
+        if (!empty($receipe)) {
+            return response()->json([
+                'success' => true,
+                'data' => $receipe,
+                'message' => 'Receipe Subscription Found',
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Receipe Subscription Not Found',
+            ]);
+        }
     }
 }
