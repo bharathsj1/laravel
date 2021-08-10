@@ -295,8 +295,5 @@ class OrderController extends Controller
         }
     }
 
-    public function checkFreeReceipeAvailable()
-    {
-        $userId = Auth::user()->id;
-    }
+
 }

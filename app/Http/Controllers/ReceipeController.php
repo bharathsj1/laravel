@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Ingridients;
 use App\Models\Nutrition;
 use App\Models\NutritionDefault;
+use App\Models\Order;
 use App\Models\Receipe;
 use App\Models\ReciepeIngridient;
 use App\Models\Steps;
 use App\Models\UtensilReciepe;
 use App\Models\Utensils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReceipeController extends Controller
 {
@@ -163,5 +165,11 @@ class ReceipeController extends Controller
             'data' => $array,
             'message' => 'Your Data'
         ]);
+    }
+
+    public function checkFreeReceipeAvailable()
+    {
+        $userId = Auth::user()->id;
+        $orders = Order::where('customer_id')->where('is_receipe',1)->get();
     }
 }

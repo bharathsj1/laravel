@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class RatingsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +36,29 @@ class RatingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $upload_path = 'uploadedImages/ratings/';
+
+        $rating =  ratings::create($request->except('image'));
+        if ($request->has('image')) {
+            $file_name = $request->image->getClientOriginalName();
+            $generated_new_name = time() . '.' . $file_name;
+            $request->image->move($upload_path, $generated_new_name);
+            $rating->image = $upload_path . $generated_new_name;
+            $rating->save();
+        }
+        if ($rating) {
+            return response()->json([
+                'success' => true,
+                'data' => $rating,
+                'message' => 'Rating Stored Successfully',
+            ]);
+        }else{
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'Something bad happens',
+            ]);
+        }
     }
 
     /**

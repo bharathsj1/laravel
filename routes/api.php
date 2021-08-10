@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaymentIntentController;
+use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\ReceipeController;
 use App\Http\Controllers\ReceipeOrderController;
 use App\Http\Controllers\RestaurentsController;
@@ -133,11 +134,15 @@ Route::get('/getPaymentMethod',[PaymentIntentController::class,'getPaymentMethod
 
 Route::get('/get-receipe/{id}',[ReceipeController::class,'getReceipeById' ]);
 Route::get('/get-receipies',[ReceipeController::class,'index']);
+Route::Get('/checkFreeReceipeAvailable',[ReceipeController::class,'checkFreeReceipeAvailable']);
 
 //Receipies Order
 
 Route::post('/create-receipe-order',[ReceipeOrderController::class,'store'])->middleware(('auth:sanctum'));
 Route::get('/get-receipe-orders',[ReceipeOrderController::class,'getReceipeOrders'])->middleware(('auth:sanctum'));
+
+//Ratings
+Route::post('/store-rating',[RatingsController::class,'store']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
