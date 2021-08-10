@@ -221,6 +221,6 @@ class ReceipeController extends Controller
         );
         $id = $user_id;
 
-        return view('checkout_receipe')->with(['user_id' => $id, 'plan' => $subscriptionPlan, 'payment' => $requiredData, 'totalReceipes' => $receipe_id]);
+        return view('checkout_receipe')->with(['user_id' => $id, 'plan' => $subscriptionPlan, 'payment' => $requiredData, 'totalReceipes' => $receipe_id,'person_quantity'=>$person_quantity]);
     }
 }

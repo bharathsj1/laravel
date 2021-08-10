@@ -544,7 +544,7 @@ pre {
             </div>
             @endif
             <div class="sr-payment-summary payment-view">
-                <h1 class="order-amount">€ {{$plan->metadata->amount}}</h1>
+                <h1 class="order-amount">€ {{$payment->unit_amount /100}}</h1>
                 <h4>Loveats Subscription</h4>
             </div>
             <div class="sr-payment-form payment-view">
@@ -613,6 +613,7 @@ pre {
         plan_id:{!! json_encode($plan->id) !!},
         price_id:{!!json_encode($payment->id)!!},
         total_receipes:{!!json_encode($totalReceipes)!!},
+        person_quantity:{!!json_encode($payment->id)!!},
 
     };
 

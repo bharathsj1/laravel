@@ -85,6 +85,7 @@ class ReceipeSubscriptionController extends Controller
                 'total_receipes' => ($request->total_receipes -1),
                 'user_id' => Auth::user()->id,
                 'payment_intent' => $subscription->id,
+                'person_quantity'=>$request->person_quantity,
                 'subscription_start_date' => Carbon::now(),
             ]);
 
