@@ -178,10 +178,10 @@ class ReceipeController extends Controller
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY')
         );
-        $stripesPaymentList =  $stripe->products->all();
+        $stripesProductsList =  $stripe->products->all();
         $receipeProducts = array();
 
-        foreach ($stripesPaymentList['data'] as $key => $value) {
+        foreach ($stripesProductsList['data'] as $key => $value) {
             if (!empty($value->metadata)) {
                 if ($value->metadata->is_receipe == 'true') {
                     $receipeProducts[] = $value;

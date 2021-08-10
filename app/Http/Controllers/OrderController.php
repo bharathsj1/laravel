@@ -52,6 +52,8 @@ class OrderController extends Controller
             'is_receipe' => $request['is_receipe'],
 
             'method_id' => $request['method_id'],
+            
+            'is_subscribed_user'=>$request['is_subscribed_user'],
 
 
 
