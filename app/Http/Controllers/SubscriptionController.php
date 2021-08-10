@@ -68,12 +68,12 @@ class SubscriptionController extends Controller
 
 
             // //PRICE ID
-            $priceIntent = $stripe->prices->create([
-                'unit_amount' => floatval($request->price) * 100,
-                'currency' => 'gbp',
-                'recurring' => ['interval' => 'month'],
-                'product' => $request->plan_id,
-            ]);
+            // $priceIntent = $stripe->prices->create([
+            //     'unit_amount' => floatval($request->price) * 100,
+            //     'currency' => 'gbp',
+            //     'recurring' => ['interval' => 'month'],
+            //     'product' => $request->plan_id,
+            // ]);
 
 
             $payment_methods = \Stripe\PaymentMethod::all([
@@ -86,7 +86,7 @@ class SubscriptionController extends Controller
                 'customer' => $customer['id'],
                 'items' => [
                     [
-                        'price' => $priceIntent->id,
+                        'price' => 'price_1JMurlHxiL0NyAbFnEjt1eHp'
                     ],
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
