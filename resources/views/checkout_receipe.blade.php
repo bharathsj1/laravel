@@ -613,7 +613,7 @@ pre {
         plan_id:{!! json_encode($plan->id) !!},
         price_id:{!!json_encode($payment->id)!!},
         total_receipes:{!!json_encode($totalReceipes)!!},
-        person_quantity:{!!json_encode($payment->id)!!},
+        person_quantity:{!!json_encode($person_quantity)!!},
 
     };
 
