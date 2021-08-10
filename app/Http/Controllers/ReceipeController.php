@@ -172,4 +172,28 @@ class ReceipeController extends Controller
         $userId = Auth::user()->id;
         $orders = Order::where('customer_id')->where('is_receipe',1)->get();
     }
+
+    public function getReceipiesProduct()
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_TEST_SECRET_KEY')
+        );
+      $stripesPaymentList=  $stripe->products->all();
+    $receipeProducts = array();
+
+    foreach ($stripesPaymentList['data'] as $key => $value) {
+       if(!empty($value->metadata))
+       {
+            if($value->metadata->is_receipe=='true')
+            {
+                $receipeProducts[]=$value;
+            }
+       }
+    }
+    return response()->json([
+        'success'=>true,
+        'data'=>$receipeProducts,
+        'message'=> 'Receipies Products'
+    ]);
+    }
 }

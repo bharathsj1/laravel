@@ -140,7 +140,7 @@ Route::Get('/checkFreeReceipeAvailable',[ReceipeController::class,'checkFreeRece
 
 Route::post('/create-receipe-order',[ReceipeOrderController::class,'store'])->middleware(('auth:sanctum'));
 Route::get('/get-receipe-orders',[ReceipeOrderController::class,'getReceipeOrders'])->middleware(('auth:sanctum'));
-
+Route::get('/getReceipiesProduct',[ReceipeController::class,'getReceipiesProduct']);
 //Ratings
 Route::post('/store-rating',[RatingsController::class,'store']);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
