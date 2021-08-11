@@ -46,8 +46,8 @@ class OrderController extends Controller
             'payment_method' => 'required|string|max:255',
             'customer_addressId' => 'required|integer',
             'is_receipe' => 'required|integer',
-            'method_id'=>'required|string',
-            'is_subscribed_user'=>'required|integer'
+            'method_id' => 'required|string',
+            'is_subscribed_user' => 'required|integer'
         ]);
 
         if ($validatedData->fails()) {
@@ -57,24 +57,42 @@ class OrderController extends Controller
             ]);
         }
 
+        if ($request->has('receipe_id')) {
+            $order = Order::create([
 
-        $order = Order::create([
+                'total_amount' => $request['total_amount'],
+                'payment_method' => $request['payment_method'],
+                'payment_id' => $request['payment_id'],
+                'customer_id' => $request['user_id'],
+                'customer_addressId' => $request['customer_addressId'],
+                'is_receipe' => $request['is_receipe'],
+                'receipe_id'=>$request['receipe_id'],
 
-            'total_amount' => $request['total_amount'],
-            'payment_method' => $request['payment_method'],
-            'payment_id' => $request['payment_id'],
-            'customer_id' => $request['user_id'],
-            'customer_addressId' => $request['customer_addressId'],
-            'is_receipe' => $request['is_receipe'],
+                'method_id' => $request['method_id'],
 
-            'method_id' => $request['method_id'],
-            
-            'is_subscribed_user'=>$request['is_subscribed_user'],
-
+                'is_subscribed_user' => $request['is_subscribed_user'],
 
 
-        ]);
 
+            ]);
+        } else {
+            $order = Order::create([
+
+                'total_amount' => $request['total_amount'],
+                'payment_method' => $request['payment_method'],
+                'payment_id' => $request['payment_id'],
+                'customer_id' => $request['user_id'],
+                'customer_addressId' => $request['customer_addressId'],
+                'is_receipe' => $request['is_receipe'],
+
+                'method_id' => $request['method_id'],
+
+                'is_subscribed_user' => $request['is_subscribed_user'],
+
+
+
+            ]);
+        }
 
         if ($order) {
             return response()->json([
@@ -189,7 +207,7 @@ class OrderController extends Controller
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
                 'rest_menuId' => $request['rest_menuId'],
-                'rest_id'=>$request['rest_Id']
+                'rest_id' => $request['rest_Id']
 
             ]);
         }
@@ -312,6 +330,4 @@ class OrderController extends Controller
             ]);
         }
     }
-
-
 }
