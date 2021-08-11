@@ -71,6 +71,8 @@ class OrderController extends Controller
                 'method_id' => $request['method_id'],
 
                 'is_subscribed_user' => $request['is_subscribed_user'],
+                'person_quantity'=>$request['person_quantity'],
+                'quantity'=>$request['quantity'],
 
 
 

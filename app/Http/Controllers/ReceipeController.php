@@ -178,31 +178,37 @@ class ReceipeController extends Controller
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY')
         );
-        $stripesProductsList =  $stripe->products->all();
-        $stripesPricesList =  $stripe->prices->all();
-
-        $receipeProducts = array();
-
-        foreach ($stripesProductsList['data'] as $key => $value) {
-            foreach ($stripesPricesList as $key => $priceList) {
-                if (!empty($value->metadata)) {
-                    if ($value->metadata->is_receipe == 'true') {
+        try {
+            $stripesProductsList =  $stripe->products->all();
+            $stripesPricesList =  $stripe->prices->all(['limit' => 100]);
+            $receipeProducts = array();
+            foreach ($stripesProductsList['data'] as $key => $value) {
+                $nes = array();
+                foreach ($stripesPricesList as $key => $priceList) {
+                    if ($value->metadata['is_receipe'] == 'true') {
                         if ($value->id == $priceList->product) {
-                            $receipeProducts[] = [
-                                'product' => $value,
-                                'price'=>$priceList,
-                            ];;
+                            $nes[] = $priceList;
                         }
                     }
                 }
+                if ($value->metadata['is_receipe'] == 'true') {
+                    $receipeProducts[] = [
+                        'product' => $value,
+                        'price' => array_reverse($nes),
+                    ];;
+                }
             }
+
+            return response()->json([
+                'success' => true,
+                'data' => $receipeProducts,
+                'message' => 'Receipies Products'
+            ]);
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
-        return response()->json([
-            'success' => true,
-            'data' => $receipeProducts,
-            'message' => 'Receipies Products'
-        ]);
     }
+
 
     public function checkoutPage($user_id, $plan_id, $person_quantity, $receipe_id)
     {
