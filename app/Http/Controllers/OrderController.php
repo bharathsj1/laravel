@@ -41,6 +41,22 @@ class OrderController extends Controller
     public function store(Request $request)
     {
 
+        $validatedData   =  Validator::make($request->all(), [
+            'total_amount' => 'required|string|max:255',
+            'payment_method' => 'required|string|email|max:255',
+            'customer_addressId' => 'required|integer',
+            'is_receipe' => 'required|integer',
+            'method_id'=>'required|string',
+            'is_subscribed_user'=>'required|integer'
+        ]);
+
+        if ($validatedData->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validatedData->errors()->first(),
+            ]);
+        }
+
 
         $order = Order::create([
 
