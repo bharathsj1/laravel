@@ -43,7 +43,7 @@ class OrderController extends Controller
 
         $validatedData   =  Validator::make($request->all(), [
             'total_amount' => 'required|string|max:255',
-            'payment_method' => 'required|string|email|max:255',
+            'payment_method' => 'required|string|max:255',
             'customer_addressId' => 'required|integer',
             'is_receipe' => 'required|integer',
             'method_id'=>'required|string',
