@@ -236,7 +236,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress', 'receipe'])->orderBy('id', 'DESC')->get();
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress', 'receipe','review'])->orderBy('id', 'DESC')->get();
             return response()->json([
                 'success' => true,
                 'data' => $order,

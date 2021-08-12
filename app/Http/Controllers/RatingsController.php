@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ratings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RatingsController extends Controller
 {
@@ -104,5 +105,16 @@ class RatingsController extends Controller
     public function destroy(ratings $ratings)
     {
         //
+    }
+
+    public function getUserRatings()
+    {
+        $userid = Auth::user()->id;
+        $ratings = ratings::where('user_id',$userid)->whereNotNull('image')->with('order')->get();
+       return response()->json([
+           'success'=>true,
+           'data'=>$ratings,
+           'message'=>'User Specific Reviews'
+       ]);
     }
 }

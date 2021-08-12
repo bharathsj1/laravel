@@ -35,6 +35,11 @@ class Order extends Model
         return $this->belongsTo(Receipe::class,'receipe_id');
     }
 
+    public function review()
+    {
+        return $this->belongsTo(ratings::class,'id','order_id');
+    }
+
     
 
 }
