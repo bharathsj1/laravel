@@ -188,18 +188,11 @@ class RestaurentsController extends Controller
                 foreach ($restaurent as $key => $value) {
                     $this->resID = $value->id;
                     $this->orderID = OrderDetails::where('rest_id', $this->resID)->get()->pluck('order_id');
-                    // return $this->orderID;
-                    // $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
-                    //     $query->where('super_admin', 'approved')->get();
-                    // })->get();
-                    // if (count($order)>0) {
-                    //     $orderDetails = $order;
-                    // } 
 
                     $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
                     $order = Order::where('super_admin', 'approved')->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
-                    })->with(['user_address','receipe'])->get();
+                    })->with(['user_address', 'receipe'])->get();
 
                     if (count($order) > 0) {
                         $orderDetails = $order;
@@ -214,27 +207,18 @@ class RestaurentsController extends Controller
                 $restaurent = Restaurents::all();
 
                 $orderDetails = array();
-                // foreach ($restaurent as $key => $value) {
-                //     $orderDetails = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
-                //         $query->where('super_admin', 'ready')->get();
-                //     })->get();
-                // }
 
                 foreach ($restaurent as $key => $value) {
                     $this->resID = $value->id;
                     $this->orderID = OrderDetails::where('rest_id', $this->resID)->get()->pluck('order_id');
-                    // return $this->orderID;
-                    // $order = OrderDetails::where('rest_id', $value->id)->with('order', function ($query) {
-                    //     $query->where('super_admin', 'ready')->get();
-                    // })->get();
-                    // if (count($order)>0) {
-                    //     $orderDetails = $order;
-                    // } 
 
                     $orderIds = OrderDetails::where('rest_id', $value->id)->get()->pluck('order_id');
                     $order = Order::whereIn('status', ['ready', 'onway', 'delivered'])->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
+                  
+                    $order[]=Order::where('is_receipe',1)->get();
+                
 
                     if (count($order) > 0) {
                         $orderDetails = $order;
@@ -430,22 +414,22 @@ class RestaurentsController extends Controller
     public function getItemsServiceType(Request $request)
     {
         $itemType =  $request['item_type'];
-        $filteredItems = Menu::where($itemType,1)->with('restaurant')->get();
+        $filteredItems = Menu::where($itemType, 1)->with('restaurant')->get();
         return response()->json([
-            'success'=>true,
-            'data'=>$filteredItems,
-            'message'=>'Restaurant Type Data',
+            'success' => true,
+            'data' => $filteredItems,
+            'message' => 'Restaurant Type Data',
         ]);
     }
 
     public function getRestaurant($id)
     {
-      
+
         $filteredItems = Restaurents::find($id);
         return response()->json([
-            'success'=>true,
-            'data'=>$filteredItems,
-            'message'=>'Restaurant Type Data',
+            'success' => true,
+            'data' => $filteredItems,
+            'message' => 'Restaurant Type Data',
         ]);
     }
 }
