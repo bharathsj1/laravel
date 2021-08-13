@@ -217,7 +217,12 @@ class RestaurentsController extends Controller
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
                   
-                    $order[]=Order::where('is_receipe',1)->where('status','ready')->get();
+                    $ff=Order::where('is_receipe',1)->where('status','ready')->get();
+                    foreach ($ff as $key => $value) {
+                        $order[]=$value;
+                    }
+
+                  
                 
 
                     if (count($order) > 0) {
