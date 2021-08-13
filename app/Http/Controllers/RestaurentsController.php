@@ -217,7 +217,7 @@ class RestaurentsController extends Controller
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
                   
-                    $order[]=Order::where('is_receipe',1)->get();
+                    $order[]=Order::where('is_receipe',1)->where('status','ready')->get();
                 
 
                     if (count($order) > 0) {
