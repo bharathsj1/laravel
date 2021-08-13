@@ -216,10 +216,10 @@ class RestaurentsController extends Controller
                     $order = Order::whereIn('status', ['ready', 'onway', 'delivered'])->whereIn('id', $orderIds)->with('orderDetail', function ($query) {
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
-                  
-                 
-                  
-                
+
+
+
+
 
 
 
@@ -228,11 +228,11 @@ class RestaurentsController extends Controller
                     }
                 }
 
-                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe')->get();
+                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe','customerAddress')->get();
                 foreach ($receipiesOrders as $key => $value) {
-                   $orderDetails[]=$value;
+                    $orderDetails[] = $value;
                 }
-              
+
 
 
                 return response()->json([
