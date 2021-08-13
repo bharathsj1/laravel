@@ -32,7 +32,7 @@ class Order extends Model
 
     public function receipe()
     {
-        return $this->belongsTo(Receipe::class,'receipe_id');
+        return $this->belongsTo(Receipe::class,'receipe_id')->with('ingridients');
     }
 
     public function review()

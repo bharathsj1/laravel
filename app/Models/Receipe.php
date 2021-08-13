@@ -9,4 +9,9 @@ class Receipe extends Model
 {
     use HasFactory;
     protected $guarded=[];
+
+    public function ingridients()
+    {
+        return $this->hasMany(ReciepeIngridient::class,'receipe_id')->with('ingridient');
+    }
 }
