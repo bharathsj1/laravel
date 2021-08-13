@@ -228,7 +228,7 @@ class RestaurentsController extends Controller
                     }
                 }
 
-                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe','customerAddress')->get();
+                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe','user_address')->get();
                 foreach ($receipiesOrders as $key => $value) {
                     $orderDetails[] = $value;
                 }
