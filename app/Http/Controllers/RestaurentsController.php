@@ -217,18 +217,24 @@ class RestaurentsController extends Controller
                         $query->where('rest_id', $this->resID)->get();
                     })->with('user_address')->get();
                   
-                    $ff=Order::where('is_receipe',1)->where('status','ready')->get();
-                    foreach ($ff as $key => $value) {
-                        $order[]=$value;
-                    }
-
+                 
                   
                 
+
+
 
                     if (count($order) > 0) {
                         $orderDetails = $order;
                     }
                 }
+
+                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe')->get();
+                foreach ($receipiesOrders as $key => $value) {
+                   $orderDetails[]=$value;
+                }
+              
+
+
                 return response()->json([
                     'success' => true,
                     'data' => $orderDetails,
