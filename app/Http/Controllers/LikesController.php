@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Likes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LikesController extends Controller
 {
@@ -35,7 +36,16 @@ class LikesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userId = Auth::user()->id;
+        $like = Likes::create([
+            'user_id'=>$userId,
+            'review_id'=>$request->review_id,
+        ]);
+        return response()->json([
+            'success' => true,
+            'data' => $like,
+            'message' => 'Post is liked',
+        ]);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\FreeMealController;
 use App\Http\Controllers\HotspotsController;
 use App\Http\Controllers\HotspotsRestaurantsController;
+use App\Http\Controllers\LikesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrderController;
@@ -151,6 +152,11 @@ Route::get('/isUserReceipeSubscribed',[ReceipeSubscriptionController::class,'isU
 //Ratings
 Route::post('/store-rating',[RatingsController::class,'store']);
 Route::get('/get-user-rating',[RatingsController::class,'getUserRatings'])->middleware('auth:sanctum');
+Route::get('/get-restaurant-rating/{id}',[RatingsController::class,'getRestaurentRatings']);
+
+//LIKES
+
+Route::post('/like',[LikesController::class,'store'])->middleware('auth:sanctum');;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

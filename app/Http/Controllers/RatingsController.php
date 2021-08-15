@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ratings;
+use App\Models\Restaurents;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,7 +54,7 @@ class RatingsController extends Controller
                 'data' => $rating,
                 'message' => 'Rating Stored Successfully',
             ]);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
                 'data' => [],
@@ -110,11 +111,28 @@ class RatingsController extends Controller
     public function getUserRatings()
     {
         $userid = Auth::user()->id;
-        $ratings = ratings::where('user_id',$userid)->whereNotNull('image')->with('order')->get();
-       return response()->json([
-           'success'=>true,
-           'data'=>$ratings,
-           'message'=>'User Specific Reviews'
-       ]);
+        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with('order')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $ratings,
+            'message' => 'User Specific Reviews'
+        ]);
+    }
+
+    public function getRestaurentRatings($id)
+    {
+        $restaurant = Restaurents::find($id);
+        if (!$restaurant)
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'No Restaurant Found with given Id',
+            ]);
+        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $ratings,
+            'message' => 'All reviews according to restaurant',
+        ]);
     }
 }

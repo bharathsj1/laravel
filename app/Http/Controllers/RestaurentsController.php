@@ -68,7 +68,21 @@ class RestaurentsController extends Controller
 
             ]);
         } else {
+
             $restaurents = Restaurents::all();
+            foreach ($restaurents as $key => $value) {
+                $ratings = ratings::where('rest_id', $value->id)->pluck('rating')->avg();
+                $restaurents[$key]->ratings = ($ratings);
+                if ($ratings <= 2) {
+                    $restaurents[$key]->review = 'average';
+                } else if ($ratings > 2 && $ratings <= 3.5) {
+                    $restaurents[$key]->review = 'good';
+                } else if ($ratings > 4 && $ratings <= 5) {
+                    $restaurents[$key]->review = 'perfect';
+                } else {
+                    $restaurents[$key]->review = 'Not Available';
+                }
+            }
             return response()->json([
                 'success' => true,
                 'data' => $restaurents,
@@ -228,7 +242,7 @@ class RestaurentsController extends Controller
                     }
                 }
 
-                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe','user_address')->get();
+                $receipiesOrders = Order::where('is_receipe', 1)->whereIn('status', ['ready', 'onway', 'delivered'])->with('receipe', 'user_address')->get();
                 foreach ($receipiesOrders as $key => $value) {
                     $orderDetails[] = $value;
                 }
