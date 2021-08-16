@@ -37,7 +37,7 @@ class LikesController extends Controller
     public function store(Request $request)
     {
         $userId = Auth::user()->id;
-        $likePost = Likes::where('user_id', $userId)->where('review_id', $request->review_id);
+        $likePost = Likes::where('user_id', $userId)->where('review_id', $request->review_id)->first();
         if (!$likePost) {
             $like = Likes::create([
                 'user_id' => $userId,
@@ -50,7 +50,7 @@ class LikesController extends Controller
             ]);
         }
 
-        $likePost->is_like = !$likePost->is_link;
+        $likePost->is_like = !$likePost->is_like;
         $likePost->update();
         return response()->json([
             'success' => true,
