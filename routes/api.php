@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AddonsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DeviceTokenController;
 use App\Http\Controllers\FreeMealController;
 use App\Http\Controllers\HotspotsController;
@@ -157,6 +158,11 @@ Route::get('/get-restaurant-rating/{id}', [RatingsController::class, 'getRestaur
 
 //LIKES
 Route::post('/like', [LikesController::class, 'store'])->middleware('auth:sanctum');
+
+//COMMENTS
+
+Route::post('/comment', [CommentController::class, 'store'])->middleware('auth:sanctum');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
