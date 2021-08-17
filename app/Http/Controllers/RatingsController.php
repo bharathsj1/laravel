@@ -128,7 +128,7 @@ class RatingsController extends Controller
                 'data' => [],
                 'message' => 'No Restaurant Found with given Id',
             ]);
-        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->with(['user','likes'])->get();
+        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->whereNotNull('image')->with(['user','likes'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
