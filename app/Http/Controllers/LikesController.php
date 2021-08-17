@@ -42,6 +42,7 @@ class LikesController extends Controller
             $like = Likes::create([
                 'user_id' => $userId,
                 'review_id' => $request->review_id,
+                'is_like'=>$request->is_like,
             ]);
             return response()->json([
                 'success' => true,
@@ -50,7 +51,7 @@ class LikesController extends Controller
             ]);
         }
 
-        $likePost->is_like = !$likePost->is_like;
+        $likePost->is_like = $request->is_like;
         $likePost->update();
         return response()->json([
             'success' => true,
