@@ -111,7 +111,7 @@ class RatingsController extends Controller
     public function getUserRatings()
     {
         $userid = Auth::user()->id;
-        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order','likes'])->get();
+        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order','likes','user'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
