@@ -312,13 +312,7 @@ class RestaurentsController extends Controller
                         $filterData[] = $value;
                     }
                 }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'data' => [],
-                    'message' => 'Lat Lngs are required for distance sorting'
-                ]);
-            }
+            } 
 
 
             //IF SORT IS RECOMMENDED
@@ -347,6 +341,7 @@ class RestaurentsController extends Controller
                     $filterData = $restaurent;
                 }
             } else if ($sortType = 'topRated') {
+                
                 $topRatedRestaurants = Restaurents::where('rest_isTrending', '1')->get();
                 if (count($topRatedRestaurants) > 0) {
                     $filterData = $topRatedRestaurants;
@@ -433,6 +428,16 @@ class RestaurentsController extends Controller
             'data' => $filterData,
             'message' => 'Filters Data'
         ]);
+    }
+
+    public function newFilter(Request $request)
+    {
+        $filterType = $request->filter_type;
+        if ($filterType == 'sorting') {
+          
+        } else if ($filterType == 'rating') {
+            return 'rating';
+        }
     }
 
 

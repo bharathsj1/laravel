@@ -121,7 +121,10 @@ Route::get('/getCategoriesMenuType/{id}', [MenuController::class, 'getCategories
 
 Route::get('/demoRecommendedItems', [MenuController::class, 'demoRecommendedItem']);
 
+//depreciated
 Route::post('/filter', [RestaurentsController::class, 'filters']);
+// Route::post('/filter', [RestaurentsController::class, 'newFilter']);
+
 
 
 //ADDONS

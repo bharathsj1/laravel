@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\FoodCategory;
 use App\Models\Menu;
 use App\Models\MenuType;
+use App\Models\ratings;
+use App\Models\Restaurents;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -208,7 +210,50 @@ class MenuController extends Controller
 
     public function getMenuWithMenuTypeId($id)
     {
-        $menus = Menu::where('menu_type_id', $id)->with('restaurant')->orderBy('order_count','DESC')->get();
+        if ($id == 'all') {
+            $menus  =  Menu::with('restaurant')->get();
+
+            foreach ($menus as $key => $value) {
+                $ratings = ratings::where('rest_id', $value->restaurant->id)->pluck('rating')->avg();
+                $menus[$key]->restaurant->ratings = ($ratings);
+                if ($ratings <= 2) {
+                    $menus[$key]->restaurant->review = 'average';
+                } else if ($ratings > 2 && $ratings <= 3.5) {
+                    $menus[$key]->restaurant->review = 'good';
+                } else if ($ratings > 4 && $ratings <= 5) {
+                    $menus[$key]->restaurant->review = 'perfect';
+                } else {
+                    $menus[$key]->restaurant->review = 'Not Available';
+                }
+            }
+            if ($menus) {
+                return response()->json([
+                    'success' => true,
+                    'data' => $menus,
+                    'message' => 'Menu Items with Menu Types'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'data' => [],
+                    'message' => 'Not Found'
+                ]);
+            }
+        }
+        $menus = Menu::where('menu_type_id', $id)->with('restaurant')->orderBy('order_count', 'DESC')->get();
+        foreach ($menus as $key => $value) {
+            $ratings = ratings::where('rest_id', $value->restaurant->id)->pluck('rating')->avg();
+            $menus[$key]->restaurant->ratings = ($ratings);
+            if ($ratings <= 2) {
+                $menus[$key]->restaurant->review = 'average';
+            } else if ($ratings > 2 && $ratings <= 3.5) {
+                $menus[$key]->restaurant->review = 'good';
+            } else if ($ratings > 4 && $ratings <= 5) {
+                $menus[$key]->restaurant->review = 'perfect';
+            } else {
+                $menus[$key]->restaurant->review = 'Not Available';
+            }
+        }
         if ($menus) {
             return response()->json([
                 'success' => true,
@@ -363,21 +408,18 @@ class MenuController extends Controller
 
     public function demoRecommendedItem()
     {
-        $foodCategories= FoodCategory::all()->random(5)->pluck('id');
+        $foodCategories = FoodCategory::all()->random(5)->pluck('id');
         foreach ($foodCategories as $key => $value) {
-            $menuItem = Menu::where('food_category_id',$value)->with('restaurant')->first();
-            if($menuItem!=null)
-            $menuItems[]=$menuItem;
+            $menuItem = Menu::where('food_category_id', $value)->with('restaurant')->first();
+            if ($menuItem != null)
+                $menuItems[] = $menuItem;
             else
-            continue; 
-            
+                continue;
         }
         return response()->json([
-            'success'=>true,
-            'data'=>$menuItems,
-            'message'=>'Recommeded Items',
-        ]) ;
-      
-       
+            'success' => true,
+            'data' => $menuItems,
+            'message' => 'Recommeded Items',
+        ]);
     }
 }

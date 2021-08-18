@@ -22,4 +22,8 @@ class ratings extends Model
     {
         return $this->hasMany(Likes::class,'review_id');
     }
+    public function comment()
+    {
+        return $this->hasMany(Comment::class,'review_id')->with('user');
+    }
 }

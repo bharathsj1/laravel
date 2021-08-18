@@ -41,6 +41,12 @@ class RatingsController extends Controller
         $upload_path = 'uploadedImages/ratings/';
 
         $rating =  ratings::create($request->except('image'));
+        $restaurant = Restaurents::find($request->rest_id);
+        if ($restaurant) {
+
+            $restaurant->rating = ratings::where('rest_id', $restaurant->id)->pluck('rating')->avg();
+            $restaurant->update();
+        }
         if ($request->has('image')) {
             $file_name = $request->image->getClientOriginalName();
             $generated_new_name = time() . '.' . $file_name;
@@ -111,7 +117,7 @@ class RatingsController extends Controller
     public function getUserRatings()
     {
         $userid = Auth::user()->id;
-        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order','likes','user'])->get();
+        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order', 'likes','comment', 'user'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
@@ -128,7 +134,7 @@ class RatingsController extends Controller
                 'data' => [],
                 'message' => 'No Restaurant Found with given Id',
             ]);
-        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->whereNotNull('image')->with(['user','likes'])->get();
+        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->whereNotNull('image')->with(['user','comment', 'likes'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
