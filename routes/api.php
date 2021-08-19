@@ -156,6 +156,7 @@ Route::get('/isUserReceipeSubscribed', [ReceipeSubscriptionController::class, 'i
 
 //Ratings
 Route::post('/store-rating', [RatingsController::class, 'store']);
+Route::get('/review/{id}',[RatingsController::class,'getRatingById']);
 Route::get('/get-user-rating', [RatingsController::class, 'getUserRatings'])->middleware('auth:sanctum');
 Route::get('/get-restaurant-rating/{id}', [RatingsController::class, 'getRestaurentRatings']);
 

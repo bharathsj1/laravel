@@ -20,7 +20,7 @@ class ratings extends Model
     }
     public function likes()
     {
-        return $this->hasMany(Likes::class,'review_id');
+        return $this->hasMany(Likes::class,'review_id')->with('user');
     }
     public function comments()
     {
