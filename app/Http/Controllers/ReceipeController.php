@@ -28,6 +28,7 @@ class ReceipeController extends Controller
             'success' => true,
             'data' => $receipe,
             'message' => 'All Receipes',
+            'recipe'=>'uploadedImages/receipes/recipe1.gif'
         ]);
     }
 
