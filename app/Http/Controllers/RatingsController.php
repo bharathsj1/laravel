@@ -117,7 +117,7 @@ class RatingsController extends Controller
     public function getUserRatings()
     {
         $userid = Auth::user()->id;
-        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order', 'likes','comment', 'user'])->get();
+        $ratings = ratings::where('user_id', $userid)->whereNotNull('image')->with(['order', 'likes','comments', 'user'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
@@ -134,7 +134,7 @@ class RatingsController extends Controller
                 'data' => [],
                 'message' => 'No Restaurant Found with given Id',
             ]);
-        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->whereNotNull('image')->with(['user','comment', 'likes'])->get();
+        $ratings = ratings::where('rest_id', $id)->where('is_public', 1)->whereNotNull('image')->with(['user','comments', 'likes'])->get();
         return response()->json([
             'success' => true,
             'data' => $ratings,
