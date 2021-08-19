@@ -312,7 +312,7 @@ class RestaurentsController extends Controller
                         $filterData[] = $value;
                     }
                 }
-            } 
+            }
 
 
             //IF SORT IS RECOMMENDED
@@ -341,8 +341,8 @@ class RestaurentsController extends Controller
                     $filterData = $restaurent;
                 }
             } else if ($sortType = 'topRated') {
-                
-                $topRatedRestaurants = Restaurents::where('rest_isTrending', '1')->get();
+
+                $topRatedRestaurants = Restaurents::where('rating', '>=', '1')->orderBy('rating', 'DESC')->get();
                 if (count($topRatedRestaurants) > 0) {
                     $filterData = $topRatedRestaurants;
                 }
@@ -434,7 +434,6 @@ class RestaurentsController extends Controller
     {
         $filterType = $request->filter_type;
         if ($filterType == 'sorting') {
-          
         } else if ($filterType == 'rating') {
             return 'rating';
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +44,7 @@ class CommentController extends Controller
             'comment' => $request->comment,
             'review_id'=>$request->review_id,
         ]);
+        $comment['user']=$user;
 
         return response()->json([
             'success' => true,
