@@ -388,7 +388,7 @@ class RestaurentsController extends Controller
             $menusList = Menu::all();
             if (empty($filterData)) {
                 foreach ($categoriesList as $key => $value) {
-                    $menuType =   MenuType::where('menu_name', $value)->first();
+                    $menuType =   MenuType::where('id', $value)->first();
                     if ($menuType) {
                         foreach ($menusList as $key => $menuData) {
                             if ($menuData->menu_type_id == $menuType->id)
