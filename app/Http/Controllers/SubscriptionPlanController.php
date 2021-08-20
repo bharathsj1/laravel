@@ -19,9 +19,17 @@ class SubscriptionPlanController extends Controller
             env('STRIPE_TEST_SECRET_KEY'),
           );
      $subscriptionPlan=$stripe->products->all();
+     $subscriptionArray=array();
+     foreach ($subscriptionPlan as $key => $value) {
+         if($value->metadata->is_package=='true')
+         {
+            $subscriptionArray[]=$value;
+           
+         }
+     }
         return response()->json([
             'success'=>true,
-            'data'=>$subscriptionPlan['data'],
+            'data'=>$subscriptionArray,
             'message'=>'All Subscription Plans'
         ]);
     }
