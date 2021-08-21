@@ -273,11 +273,11 @@ class SubscriptionController extends Controller
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
         $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->get();
-        if (count($allUserSubs)>0) {
+        if (count($allUserSubs) > 0) {
             $alreadySubscribed = true;
         }
         $mytime = Carbon::now()->subDays(7);
-        $order =  Order::where('customer_id', $user->id)->latest()->first();
+        $order =  Order::where('customer_id', $user->id)->where('is_receipe',0)->latest()->first();
         if ($order) {
             $orderDetails = OrderDetails::where('order_id', $order->id)->get();
             if ($orderDetails[0]->created_at > $mytime) {
