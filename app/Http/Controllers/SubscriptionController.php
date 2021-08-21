@@ -278,7 +278,7 @@ class SubscriptionController extends Controller
         $order =  Order::where('customer_id', $request->user_id)->latest()->first();
         if ($order) {
             $orderDetails = OrderDetails::where('order_id', $order->id)->get();
-            if ($orderDetails[0]->created_at < $mytime) {
+            if ($orderDetails[0]->created_at > $mytime) {
                 foreach ($orderDetails as $key => $value) {
                     $menuItem = Menu::find($value->rest_menuId);
                     if ($menuItem->is_free == 1) {
