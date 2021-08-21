@@ -90,7 +90,7 @@ class SubscriptionController extends Controller
                 'customer' => $customer['id'],
                 'items' => [
                     [
-                        'price' => 'price_1JMurlHxiL0NyAbFnEjt1eHp'
+                        'price' => 'price_1JQcyGHxiL0NyAbFqIY18LLV'
                     ],
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
