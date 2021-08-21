@@ -271,7 +271,7 @@ class SubscriptionController extends Controller
     {
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
-        $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->get();
+        $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->get();
         if ($allUserSubs) {
             $alreadySubscribed = true;
         }
