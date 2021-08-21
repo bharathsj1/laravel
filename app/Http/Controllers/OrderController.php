@@ -66,13 +66,20 @@ class OrderController extends Controller
                 'customer_id' => $request['user_id'],
                 'customer_addressId' => $request['customer_addressId'],
                 'is_receipe' => $request['is_receipe'],
-                'receipe_id'=>$request['receipe_id'],
+                'receipe_id' => $request['receipe_id'],
 
                 'method_id' => $request['method_id'],
 
                 'is_subscribed_user' => $request['is_subscribed_user'],
-                'person_quantity'=>$request['person_quantity'],
-                'quantity'=>$request['quantity'],
+                'person_quantity' => $request['person_quantity'],
+                'quantity' => $request['quantity'],
+                'cutlery' => $request['cutlery'],
+                'delivery_free' => $request['delivery_free'],
+                'service_fee' => $request['service_fee'],
+                'restaurent_tip' => $request['restaurent_tip'],
+                'tip_more' => $request['tip_more'],
+                'rider_tip' => $request['rider_tip'],
+                'sub_total' => $request['sub_total'],
 
 
 
@@ -236,7 +243,7 @@ class OrderController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress', 'receipe','review'])->orderBy('id', 'DESC')->get();
+            $order = Order::where('customer_id', $user->id)->with(['orderDetail', 'customerAddress', 'receipe', 'review'])->orderBy('id', 'DESC')->get();
             return response()->json([
                 'success' => true,
                 'data' => $order,

@@ -277,12 +277,14 @@ class SubscriptionController extends Controller
         }
         $mytime = Carbon::now()->subDays(7);
         $order =  Order::where('customer_id', $request->user_id)->latest()->first();
-        $orderDetails = OrderDetails::where('order_id', $order->id)->get();
-        if ($orderDetails[0]->created_at < $mytime) {
-            foreach ($orderDetails as $key => $value) {
-                $menuItem = Menu::find($value->rest_menuId);
-                if ($menuItem->is_free == 1) {
-                    $isFreeMealAlreadyTaken = true;
+        if ($order) {
+            $orderDetails = OrderDetails::where('order_id', $order->id)->get();
+            if ($orderDetails[0]->created_at < $mytime) {
+                foreach ($orderDetails as $key => $value) {
+                    $menuItem = Menu::find($value->rest_menuId);
+                    if ($menuItem->is_free == 1) {
+                        $isFreeMealAlreadyTaken = true;
+                    }
                 }
             }
         }
