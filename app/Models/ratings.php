@@ -20,10 +20,14 @@ class ratings extends Model
     }
     public function likes()
     {
-        return $this->hasMany(Likes::class,'review_id')->with('user');
+        return $this->hasMany(Likes::class, 'review_id')->with('user');
     }
     public function comments()
     {
-        return $this->hasMany(Comment::class,'review_id')->with('user');
+        return $this->hasMany(Comment::class, 'review_id')->with('user');
+    }
+    public function restaurent()
+    {
+        return $this->belongsTo(Restaurents::class, 'rest_id');
     }
 }

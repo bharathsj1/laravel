@@ -172,6 +172,8 @@ Route::post('/like', [LikesController::class, 'store'])->middleware('auth:sanctu
 
 Route::post('/comment', [CommentController::class, 'store'])->middleware('auth:sanctum');
 
+Route::get('/restaurent-review_count',[RatingsController::class,'restaurentReviewLength']);
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

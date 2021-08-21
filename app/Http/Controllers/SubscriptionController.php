@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
 use App\Models\Order;
+use App\Models\OrderDetails;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -266,24 +268,27 @@ class SubscriptionController extends Controller
 
     public function checkAllMealSubscription(Request $request)
     {
-        // $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', $request->plan_id)->get();
-        // $mytime = Carbon::now()->subDays(7);
-        // $order =  Order::where('user_id', $request->user_id)->latest()->first();
-
-        // $isFreeMeal = false;
-
-        // if ($freeMeal->created_at < $mytime) {
-        // }
-        // if (count($allUserSubs) > 0) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'You have already subscribed for this subscription'
-        //     ]);
-        // } else {
-        //     return response()->json([
-        //         'success' => true,
-        //         'message' => 'You can applied for this subscription'
-        //     ]);
-        // }
+        $alreadySubscribed = false;
+        $isFreeMealAlreadyTaken = false;
+        $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->get();
+        if ($allUserSubs) {
+            $alreadySubscribed = true;
+        }
+        $mytime = Carbon::now()->subDays(7);
+        $order =  Order::where('customer_id', $request->user_id)->latest()->first();
+        $orderDetails = OrderDetails::where('order_id', $order->id)->get();
+        if ($orderDetails[0]->created_at < $mytime) {
+            foreach ($orderDetails as $key => $value) {
+                $menuItem = Menu::find($value->rest_menuId);
+                if ($menuItem->is_free == 1) {
+                    $isFreeMealAlreadyTaken = true;
+                }
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'already_subscribed' => $alreadySubscribed,
+            'free_meal_taken' => $isFreeMealAlreadyTaken,
+        ]);
     }
 }

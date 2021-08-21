@@ -152,4 +152,10 @@ class RatingsController extends Controller
             'message' => 'Review according to id',
         ]);
     }
+
+    public function restaurentReviewLength()
+    {
+        // $rating = ratings::with('restaurent')->get()->groupBy('rating');
+        // return $rating;
+    }
 }
