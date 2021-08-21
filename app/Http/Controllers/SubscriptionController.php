@@ -268,12 +268,12 @@ class SubscriptionController extends Controller
 
     public function checkAllMealSubscription()
     {
-$user = Auth::user();
+        $user = Auth::user();
 
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
-        $allUserSubs = Subscription::where('user_id',$user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->get();
-        if ($allUserSubs) {
+        $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->get();
+        if (count($allUserSubs)>0) {
             $alreadySubscribed = true;
         }
         $mytime = Carbon::now()->subDays(7);
