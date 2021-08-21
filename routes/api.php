@@ -81,6 +81,8 @@ Route::get('/get-specific-order/{id}', [OrderController::class, 'getSpecificOrde
 Route::post('/send-notification-to-specific-user', [NotificationsController::class, 'sendNotificationToSpecificUser']);
 Route::get('/getSpecificNotification', [NotificationsController::class, 'getSpecificNotification'])->middleware(('auth:sanctum'));
 Route::get('/getRestaurant/{id}', [RestaurentsController::class, 'getRestaurant']);
+
+Route::post('/restaurantWithinGivenKM',[RestaurentsController::class,'restaurantWithinGivenKM']);
 //DELETING FCM TOKEN
 
 Route::delete('/deleteFCM', [DeviceTokenController::class, 'deleteToken'])->middleware('auth:sanctum');
@@ -97,6 +99,9 @@ Route::get('/get-all-subscription-plans', [SubscriptionPlanController::class, 'i
 Route::get('/get-specific-user-subs', [SubscriptionController::class, 'getSpecificUserSubscription'])->middleware('auth:sanctum');
 Route::get('/cancel-subscription/{id}', [SubscriptionController::class, 'cancelSubscription']);
 Route::post('/checkAlreadySubscribed', [SubscriptionController::class, 'checkAlreadySubscribed']);
+
+//ye bnani hai
+Route::post('/checkAllMealSubscription', [SubscriptionController::class, 'checkAllMealSubscription']);
 
 //free meal
 Route::post('/storeFreeMeal', [FreeMealController::class, 'store'])->middleware(('auth:sanctum'));

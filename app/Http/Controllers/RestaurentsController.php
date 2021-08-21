@@ -461,4 +461,33 @@ class RestaurentsController extends Controller
             'message' => 'Restaurant Type Data',
         ]);
     }
+
+    public function restaurantWithinGivenKM(Request $request)
+    {
+        $restaurant = Restaurents::find($request->rest_id);
+        if (!$restaurant) {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'Invalid Restaurant ID GIven'
+            ]);
+        }
+
+        $km =  $this->haversineGreatCircleDistance(floatval($restaurant->rest_latitude), floatval($restaurant->rest_longitude), $request->lat, $request->lng);
+
+        if ($km <= $request->within_km) {
+
+            return response()->json([
+                'success' => true,
+                'data' => $restaurant,
+                'message' => 'Distance is ' .$km,
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'Distance is '  .$km,
+            ]);
+        }
+    }
 }

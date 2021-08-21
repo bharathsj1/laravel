@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
@@ -171,9 +173,9 @@ class SubscriptionController extends Controller
                 $subsc =   $stripe->subscriptions->retrieve(
                     $value->payment_intent,
                     []
-                  
+
                 );
-              
+
                 $product =     $stripe->products->retrieve(
                     $subsc['items']['data'][0]['price']['product'],
                     []
@@ -260,5 +262,28 @@ class SubscriptionController extends Controller
                 'message' => 'You can applied for this subscription'
             ]);
         }
+    }
+
+    public function checkAllMealSubscription(Request $request)
+    {
+        // $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', $request->plan_id)->get();
+        // $mytime = Carbon::now()->subDays(7);
+        // $order =  Order::where('user_id', $request->user_id)->latest()->first();
+
+        // $isFreeMeal = false;
+
+        // if ($freeMeal->created_at < $mytime) {
+        // }
+        // if (count($allUserSubs) > 0) {
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'You have already subscribed for this subscription'
+        //     ]);
+        // } else {
+        //     return response()->json([
+        //         'success' => true,
+        //         'message' => 'You can applied for this subscription'
+        //     ]);
+        // }
     }
 }
