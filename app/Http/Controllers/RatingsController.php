@@ -155,7 +155,9 @@ class RatingsController extends Controller
 
     public function restaurentReviewLength()
     {
-        // $rating = ratings::with('restaurent')->get()->groupBy('rating');
-        // return $rating;
+        $ratings = ratings::groupBy('rating')
+        ->selectRaw('count(*) as total, rating')
+        ->get();
+        return $ratings;
     }
 }

@@ -73,11 +73,11 @@ class OrderController extends Controller
                 'is_subscribed_user' => $request['is_subscribed_user'],
                 'person_quantity' => $request['person_quantity'],
                 'quantity' => $request['quantity'],
-                'cutlery' => $request['cutlery'],
+                // 'cutlery' => $request['cutlery'],
                 'delivery_free' => $request['delivery_free'],
                 'service_fee' => $request['service_fee'],
-                'restaurent_tip' => $request['restaurent_tip'],
-                'tip_more' => $request['tip_more'],
+                // 'restaurent_tip' => $request['restaurent_tip'],
+                'tip_more' => $request['tip_morez'],
                 'rider_tip' => $request['rider_tip'],
                 'sub_total' => $request['sub_total'],
 
@@ -97,6 +97,13 @@ class OrderController extends Controller
                 'method_id' => $request['method_id'],
 
                 'is_subscribed_user' => $request['is_subscribed_user'],
+                'cutlery' => $request['cutlery'],
+                'delivery_free' => $request['delivery_free'],
+                'service_fee' => $request['service_fee'],
+                'restaurent_tip' => $request['restaurent_tip'],
+                'tip_more' => $request['tip_more'],
+                'rider_tip' => $request['rider_tip'],
+                'sub_total' => $request['sub_total'],
 
 
 
