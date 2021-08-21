@@ -82,7 +82,7 @@ Route::post('/send-notification-to-specific-user', [NotificationsController::cla
 Route::get('/getSpecificNotification', [NotificationsController::class, 'getSpecificNotification'])->middleware(('auth:sanctum'));
 Route::get('/getRestaurant/{id}', [RestaurentsController::class, 'getRestaurant']);
 
-Route::post('/restaurantWithinGivenKM',[RestaurentsController::class,'restaurantWithinGivenKM']);
+Route::post('/restaurantWithinGivenKM', [RestaurentsController::class, 'restaurantWithinGivenKM']);
 //DELETING FCM TOKEN
 
 Route::delete('/deleteFCM', [DeviceTokenController::class, 'deleteToken'])->middleware('auth:sanctum');
@@ -100,8 +100,7 @@ Route::get('/get-specific-user-subs', [SubscriptionController::class, 'getSpecif
 Route::get('/cancel-subscription/{id}', [SubscriptionController::class, 'cancelSubscription']);
 Route::post('/checkAlreadySubscribed', [SubscriptionController::class, 'checkAlreadySubscribed']);
 
-//ye bnani hai
-Route::post('/checkAllMealSubscription', [SubscriptionController::class, 'checkAllMealSubscription']);
+Route::get('/checkAllMealSubscription', [SubscriptionController::class, 'checkAllMealSubscription'])->middleware('auth:sanctum');
 
 //free meal
 Route::post('/storeFreeMeal', [FreeMealController::class, 'store'])->middleware(('auth:sanctum'));
@@ -161,7 +160,7 @@ Route::get('/isUserReceipeSubscribed', [ReceipeSubscriptionController::class, 'i
 
 //Ratings
 Route::post('/store-rating', [RatingsController::class, 'store']);
-Route::get('/review/{id}',[RatingsController::class,'getRatingById']);
+Route::get('/review/{id}', [RatingsController::class, 'getRatingById']);
 Route::get('/get-user-rating', [RatingsController::class, 'getUserRatings'])->middleware('auth:sanctum');
 Route::get('/get-restaurant-rating/{id}', [RatingsController::class, 'getRestaurentRatings']);
 
@@ -172,7 +171,7 @@ Route::post('/like', [LikesController::class, 'store'])->middleware('auth:sanctu
 
 Route::post('/comment', [CommentController::class, 'store'])->middleware('auth:sanctum');
 
-Route::get('/restaurent-review_count',[RatingsController::class,'restaurentReviewLength']);
+Route::get('/restaurent-review_count', [RatingsController::class, 'restaurentReviewLength']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

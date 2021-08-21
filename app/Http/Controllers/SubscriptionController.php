@@ -251,7 +251,8 @@ class SubscriptionController extends Controller
 
     public function checkAlreadySubscribed(Request $request)
     {
-        $allUserSubs = Subscription::where('user_id', $request->user_id)->where('subscription_plan_id', $request->plan_id)->where('subscription_status', 'active')->get();
+        $user = Auth::user();
+        $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', $request->plan_id)->where('subscription_status', 'active')->get();
 
         if (count($allUserSubs) > 0) {
             return response()->json([
