@@ -213,7 +213,7 @@ class OrderController extends Controller
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
                 'receipe_id' => $request['receipe_id'],
-                'person_quantity' => $request['person_quantity']
+                'person_quantity' => $request['person_quantity'],
 
             ]);
         } else {
@@ -223,7 +223,9 @@ class OrderController extends Controller
                 'total_price' => $request['total_price'],
                 'order_id' => $request['order_id'],
                 'rest_menuId' => $request['rest_menuId'],
-                'rest_id' => $request['rest_Id']
+                'rest_id' => $request['rest_Id'],
+                'extras' => serialize($request['extras']),
+
 
             ]);
         }

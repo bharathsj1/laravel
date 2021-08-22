@@ -276,8 +276,9 @@ class SubscriptionController extends Controller
         if (count($allUserSubs) > 0) {
             $alreadySubscribed = true;
         }
+        // if ($alreadySubscribed) {
         $mytime = Carbon::now()->subDays(7);
-        $order =  Order::where('customer_id', $user->id)->where('is_receipe',0)->latest()->first();
+        $order =  Order::where('customer_id', $user->id)->where('is_receipe', 0)->latest()->first();
         if ($order) {
             $orderDetails = OrderDetails::where('order_id', $order->id)->get();
             if ($orderDetails[0]->created_at > $mytime) {
@@ -289,6 +290,7 @@ class SubscriptionController extends Controller
                 }
             }
         }
+        // }
         return response()->json([
             'success' => true,
             'already_subscribed' => $alreadySubscribed,
