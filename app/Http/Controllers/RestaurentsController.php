@@ -480,13 +480,15 @@ class RestaurentsController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $restaurant,
-                'message' => 'Distance is ' .$km,
+                'withInRange' => true,
+                'message' => 'Distance is ' . $km,
             ]);
         } else {
             return response()->json([
                 'success' => true,
                 'data' => [],
-                'message' => 'Distance is '  .$km,
+                'withInRange' => false,
+                'message' => 'Distance is '  . $km,
             ]);
         }
     }
