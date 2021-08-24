@@ -13,6 +13,14 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        if ($request['cust_registration_type'] == 2) {
+            $user =   User::create($request->all);
+            return response()->json([
+                'success' => true,
+                'data' => $user,
+                'message' => 'User Registered'
+            ]);
+        }
         $upload_path = 'uploadedImages/profilePictures/';
         $validatedData   =  Validator::make($request->all(), [
             'cust_first_name' => 'required|string|max:255',
