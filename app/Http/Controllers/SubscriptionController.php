@@ -9,6 +9,7 @@ use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
@@ -274,12 +275,11 @@ class SubscriptionController extends Controller
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
         $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->latest()->first();
-        if (($allUserSubs)) {
+        if ($allUserSubs) {
             $alreadySubscribed = true;
             $membershipPurchaseDate = $allUserSubs->created_at;
-            // $nextMonthDate = $allUserSubs->created_at.add()
-
-
+            $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
+            $nextMonthDate = $membershipPurchaseDate->addMonth(1);
         }
 
         // if ($alreadySubscribed) {
@@ -302,5 +302,47 @@ class SubscriptionController extends Controller
             'already_subscribed' => $alreadySubscribed,
             'free_meal_taken' => $isFreeMealAlreadyTaken,
         ]);
+
+        // $user = Auth::user();
+        // $membershipPurchaseDate = null;
+        // $nextMonthDate = null;
+        // $firstWeek = null;
+        // $secondWeek = null;
+        // $thirdWeek = null;
+        // $fourthWeek = null;
+        // $alreadySubscribed = false;
+        // $isFreeMealAlreadyTaken = false;
+        // $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->latest()->first();
+        // if ($allUserSubs) {
+        //     $alreadySubscribed = true;
+        //     $membershipPurchaseDate = $allUserSubs->created_at;
+        //     $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
+        //     $nextMonthDate = $membershipPurchaseDate->addMonth(1);
+        //     $firstWeek = $membershipPurchaseDate->addWeek(1);
+        //     $secondWeek = $membershipPurchaseDate->addWeek(2);
+        //     $thirdWeek = $membershipPurchaseDate->addWeek(3);
+        //     $fourthWeek = $membershipPurchaseDate->addWeek(4);
+        // }
+
+        // // if ($alreadySubscribed) {
+        // $mytime = Carbon::now()->subDays(7);
+        // $order =  Order::where('customer_id', $user->id)->where('is_receipe', 0)->latest()->first();
+        // if ($order) {
+        //     $orderDetails = OrderDetails::where('order_id', $order->id)->get();
+        //     if ($orderDetails[0]->created_at > $mytime) {
+        //         foreach ($orderDetails as $key => $value) {
+        //             $menuItem = Menu::find($value->rest_menuId);
+        //             if ($menuItem->is_free == 1) {
+        //                 $isFreeMealAlreadyTaken = true;
+        //             }
+        //         }
+        //     }
+        // }
+        // // }
+        // return response()->json([
+        //     'success' => true,
+        //     'already_subscribed' => $alreadySubscribed,
+        //     'free_meal_taken' => $isFreeMealAlreadyTaken,
+        // ]);
     }
 }
