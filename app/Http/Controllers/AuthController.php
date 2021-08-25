@@ -15,13 +15,15 @@ class AuthController extends Controller
     {
         if ($request['cust_registration_type'] == 2) {
             $request->merge([
-                'cust_phone_number'=>'00000000',
+                'cust_phone_number' => '00000000',
             ]);
             $user =   User::create($request->all());
+            $token = $user->createToken('auth_token')->plainTextToken;
+
             return response()->json([
                 'success' => true,
                 'data' => $user,
-                'message' => 'User Registered'
+                'access_token' => $token,
             ]);
         }
         $upload_path = 'uploadedImages/profilePictures/';
