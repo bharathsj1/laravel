@@ -269,13 +269,19 @@ class SubscriptionController extends Controller
     public function checkAllMealSubscription()
     {
         $user = Auth::user();
-
+        $membershipPurchaseDate = null;
+        $nextMonthDate = null;
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
-        $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->get();
-        if (count($allUserSubs) > 0) {
+        $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->latest()->first();
+        if (($allUserSubs)) {
             $alreadySubscribed = true;
+            $membershipPurchaseDate = $allUserSubs->created_at;
+            // $nextMonthDate = $allUserSubs->created_at.add()
+
+
         }
+
         // if ($alreadySubscribed) {
         $mytime = Carbon::now()->subDays(7);
         $order =  Order::where('customer_id', $user->id)->where('is_receipe', 0)->latest()->first();
