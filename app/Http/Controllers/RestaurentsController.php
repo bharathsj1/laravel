@@ -92,6 +92,30 @@ class RestaurentsController extends Controller
         }
     }
 
+    public function getRestaurentById($id)
+    {
+        $restaurents = Restaurents::find($id);
+
+        $ratings = ratings::where('rest_id', $id)->pluck('rating')->avg();
+        $restaurents->ratings = ($ratings);
+        if ($ratings <= 2) {
+            $restaurents->review = 'average';
+        } else if ($ratings > 2 && $ratings <= 3.5) {
+            $restaurents->review = 'good';
+        } else if ($ratings > 4 && $ratings <= 5) {
+            $restaurents->review = 'perfect';
+        } else {
+            $restaurents->review = 'Not Available';
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $restaurents,
+            'message' => 'Specific Restaurant',
+
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

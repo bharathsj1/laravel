@@ -58,6 +58,8 @@ Route::post('/changePassword', [AuthController::class, 'changePassword'])->middl
 
 Route::get('get-all-orders', [OrderController::class, 'getAllOrders']);
 Route::post('/get-restaurents', [RestaurentsController::class, 'index']);
+Route::get('/get-restaurent/{id}', [RestaurentsController::class, 'getRestaurentById']);
+
 Route::get('getOrdersForSpecificOwnerRestaurent', [RestaurentsController::class, 'getOrdersForSpecificRes'])->middleware(('auth:sanctum'));
 Route::post('/getItemsServiceType', [RestaurentsController::class, 'getItemsServiceType']); // PICKUP DELIVERY
 Route::post('/make-payment', [PaymentController::class, 'store'])->middleware(('auth:sanctum'));
