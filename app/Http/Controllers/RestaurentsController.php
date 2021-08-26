@@ -111,7 +111,7 @@ class RestaurentsController extends Controller
         return response()->json([
             'success' => true,
             'data' => $restaurents,
-            'message' => 'Specific Restaurant',
+            'message' => 'Specific Restaurent',
 
         ]);
     }
