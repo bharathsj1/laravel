@@ -723,7 +723,7 @@ pre {
                     showError(result.error.message);
                 } else {
                 console.log(result);
-             
+  
                 
                   
                     orderData.paymentMethodId = result.paymentMethod.id;

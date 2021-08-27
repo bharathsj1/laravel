@@ -96,21 +96,35 @@ class SubscriptionController extends Controller
                 ],
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
-            $subs = Subscription::create([
-                'subscription_plan_id' => $request->plan_id,
-                'subscription_status' => 'active',
-                'user_id' => Auth::user()->id,
-                'payment_intent' => $subscription->id
-            ]);
+            if ($subscription) {
+                $subs = Subscription::create([
+                    'subscription_plan_id' => $request->plan_id,
+                    'subscription_status' => 'active',
+                    'user_id' => Auth::user()->id,
+                    'payment_intent' => $subscription->id
+                ]);
 
+                return response()->json([
+                    'success' => true,
+                    'data' => $subs,
+                    'message' => 'Successfully Subscribed',
+
+                ]);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'Could not subscribed',
+
+                ]);
+            }
+        } else {
             return response()->json([
                 'success' => true,
-                'data' => $subs,
-                'message' => 'Successfully Subscribed',
+                'data' => [],
+                'message' => 'Did not found user',
 
             ]);
-        } else {
-            return 'kkk';
         }
     }
 

@@ -498,7 +498,6 @@ class RestaurentsController extends Controller
         }
 
         $km =  $this->haversineGreatCircleDistance(floatval($restaurant->rest_latitude), floatval($restaurant->rest_longitude), $request->lat, $request->lng);
-
         if ($km <= $request->within_km) {
 
             return response()->json([
