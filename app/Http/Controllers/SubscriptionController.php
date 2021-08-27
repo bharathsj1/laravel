@@ -50,7 +50,7 @@ class SubscriptionController extends Controller
 
 
         Stripe::setApiKey('sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl');
-        $userData = Auth::loginUsingId($request->user_id);
+        $userData = Auth::user(); //Auth::loginUsingId($request->user_id);
         $customer = null;
         if ($userData) {
             $stripe = new \Stripe\StripeClient(
@@ -81,10 +81,10 @@ class SubscriptionController extends Controller
             // ]);
 
 
-            $payment_methods = \Stripe\PaymentMethod::all([
-                'customer' => $customer['id'],
-                'type' => 'card'
-            ]);
+            // $payment_methods = \Stripe\PaymentMethod::all([
+            //     'customer' => $customer['id'],
+            //     'type' => 'card'
+            // ]);
 
 
             $subscription = $stripe->subscriptions->create([
@@ -94,12 +94,12 @@ class SubscriptionController extends Controller
                         'price' => 'price_1JQcyGHxiL0NyAbFqIY18LLV'
                     ],
                 ],
-                'default_payment_method' => $payment_methods->data[0]->id,
+                'default_payment_method' => $request->payment_method_id //$payment_methods->data[0]->id,
             ]);
             if ($subscription) {
                
                 $subs = Subscription::create([
-                    'subscription_plan_id' => $request->plan_id,
+                    'subscription_plan_id' => $subscription->id,
                     'subscription_status' => 'active',
                     'user_id' => Auth::user()->id,
                     'payment_intent' => $subscription->id
