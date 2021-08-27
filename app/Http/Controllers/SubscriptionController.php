@@ -97,6 +97,7 @@ class SubscriptionController extends Controller
                 'default_payment_method' => $payment_methods->data[0]->id,
             ]);
             if ($subscription) {
+               
                 $subs = Subscription::create([
                     'subscription_plan_id' => $request->plan_id,
                     'subscription_status' => 'active',
