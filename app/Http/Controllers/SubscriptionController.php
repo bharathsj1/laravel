@@ -81,10 +81,10 @@ class SubscriptionController extends Controller
             // ]);
 
 
-            // $payment_methods = \Stripe\PaymentMethod::all([
-            //     'customer' => $customer['id'],
-            //     'type' => 'card'
-            // ]);
+            $payment_methods = \Stripe\PaymentMethod::all([
+                'customer' => $customer['id'],
+                'type' => 'card'
+            ]);
 
 
             $subscription = $stripe->subscriptions->create([
@@ -94,7 +94,7 @@ class SubscriptionController extends Controller
                         'price' => 'price_1JQcyGHxiL0NyAbFqIY18LLV'
                     ],
                 ],
-                'default_payment_method' => $request->payment_method_id //$payment_methods->data[0]->id,
+                'default_payment_method' => $request->payment_method_id 
             ]);
             if ($subscription) {
                

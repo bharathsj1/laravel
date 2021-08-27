@@ -18,6 +18,9 @@ class AuthController extends Controller
                 'cust_phone_number' => '00000000',
             ]);
             $user =   User::create($request->all());
+            $user->password =Hash::make($request['password']);
+            $user->update();
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
