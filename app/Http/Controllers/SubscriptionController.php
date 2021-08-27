@@ -60,7 +60,7 @@ class SubscriptionController extends Controller
             if ($userObject->stripe_cus_id == null) {
                 // NEW USER 
                 $customer =  $stripe->customers->create([
-                    'payment_method' => $request->paymentMethodId,
+                    'payment_method' => $request->payment_method_id,
                     'description' => 'NEW USER FOR SUBSCRIPTION',
                     'email' => $userObject->email,
                     'name' => $userObject->name,
