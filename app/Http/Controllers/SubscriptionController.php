@@ -108,6 +108,7 @@ class SubscriptionController extends Controller
                 return response()->json([
                     'success' => true,
                     'data' => $subs,
+                    'subscription_data'=>$subscription,
                     'message' => 'Successfully Subscribed',
 
                 ]);
