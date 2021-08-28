@@ -87,6 +87,7 @@ class SubscriptionController extends Controller
             // ]);
 
 
+
             $subscription = $stripe->subscriptions->create([
                 'customer' => $customer['id'],
                 'items' => [
@@ -94,21 +95,22 @@ class SubscriptionController extends Controller
                         'price' => 'price_1JQcyGHxiL0NyAbFqIY18LLV'
                     ],
                 ],
-                'default_payment_method' => $request->payment_method_id 
+                'default_payment_method' => $request->payment_method_id, //$payment_methods['data'][0]->id, //$
             ]);
             if ($subscription) {
-               
+                // return  
+
                 $subs = Subscription::create([
-                    'subscription_plan_id' => $subscription->id,
+                    'subscription_plan_id' => $subscription['items']['data'][0]['plan']['product'],
                     'subscription_status' => 'active',
                     'user_id' => Auth::user()->id,
-                    'payment_intent' => $subscription['items']['data']['plan']['id']
+                    'payment_intent' => $subscription['items']['data'][0]['price']['id'],
                 ]);
 
                 return response()->json([
                     'success' => true,
                     'data' => $subs,
-                    'subscription_data'=>$subscription,
+                    'subscription_data' => $subscription,
                     'message' => 'Successfully Subscribed',
 
                 ]);

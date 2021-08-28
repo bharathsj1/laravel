@@ -13,12 +13,26 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+
         if ($request['cust_registration_type'] == 2) {
             $request->merge([
                 'cust_phone_number' => '00000000',
             ]);
             $user =   User::create($request->all());
-            $user->password =Hash::make($request['password']);
+
+            $customer =  $stripe->customers->create([
+                // 'payment_method' => $request->paymentMethodId,
+                'description' => 'NEW USER Signed up',
+                'email' =>  $request['email'],
+                'name' =>  $request['email'],
+            ]);
+
+            $user->password = Hash::make($request['password']);
+           $user->stripe_cus_id = $customer->id;
+
             $user->update();
 
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -44,10 +58,6 @@ class AuthController extends Controller
             ]);
         }
 
-        //CREATING STRIPE USER
-        $stripe = new \Stripe\StripeClient(
-            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
-        );
 
         $customer =  $stripe->customers->create([
             // 'payment_method' => $request->paymentMethodId,
