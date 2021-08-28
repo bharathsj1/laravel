@@ -81,10 +81,10 @@ class SubscriptionController extends Controller
             // ]);
 
 
-            $payment_methods = \Stripe\PaymentMethod::all([
-                'customer' => $customer['id'],
-                'type' => 'card'
-            ]);
+            // $payment_methods = \Stripe\PaymentMethod::all([
+            //     'customer' => $customer['id'],
+            //     'type' => 'card'
+            // ]);
 
 
             $subscription = $stripe->subscriptions->create([
@@ -102,7 +102,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $subscription->id,
                     'subscription_status' => 'active',
                     'user_id' => Auth::user()->id,
-                    'payment_intent' => $subscription->id
+                    'payment_intent' => $subscription['items']['data']['plan']['id']
                 ]);
 
                 return response()->json([
