@@ -104,7 +104,7 @@ class SubscriptionController extends Controller
                     'subscription_plan_id' => $subscription['items']['data'][0]['plan']['product'],
                     'subscription_status' => 'active',
                     'user_id' => Auth::user()->id,
-                    'payment_intent' => $subscription['items']['data'][0]['price']['id'],
+                    'payment_intent' => $subscription['id'] //['data'][0]['price']['id'],
                 ]);
 
                 return response()->json([
@@ -196,6 +196,8 @@ class SubscriptionController extends Controller
                     []
 
                 );
+
+                return $subsc;
 
                 $product =     $stripe->products->retrieve(
                     $subsc['items']['data'][0]['price']['product'],
