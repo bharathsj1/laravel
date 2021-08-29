@@ -197,7 +197,7 @@ class SubscriptionController extends Controller
 
                 );
 
-                return $subsc;
+                // return $subsc;
 
                 $product =     $stripe->products->retrieve(
                     $subsc['items']['data'][0]['price']['product'],
