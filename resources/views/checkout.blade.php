@@ -544,7 +544,7 @@ pre {
             </div>
             @endif
             <div class="sr-payment-summary payment-view">
-                <h1 class="order-amount">€ {{$plan->metadata->amount}}</h1>
+                <h1 class="order-amount">£ {{$plan->metadata->amount}}</h1>
                 <h4>Loveats Subscription</h4>
             </div>
             <div class="sr-payment-form payment-view">
@@ -568,7 +568,7 @@ pre {
                     <div class="spinner hidden" id="spinner"></div><span id="button-text">Pay</span>
                 </button>
                 <div class="sr-legal-text">
-                    Your card will be charge € {{$plan->metadata->amount}}<span id="save-card-text"> and your card details will be saved to
+                    Your card will be charge £ {{$plan->metadata->amount}}<span id="save-card-text"> and your card details will be saved to
                         your account</span>.
                         <span> Your User id is {{$id}}</span>
                 </div>
