@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderDetails;
+use App\Models\ReceipeOrder;
 use App\Models\ReceipeSubscription;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
@@ -280,30 +281,28 @@ class SubscriptionController extends Controller
             }
 
 
-            $order =  Order::where('customer_id', $user->id)->where('is_receipe', 1)->latest()->first();
+            $order =  ReceipeOrder::where('user_id', $user->id)->latest()->first();
             // return $order;
             if ($order) {
-                $orderDetails = OrderDetails::where('order_id', $order->id)->get();
-                if (count($orderDetails) > 0) {
 
-                    if ($orderDetails[0]->created_at <= $firstWeek) {
-                        $isFirstWeek = true;
-                        $slotsLeft = 3;
-                        $nextFreeMeal = $secondWeek->diff($firstWeek);
-                    } else if ($orderDetails[0]->created_at > $firstWeek && $orderDetails[0]->created_at <= $secondWeek) {
-                        $isSecondWeek = true;
-                        $slotsLeft = 2;
-                        $nextFreeMeal =  $thirdWeek->diff($secondWeek);
-                    } else if ($orderDetails[0]->created_at > $secondWeek && $orderDetails[0]->created_at <= $thirdWeek) {
-                        $isThirdWeek = true;
-                        $slotsLeft = 1;
-                        $nextFreeMeal =  $fourthWeek->diff($thirdWeek);
-                    } else if ($orderDetails[0]->created_at > $thirdWeek && $orderDetails[0]->created_at <= $fourthWeek) {
-                        $isFourthWeek = true;
-                        $slotsLeft = 0;
-                        $nextFreeMeal =  $fourthWeek->diff($fourthWeek);
-                    } else {
-                    }
+
+                if ($order->created_at <= $firstWeek) {
+                    $isFirstWeek = true;
+                    $slotsLeft = 3;
+                    $nextFreeMeal = $secondWeek->diff($firstWeek);
+                } else if ($order->created_at > $firstWeek && $order->created_at <= $secondWeek) {
+                    $isSecondWeek = true;
+                    $slotsLeft = 2;
+                    $nextFreeMeal =  $thirdWeek->diff($secondWeek);
+                } else if ($order->created_at > $secondWeek && $order->created_at <= $thirdWeek) {
+                    $isThirdWeek = true;
+                    $slotsLeft = 1;
+                    $nextFreeMeal =  $fourthWeek->diff($thirdWeek);
+                } else if ($order->created_at > $thirdWeek && $order->created_at <= $fourthWeek) {
+                    $isFourthWeek = true;
+                    $slotsLeft = 0;
+                    $nextFreeMeal =  $fourthWeek->diff($fourthWeek);
+                } else {
                 }
             }
 
