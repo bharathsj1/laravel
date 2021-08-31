@@ -14,23 +14,22 @@ class SubscriptionPlanController extends Controller
      */
     public function index()
     {
-       
+
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_TEST_SECRET_KEY'),
-          );
-     $subscriptionPlan=$stripe->products->all();
-     $subscriptionArray=array();
-     foreach ($subscriptionPlan as $key => $value) {
-         if($value->metadata->is_package=='true')
-         {
-            $subscriptionArray[]=$value;
-           
-         }
-     }
+        );
+        $subscriptionPlan = $stripe->products->all();
+        $subscriptionArray = array();
+        foreach ($subscriptionPlan as $key => $value) {
+            if ($value->metadata->is_package == 'true') {
+                $value['amount']=$value['metadata']->amount;
+                $subscriptionArray[] =$value;
+            }
+        }
         return response()->json([
-            'success'=>true,
-            'data'=>$subscriptionArray,
-            'message'=>'All Subscription Plans'
+            'success' => true,
+            'data' => $subscriptionArray,
+            'message' => 'All Subscription Plans'
         ]);
     }
 
