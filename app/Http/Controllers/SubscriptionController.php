@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderDetails;
+use App\Models\ReceipeSubscription;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Stripe\Stripe;
 
 class SubscriptionController extends Controller
@@ -177,7 +179,7 @@ class SubscriptionController extends Controller
         //
     }
 
-
+    //getSpecificUserReceipeSubscription
     public function getSpecificUserSubscription()
     {
         $user =   Auth::user();
@@ -213,6 +215,97 @@ class SubscriptionController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $subs,
+                'message' => 'User Subscription Detail'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data' => [],
+                'message' => 'No Subscription Details Found'
+            ]);
+        }
+    }
+
+    public function getSpecificUserReceipeSubscription()
+    {
+        $user =   Auth::user();
+        $subscriptionData = ReceipeSubscription::where('user_id', $user->id)->whereNotNull('payment_intent')->orderBy('created_at', 'DESC')->get('payment_intent');
+        $stripe = new \Stripe\StripeClient(
+            'sk_test_51ISmUBHxiL0NyAbFbzAEkXDMDC2HP0apPILEyaIYaUI8ux0yrBkHMI5ikWZ4teMNsixWP2IPv4yw9bvdqb9rTrhA004tpWU9yl'
+        );
+        $subscriptionEnd = 0;
+
+        $subs = array();
+        if ($subscriptionData) {
+            foreach ($subscriptionData as $key => $value) {
+                $subsc =   $stripe->subscriptions->retrieve(
+                    $value->payment_intent,
+                    []
+                );
+                $product =     $stripe->products->retrieve(
+                    $subsc['items']['data'][0]['price']['product'],
+                    []
+                );
+                if ($product['metadata']['is_receipe'] == 'true') {
+                    $subscriptionEnd = $subsc->current_period_end;
+                    $subs[] = [
+                        'sub' => $subsc,
+                        'product' => $product,
+                    ];
+                }
+            }
+            $membershipPurchaseDate = null;
+            $firstWeek = null;
+            $secondWeek = null;
+            $thirdWeek = null;
+            $fourthWeek = null;
+            $alreadySubscribed = false;
+            $isFreeMealAlreadyTaken = false;
+            $isFirstWeek = false;
+            $isSecondWeek = false;
+            $isThirdWeek = false;
+            $isFourthWeek = false;
+
+            $slotsLeft = 0;
+
+            $receipeSubscriptions = ReceipeSubscription::where('user_id', $user->id)->latest()->first();
+            if (($receipeSubscriptions)) {
+                $membershipPurchaseDate = $receipeSubscriptions->created_at;
+                $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
+                $firstWeek = $membershipPurchaseDate->addWeek(1);
+                $secondWeek = $membershipPurchaseDate->addWeek(2);
+                $thirdWeek = $membershipPurchaseDate->addWeek(3);
+                $fourthWeek = $membershipPurchaseDate->addWeek(4);
+            }
+
+
+            $order =  Order::where('customer_id', $user->id)->where('is_receipe', 1)->latest()->first();
+            // return $order;
+            if ($order) {
+                $orderDetails = OrderDetails::where('order_id', $order->id)->get();
+                if (count($orderDetails)>0) {
+                    if ($orderDetails[0]->created_at <= $firstWeek) {
+                        $isFirstWeek = true;
+                        $slotsLeft = 3;
+                    } else if ($orderDetails[0]->created_at > $firstWeek && $orderDetails[0]->created_at <= $secondWeek) {
+                        $isSecondWeek = true;
+                        $slotsLeft = 2;
+                    } else if ($orderDetails[0]->created_at > $secondWeek && $orderDetails[0]->created_at <= $thirdWeek) {
+                        $isThirdWeek = true;
+                        $slotsLeft = 1;
+                    } else if ($orderDetails[0]->created_at > $thirdWeek && $orderDetails[0]->created_at <= $fourthWeek) {
+                        $isFourthWeek = true;
+                        $slotsLeft = 0;
+                    } else {
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $subs,
+                'slots_left' => $slotsLeft,
+                'subscription_end' => date("d/m/Y H:i:s", $subscriptionEnd),
                 'message' => 'User Subscription Detail'
             ]);
         } else {
@@ -325,7 +418,6 @@ class SubscriptionController extends Controller
 
         $user = Auth::user();
         $membershipPurchaseDate = null;
-        $nextMonthDate = null;
         $firstWeek = null;
         $secondWeek = null;
         $thirdWeek = null;
@@ -337,14 +429,12 @@ class SubscriptionController extends Controller
             $alreadySubscribed = true;
             $membershipPurchaseDate = $allUserSubs->created_at;
             $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
-            $nextMonthDate = $membershipPurchaseDate->addMonth(1);
             $firstWeek = $membershipPurchaseDate->addWeek(1);
             $secondWeek = $membershipPurchaseDate->addWeek(2);
             $thirdWeek = $membershipPurchaseDate->addWeek(3);
             $fourthWeek = $membershipPurchaseDate->addWeek(4);
         }
 
-        // if ($alreadySubscribed) {
 
         $order =  Order::where('customer_id', $user->id)->where('is_receipe', 0)->latest()->first();
         if ($order) {
@@ -381,7 +471,7 @@ class SubscriptionController extends Controller
                 $isFreeMealAlreadyTaken = false;
             }
         }
-        // }
+
         return response()->json([
             'success' => true,
             'already_subscribed' => $alreadySubscribed,
