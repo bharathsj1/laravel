@@ -265,6 +265,7 @@ class SubscriptionController extends Controller
             $isSecondWeek = false;
             $isThirdWeek = false;
             $isFourthWeek = false;
+            $nextFreeMeal = null;
 
             $slotsLeft = 0;
 
@@ -272,10 +273,10 @@ class SubscriptionController extends Controller
             if (($receipeSubscriptions)) {
                 $membershipPurchaseDate = $receipeSubscriptions->created_at;
                 $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
-                $firstWeek = $membershipPurchaseDate->addWeek(1);
-                $secondWeek = $membershipPurchaseDate->addWeek(2);
-                $thirdWeek = $membershipPurchaseDate->addWeek(3);
-                $fourthWeek = $membershipPurchaseDate->addWeek(4);
+                $firstWeek = Carbon::parse($membershipPurchaseDate)->addWeeks();
+                $secondWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(2);
+                $thirdWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(3);
+                $fourthWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(4);
             }
 
 
@@ -283,19 +284,24 @@ class SubscriptionController extends Controller
             // return $order;
             if ($order) {
                 $orderDetails = OrderDetails::where('order_id', $order->id)->get();
-                if (count($orderDetails)>0) {
+                if (count($orderDetails) > 0) {
+
                     if ($orderDetails[0]->created_at <= $firstWeek) {
                         $isFirstWeek = true;
                         $slotsLeft = 3;
+                        $nextFreeMeal = $secondWeek->diff($firstWeek);
                     } else if ($orderDetails[0]->created_at > $firstWeek && $orderDetails[0]->created_at <= $secondWeek) {
                         $isSecondWeek = true;
                         $slotsLeft = 2;
+                        $nextFreeMeal =  $thirdWeek->diff($secondWeek);
                     } else if ($orderDetails[0]->created_at > $secondWeek && $orderDetails[0]->created_at <= $thirdWeek) {
                         $isThirdWeek = true;
                         $slotsLeft = 1;
+                        $nextFreeMeal =  $fourthWeek->diff($thirdWeek);
                     } else if ($orderDetails[0]->created_at > $thirdWeek && $orderDetails[0]->created_at <= $fourthWeek) {
                         $isFourthWeek = true;
                         $slotsLeft = 0;
+                        $nextFreeMeal =  $fourthWeek->diff($fourthWeek);
                     } else {
                     }
                 }
@@ -305,6 +311,7 @@ class SubscriptionController extends Controller
                 'success' => true,
                 'data' => $subs,
                 'slots_left' => $slotsLeft,
+                'next_free_meal' => $nextFreeMeal,
                 'subscription_end' => date("d/m/Y H:i:s", $subscriptionEnd),
                 'message' => 'User Subscription Detail'
             ]);
