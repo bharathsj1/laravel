@@ -267,8 +267,10 @@ class SubscriptionController extends Controller
             $isThirdWeek = false;
             $isFourthWeek = false;
             $nextFreeMeal = null;
+            $totalReceipesAllowed = 0;
 
             $slotsLeft = 0;
+            $totalReceipesLeft = 0;
 
             $receipeSubscriptions = ReceipeSubscription::where('user_id', $user->id)->latest()->first();
             if (($receipeSubscriptions)) {
@@ -282,23 +284,34 @@ class SubscriptionController extends Controller
 
 
             $order =  ReceipeOrder::where('user_id', $user->id)->latest()->first();
+            $receipeSubs = ReceipeSubscription::where('user_id', $user->id)->latest()->first();
+            if ($receipeSubs)
+                $totalReceipesAllowed = intval($receipeSubs->total_receipes);
+
             // return $order;
             if ($order) {
 
 
                 if ($order->created_at <= $firstWeek) {
+                    $totalReceipesLeft = $totalReceipesAllowed-ReceipeOrder::where('user_id', $user->id)->whereDate('created_at', '<=', $firstWeek)->get()->count();
                     $isFirstWeek = true;
                     $slotsLeft = 3;
                     $nextFreeMeal = $secondWeek->diff($firstWeek);
                 } else if ($order->created_at > $firstWeek && $order->created_at <= $secondWeek) {
+                    $totalReceipesLeft = ReceipeOrder::where('user_id', $user->id)->whereDate('created_at', '>', $firstWeek)->whereDate('created_at', '<=', $secondWeek)->get()->count();
+
                     $isSecondWeek = true;
                     $slotsLeft = 2;
                     $nextFreeMeal =  $thirdWeek->diff($secondWeek);
                 } else if ($order->created_at > $secondWeek && $order->created_at <= $thirdWeek) {
+                    $totalReceipesLeft = $totalReceipesAllowed- ReceipeOrder::where('user_id', $user->id)->whereDate('created_at', '>', $secondWeek)->whereDate('created_at', '<=', $thirdWeek)->get()->count();
+
                     $isThirdWeek = true;
                     $slotsLeft = 1;
                     $nextFreeMeal =  $fourthWeek->diff($thirdWeek);
                 } else if ($order->created_at > $thirdWeek && $order->created_at <= $fourthWeek) {
+                    $totalReceipesLeft = $totalReceipesAllowed- ReceipeOrder::where('user_id', $user->id)->whereDate('created_at', '>', $thirdWeek)->whereDate('created_at', '<=', $fourthWeek)->get()->count();
+
                     $isFourthWeek = true;
                     $slotsLeft = 0;
                     $nextFreeMeal =  $fourthWeek->diff($fourthWeek);
@@ -312,6 +325,8 @@ class SubscriptionController extends Controller
                 'slots_left' => $slotsLeft,
                 'next_free_meal' => $nextFreeMeal,
                 'subscription_end' => date("d/m/Y H:i:s", $subscriptionEnd),
+                'total_receipe_allowed_per_week' => $totalReceipesAllowed,
+                'total_receipe_left_per_week' => $totalReceipesLeft,
                 'message' => 'User Subscription Detail'
             ]);
         } else {
