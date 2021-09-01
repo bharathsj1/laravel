@@ -343,7 +343,7 @@ class SubscriptionController extends Controller
                     return 'sfa';
                 }
             }
-
+            $nextFreeMeal = $nextFreeMeal->d . ' days ' . $nextFreeMeal->h . ' hours ' . $nextFreeMeal->i . ' minutes';
             return response()->json([
                 'success' => true,
                 'data' => $subs,
