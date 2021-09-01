@@ -348,7 +348,7 @@ class SubscriptionController extends Controller
                 'success' => true,
                 'data' => $subs,
                 'slots_left' => $slotsLeft,
-                'next_free_meal' => $nextFreeMeal,
+                'next_free_meal' => $totalReceipesLeft==0?$nextFreeMeal:null,
                 'subscription_end' => date("d/m/Y H:i:s", $subscriptionEnd),
                 'total_receipe_allowed_per_week' => $totalReceipesAllowed,
                 'total_receipe_left_per_week' => $totalReceipesLeft,
