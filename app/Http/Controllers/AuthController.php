@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -31,11 +32,19 @@ class AuthController extends Controller
             ]);
 
             $user->password = Hash::make($request['password']);
-           $user->stripe_cus_id = $customer->id;
+            $user->stripe_cus_id = $customer->id;
 
             $user->update();
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $userWallet = Wallet::create([
+                'user_id' => $user->id,
+                'balance' => '0',
+                'token' => '0',
+                'stripe_cus_id' => $customer->id,
+
+            ]);
+
 
             return response()->json([
                 'success' => true,

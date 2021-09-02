@@ -227,7 +227,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function getSpecificUserReceipeSubscription()
+    public function getSpecificUserReceipeSubscription($forApi = true)
     {
         $user =   Auth::user();
         $subscriptionData = ReceipeSubscription::where('user_id', $user->id)->whereNotNull('payment_intent')->orderBy('created_at', 'DESC')->get('payment_intent');
@@ -343,6 +343,9 @@ class SubscriptionController extends Controller
                 } else {
                     return 'sfa';
                 }
+            }
+            if (!$forApi) {
+                return $totalReceipesLeft == 0 ? false : true;
             }
             return response()->json([
                 'success' => true,
@@ -538,13 +541,22 @@ class SubscriptionController extends Controller
             }
         }
 
+        $receipe =   ReceipeSubscription::where('user_id', $user->id)->get();
+        if (count($receipe) > 0)
+            $isUserSubscribedForReceipe = true;
+        else
+            $isUserSubscribedForReceipe = false;
+
+        $freeReceipeAvailable =     $this->getSpecificUserReceipeSubscription(false);
 
         return response()->json([
             'success' => true,
             'already_subscribed' => $alreadySubscribed,
             'free_meal_taken' => $isFreeMealAlreadyTaken,
-            'slots_left' => $slotsLeft,
-            'next_free_meal' => $slotsLeft==0? $nextFreeMeal : null,
+            'free_receipe_available' => $freeReceipeAvailable,
+            // 'slots_left' => $slotsLeft,
+            'user_subscribed_for_receipe' => $isUserSubscribedForReceipe,
+            'next_free_meal_available' => $slotsLeft == 0 ? false : true,
         ]);
     }
 }

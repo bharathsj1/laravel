@@ -23,6 +23,7 @@ use App\Http\Controllers\SubcategoriesController;
 use App\Http\Controllers\SubscribedOfferController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\SubscriptionPlanController;
+use App\Http\Controllers\WalletTransactionController;
 use App\Models\DeviceToken;
 use App\Models\freeMeal;
 use App\Models\HotspotsRestaurants;
@@ -33,6 +34,7 @@ use App\Models\ReceipeOrder;
 use App\Models\ReceipeSubscription;
 use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
+use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -176,6 +178,10 @@ Route::post('/like', [LikesController::class, 'store'])->middleware('auth:sanctu
 Route::post('/comment', [CommentController::class, 'store'])->middleware('auth:sanctum');
 
 Route::get('/restaurent-review_count', [RatingsController::class, 'restaurentReviewLength']);
+
+//WALLET
+
+Route::post('/wallet-transaction', [WalletTransactionController::class, 'store'])->middleware('auth:sanctum');
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
