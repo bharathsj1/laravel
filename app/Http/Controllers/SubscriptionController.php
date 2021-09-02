@@ -470,15 +470,18 @@ class SubscriptionController extends Controller
         $fourthWeek = null;
         $alreadySubscribed = false;
         $isFreeMealAlreadyTaken = false;
+        $slotsLeft = 0;
+        $nextFreeMeal = null;
         $allUserSubs = Subscription::where('user_id', $user->id)->where('subscription_plan_id', 'prod_K4mX6kbfk8c9Vm')->where('subscription_status', 'active')->latest()->first();
         if ($allUserSubs) {
             $alreadySubscribed = true;
             $membershipPurchaseDate = $allUserSubs->created_at;
-            $membershipPurchaseDate = Carbon::parse($membershipPurchaseDate);
-            $firstWeek = $membershipPurchaseDate->addWeek(1);
-            $secondWeek = $membershipPurchaseDate->addWeek(2);
-            $thirdWeek = $membershipPurchaseDate->addWeek(3);
-            $fourthWeek = $membershipPurchaseDate->addWeek(4);
+            $firstWeek = Carbon::parse($membershipPurchaseDate)->addWeeks();
+
+            $secondWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(2);
+
+            $thirdWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(3);
+            $fourthWeek = Carbon::parse($membershipPurchaseDate)->addWeeks(4);
         }
 
 
@@ -490,38 +493,58 @@ class SubscriptionController extends Controller
                     $menuItem = Menu::find($value->rest_menuId);
                     if ($menuItem->is_free == 1) {
                         $isFreeMealAlreadyTaken = true;
+                        $slotsLeft = 3;
                     }
                 }
+                $nextFreeMeal = $secondWeek;
             } else if ($orderDetails[0]->created_at > $firstWeek && $orderDetails[0]->created_at <= $secondWeek) {
                 foreach ($orderDetails as $key => $value) {
                     $menuItem = Menu::find($value->rest_menuId);
                     if ($menuItem->is_free == 1) {
                         $isFreeMealAlreadyTaken = true;
+                        $slotsLeft = 2;
                     }
                 }
+                $nextFreeMeal = $thirdWeek;
             } else if ($orderDetails[0]->created_at > $secondWeek && $orderDetails[0]->created_at <= $thirdWeek) {
                 foreach ($orderDetails as $key => $value) {
                     $menuItem = Menu::find($value->rest_menuId);
                     if ($menuItem->is_free == 1) {
                         $isFreeMealAlreadyTaken = true;
+                        $slotsLeft = 1;
                     }
                 }
+                $nextFreeMeal = $fourthWeek;
             } else if ($orderDetails[0]->created_at > $thirdWeek && $orderDetails[0]->created_at <= $fourthWeek) {
                 foreach ($orderDetails as $key => $value) {
                     $menuItem = Menu::find($value->rest_menuId);
                     if ($menuItem->is_free == 1) {
+
                         $isFreeMealAlreadyTaken = true;
+                        $slotsLeft = 0;
                     }
                 }
-            } else {
-                $isFreeMealAlreadyTaken = false;
+            }
+        } else {
+            $isFreeMealAlreadyTaken = false;
+            if (Carbon::now() <= $firstWeek) {
+                $slotsLeft = 4;
+            } else if (Carbon::now() > $firstWeek && Carbon::now() <= $secondWeek) {
+                $slotsLeft = 3;
+            } else if (Carbon::now() > $secondWeek && Carbon::now() <= $thirdWeek) {
+                $slotsLeft = 2;
+            } else if (Carbon::now() > $thirdWeek && Carbon::now() <= $fourthWeek) {
+                $slotsLeft = 1;
             }
         }
+
 
         return response()->json([
             'success' => true,
             'already_subscribed' => $alreadySubscribed,
             'free_meal_taken' => $isFreeMealAlreadyTaken,
+            'slots_left' => $slotsLeft,
+            'next_free_meal' => $slotsLeft==0? $nextFreeMeal : null,
         ]);
     }
 }
