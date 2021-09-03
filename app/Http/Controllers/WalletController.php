@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Wallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class WalletController extends Controller
 {
@@ -81,5 +82,25 @@ class WalletController extends Controller
     public function destroy(Wallet $wallet)
     {
         //
+    }
+
+    public function getLoggedUserWallet( )
+    {
+        $user = Auth::user();
+
+        $wallet = Wallet::where('user_id', $user->id)->get()->first();
+        if ($wallet) {
+            return response()->json([
+                'success' => true,
+                'data' => $wallet,
+                'message' => 'Logged user Wallet',
+            ]);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'Wallet Not Found',
+            ]);
+        }
     }
 }

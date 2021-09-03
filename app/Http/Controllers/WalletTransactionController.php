@@ -150,7 +150,7 @@ class WalletTransactionController extends Controller
             ]);
         }
         $wallet = Wallet::where('user_id', $request->user_id)->latest()->first();
-        if (!$wallet) { 
+        if (!$wallet) {
             return response()->json([
                 'success' => true,
                 'data' => [],
@@ -170,6 +170,18 @@ class WalletTransactionController extends Controller
             'success' => true,
             'data' => $wallet,
             'message' => 'Token added Successfully',
+        ]);
+    }
+
+    public function getLoggedUserTransaction()
+    {
+        $user = Auth::user();
+        $userTransactions = WalletTransaction::where('user_id', $user->id)->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $userTransactions,
+            'message' => 'Users All Transactions',
         ]);
     }
 }
