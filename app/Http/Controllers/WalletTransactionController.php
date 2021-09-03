@@ -139,4 +139,37 @@ class WalletTransactionController extends Controller
     {
         //
     }
+
+    public function addToken(Request $request)
+    {
+        if (!$request->has('user_id')) {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'User id is required'
+            ]);
+        }
+        $wallet = Wallet::where('user_id', $request->user_id)->latest()->first();
+        if (!$wallet) { 
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => "Didn't find any wallet against the given user id",
+            ]);
+        }
+
+        $wallet->token = strval(doubleval($wallet->token) + doubleval($request->token));
+        $wallet->update();
+        $walletTransaction = WalletTransaction::create([
+            'user_id' => $request->user_id,
+            'transaction_type' => 'token_plus',
+            'amount' => $request->token,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $wallet,
+            'message' => 'Token added Successfully',
+        ]);
+    }
 }
