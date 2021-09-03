@@ -182,7 +182,7 @@ Route::get('/restaurent-review_count', [RatingsController::class, 'restaurentRev
 //WALLET
 
 Route::post('/wallet-transaction', [WalletTransactionController::class, 'store'])->middleware('auth:sanctum');
-
+Route::post('update-profile-picture', [AuthController::class, 'updateProfilePicture'])->middleware('auth:sanctum');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

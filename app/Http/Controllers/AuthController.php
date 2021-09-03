@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+
     public function register(Request $request)
     {
         $stripe = new \Stripe\StripeClient(
@@ -289,5 +291,33 @@ class AuthController extends Controller
             }
         }
         return response($arr);
+    }
+
+    public function updateProfilePicture(Request $request)
+    {
+        $uploadPath = 'uploadedImages/profilePictures/';
+
+        if (!$request->has('profile_picture')) {
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => 'Profile Picture Required',
+
+            ]);
+        }
+        $user = Auth::user();
+        $user = User::find($user->id);
+
+        $file_name = $request->profile_picture->getClientOriginalName();
+        $generated_new_name = time() . '.' . $file_name;
+        $request->profile_picture->move($uploadPath, $generated_new_name);
+        $user->profile_picture = $uploadPath . $generated_new_name;
+        $user->update();
+
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'message' => 'Profile Picture Updated Successfully',
+        ]);
     }
 }

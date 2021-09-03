@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Wallet;
 use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
@@ -62,7 +63,7 @@ class WalletTransactionController extends Controller
                     $wallet->token = strval(doubleval($wallet->token) + doubleval($request->amount));
                     $wallet->update();
                 } else if ($transactionType == 'token_minus') {
-                    if (doubleval($request->token) > doubleval($wallet->token)) {
+                    if (doubleval($wallet->token) < doubleval($request->amount)) {
                         return response()->json([
                             'success' => true,
                             'data' => [],
@@ -73,7 +74,18 @@ class WalletTransactionController extends Controller
                         $wallet->update();
                     }
                 }
+                $walletTransaction = WalletTransaction::create([
+                    'user_id' => $user->id,
+                    'transaction_type' => $request->transaction_type,
+                    'amount' => $request->amount,
+                ]);
             }
+            $wallet = Wallet::where('user_id', $user->id)->get()->first();
+            return response()->json([
+                'success' => true,
+                'data' => $wallet,
+                'message' => 'updated',
+            ]);
         } else {
             return response()->json([
                 'success' => true,
